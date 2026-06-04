@@ -27,6 +27,8 @@ export default function AuthLayout() {
           sx={{
             width: "100%",
             maxWidth: 500,
+            p:6,
+            pl: 4,
           }}
         >
           <Outlet />
