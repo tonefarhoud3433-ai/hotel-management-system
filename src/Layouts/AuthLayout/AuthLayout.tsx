@@ -1,4 +1,4 @@
-import Grid from "@mui/material/Grid"; // أو المسار المعتمد عندك
+import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Outlet } from "react-router-dom";
@@ -6,24 +6,23 @@ import bgImg1 from "../../assets/Images/Auth/authbg1.png";
 
 export default function AuthLayout() {
   return (
-    <Box 
+    <Box
       sx={{
-        height: "100vh", 
+        height: "100vh",
         display: "flex",
         flexDirection: "column",
         p: { xs: 2, md: 3 },
         boxSizing: "border-box",
-        backgroundColor: "#ffffff",
-        overflow: "hidden" ,
+        backgroundColor: "#ffffff", 
       }}
     >
       {/* logo */}
-      <Box sx={{ mb: 1 }}> 
-        <Typography 
-          variant="h5" 
-          sx={{ 
-            fontWeight: 700, 
-            color: "#3b5bdb", 
+      <Box sx={{ mb: 1 }}>
+        <Typography
+          variant="h5"
+          sx={{
+            fontWeight: 700,
+            color: "#3b5bdb",
             fontFamily: "sans-serif"
           }}
         >
@@ -31,47 +30,59 @@ export default function AuthLayout() {
         </Typography>
       </Box>
 
-      {/*  Parent Grid  */}
+      {/* Parent Grid  */}
       <Grid
         container
         spacing={{ xs: 2, md: 4 }}
         sx={{
-          flexGrow: 1, 
+          flexGrow: 1,
           height: "calc(100% - 25px)",
           alignItems: "center",
           boxSizing: "border-box",
         }}
       >
-        {/* Form Section  */}
+        {/* Form Section */}
         <Grid
           size={{ xs: 12, md: 6 }}
           sx={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            height: "100%", 
+            height: "100%",
             maxHeight: "100%",
-            p: { xs: 1, md: 3 },
+            p: { xs: 1, md: '12px' },
           }}
         >
+          
           <Box
             sx={{
               width: "100%",
               maxWidth: 500,
               mx: 'auto',
-              p: { xs: 2, md: 5 },
+              px: { xs: 1, md: 3 },
+              maxHeight: "100%",
+              overflowY: "auto",
+              scrollBehavior: "smooth",
+              '&::-webkit-scrollbar': {
+                width: '4px',
+                maxHeight: '20px',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                backgroundColor: 'rgba(0,0,0,0.1)',
+                borderRadius: '4px',
+              }
             }}
           >
             <Outlet />
           </Box>
         </Grid>
 
-        {/* Image Section (الجانب الأيمن) */}
+        {/* Image Section */}
         <Grid
           size={{ xs: 0, md: 6 }}
           sx={{
             display: { xs: "none", md: "block" },
-            height: "100%", 
+            height: "100%",
             boxSizing: "border-box"
           }}
         >
@@ -79,7 +90,7 @@ export default function AuthLayout() {
             sx={{
               position: "relative",
               width: "100%",
-              height: "100%", 
+              height: "100%",
               borderRadius: 5,
               overflow: "hidden",
               boxShadow: "0 10px 30px rgba(0,0,0,0.02)"
@@ -113,8 +124,7 @@ export default function AuthLayout() {
               </Typography>
             </Box>
 
-            
-            <Box 
+            <Box
               sx={{
                 position: "absolute",
                 bottom: 0,

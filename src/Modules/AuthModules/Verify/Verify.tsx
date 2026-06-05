@@ -6,7 +6,28 @@ import {
   TextField,
   Typography
 } from '@mui/material';
+
+import  {verifySchema,type VerifySchema } from '../YupValidation/YupValidation';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+
 export default function Verify() {
+
+  const {
+      register,
+      handleSubmit,
+      formState: { errors },
+      reset,
+    } = useForm<VerifySchema>({
+      resolver: yupResolver(verifySchema),
+    });
+  
+    const onSubmit: SubmitHandler<VerifySchema> = (data,e) => {
+      e?.preventDefault();
+      console.log("Valid Form Data:", data);
+      reset();
+  
+    };
     
     const textFieldStyle = {
   
@@ -35,14 +56,13 @@ export default function Verify() {
   return <>
   <Box 
       component="form" 
-      // onSubmit={} 
-      sx={{ width:'100%',  mx: 'auto', fontFamily: 'sans-serif' }}
+      onSubmit={handleSubmit(onSubmit)} 
+      sx={{ width: '100%', mx: 'auto', fontFamily: 'sans-serif' }}
     >
       {/* Header Section */}
       <Typography variant="h4" gutterBottom sx={{ color: 'rgba(21, 44, 91, 1)', fontWeight: 'bold' }}>
         Verify Your Account
       </Typography>
-      
       <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
         If you already have an account register
       </Typography>
@@ -52,9 +72,10 @@ export default function Verify() {
 
       {/* parent Grid  */}
       <Grid container spacing={2}>
+        
         {/* Email Address */}
         <Grid size={12}>
-          <Typography variant="subtitle2"  sx={{color:"rgba(21, 44, 91, 1)", mb: 1, fontWeight: 500 }}>
+          <Typography variant="subtitle2" sx={{ color: "rgba(21, 44, 91, 1)", mb: 1, fontWeight: 500 }}>
             Email Address
           </Typography>
           <TextField
@@ -62,19 +83,28 @@ export default function Verify() {
             type="email"
             placeholder="Please type here ..."
             sx={textFieldStyle}
+            {...register('email')}
+            error={!!errors.email}
+            helperText={errors.email?.message}
           />
         </Grid>
-       {/* OTP Code */}
+
+        {/* OTP Code */}
         <Grid size={12}>
-          <Typography variant="subtitle2"  sx={{color:"rgba(21, 44, 91, 1)", mb: 1, fontWeight: 500 }}>
+          <Typography variant="subtitle2" sx={{ color: "rgba(21, 44, 91, 1)", mb: 1, fontWeight: 500 }}>
             OTP Code
           </Typography>
           <TextField
             fullWidth
             placeholder="Please type your OTP here ..."
             sx={textFieldStyle}
+            {...register('code')}
+            error={!!errors.code}
+            helperText={errors.code?.message}
           />
         </Grid>
+
+        {/* Action Button */}
         <Grid size={12} sx={{ mt: 1 }}>
           <Button
             disableElevation
