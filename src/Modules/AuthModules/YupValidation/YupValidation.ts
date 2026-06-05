@@ -64,6 +64,17 @@ export const resetSchema = yup.object({
     .oneOf([yup.ref('password')], 'Passwords must match'),
 }).required();
 
+export const loginSchema = yup.object({
+  email: yup
+    .string()
+    .required('Email address is required')
+    .email('Invalid email format'),
+  password: yup
+    .string()
+    .required('Password is required')
+    .min(6, 'Password must be at least 6 characters'),
+});
+export type LoginFormData = yup.InferType<typeof loginSchema>;
 
 export type RegisterFormData = yup.InferType<typeof registerSchema>;
 export type VerifySchema = yup.InferType<typeof verifySchema>;

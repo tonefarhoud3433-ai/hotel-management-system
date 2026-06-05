@@ -9,6 +9,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { loginSchema } from "../YupValidation/YupValidation";
 interface IFormInput {
   email: string;
   password: string;
@@ -17,7 +19,7 @@ interface IFormInput {
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const {register, handleSubmit, formState: {errors}} = useForm<IFormInput>();
+  const {register, handleSubmit, formState: {errors}} = useForm<IFormInput>({resolver: yupResolver(loginSchema)});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
