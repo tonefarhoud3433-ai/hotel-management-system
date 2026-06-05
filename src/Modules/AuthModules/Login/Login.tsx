@@ -12,12 +12,18 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
+import {  ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { darkTheme, lightTheme } from "../../../Constants/Themes";
+import ToggleButton from "@mui/material/ToggleButton";
 interface IFormInput {
   email: string;
   password: string;
 }
 
+
 export default function Login() {
+  const [darkMode,setDarkMode] = useState(false)
   const [showPassword, setShowPassword] = useState(false);
   const {register, handleSubmit, formState: {errors}} = useForm<IFormInput>();
   const [loading, setLoading] = useState(false);
@@ -40,6 +46,9 @@ export default function Login() {
   };
 
 return (
+  <ThemeProvider theme={darkMode? darkTheme : lightTheme} >
+    <CssBaseline/>
+<ToggleButton href="#" value='' onClick={()=>setDarkMode(p=>!p)}>dark</ToggleButton>
   <form onSubmit={handleSubmit(onSubmit)}>
     <Box sx={{mb:3}}>
     <Typography variant="h4" gutterBottom>
@@ -59,7 +68,7 @@ return (
       {errors?.email?.message}
       
     </Typography>
-    </Box>
+    </Box>   
         <Box sx={{mb:3}}>
 
     <FormControl {...register('password')} fullWidth variant="outlined" sx={{mb:3}} color={errors.password ? "error" : "success"}>
@@ -87,7 +96,7 @@ return (
           />
         </FormControl>
          <Typography variant="caption" color="error" >
-      {errors?.email?.message}
+      {errors?.password?.message}
       
     </Typography>
     </Box>
@@ -95,13 +104,14 @@ return (
           fullWidth
            type="submit"
            color="primary"
-          // onClick={handleClick}
-          loading={loading}
-          loadingPosition="end"
+           // onClick={handleClick}
+           loading={loading}
+           loadingPosition="end"
           variant="contained"
         >
           Login
         </Button>
   </form>
+           </ThemeProvider>
 )
 }
