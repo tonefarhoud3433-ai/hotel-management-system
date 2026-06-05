@@ -8,7 +8,7 @@ export const registerSchema = yup.object({
   phone: yup
     .string()
     .required('Phone number is required')
-    .matches(/^[0-9]+$/, 'Must be only digits'), 
+    .matches(/^[0-9]+$/, 'Must be only digits'),
   country: yup
     .string()
     .required('Country is required'),

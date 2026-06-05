@@ -21,6 +21,16 @@ export default function AuthLayout() {
       return bgImg3;
   };
 
+  const getTitle = () => {
+    if (pathname === "/register") return "Sign up to Roamhome";
+    if (pathname === "/login") return "Sign in to Roamhome";
+    if (pathname === "/") return "Sign in to Roamhome";
+    if (pathname === "/forget-password") return "Forgot password";
+    if (pathname === "/reset-password") return "Reset Password";
+    if (pathname === "/verify") return "Verify your email";
+    if (pathname === "/change-password") return "Change your password";
+  };
+
   return (
     <Box
       sx={{
@@ -135,7 +145,7 @@ export default function AuthLayout() {
               }}
             >
               <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
-                Sign up to Roamhome
+                {getTitle()}
               </Typography>
               <Typography variant="body1" sx={{ opacity: 0.9 }}>
                 Homes as unique as you.
