@@ -2,9 +2,6 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff  from "@mui/icons-material/VisibilityOff";
 import IconButton from "@mui/material/IconButton";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
 import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { useForm } from "react-hook-form";
@@ -12,10 +9,6 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
-import {  ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import { darkTheme, lightTheme } from "../../../Constants/Themes";
-import ToggleButton from "@mui/material/ToggleButton";
 interface IFormInput {
   email: string;
   password: string;
@@ -23,19 +16,33 @@ interface IFormInput {
 
 
 export default function Login() {
-  const [darkMode,setDarkMode] = useState(false)
   const [showPassword, setShowPassword] = useState(false);
   const {register, handleSubmit, formState: {errors}} = useForm<IFormInput>();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
-
-  const handleMouseUpPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+const textFieldStyle = {
+    '& .css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input': {
+      padding: '8px 14px'
+    },
+    '& .css-1dune0f-MuiInputBase-input-MuiOutlinedInput-input': {
+      padding: '8px 14px'
+    },
+    '& .MuiOutlinedInput-root': {
+      backgroundColor: 'rgba(245, 246, 248, 1)',
+      borderRadius: '6px',
+      '& fieldset': { 
+        borderColor: '#e2e8f0',
+        borderWidth: '0px',
+      },
+      '&:hover fieldset': {
+        borderColor: '#cbd5e1',
+      },
+      '&.Mui-focused fieldset': { 
+        borderColor: 'rgba(21, 44, 91, 1)', 
+        borderWidth: '2px' 
+      }
+    }
   };
   const onSubmit = (data: IFormInput) => {
     setLoading(true);
@@ -46,9 +53,7 @@ export default function Login() {
   };
 
 return (
-  <ThemeProvider theme={darkMode? darkTheme : lightTheme} >
-    <CssBaseline/>
-<ToggleButton href="#" value='' onClick={()=>setDarkMode(p=>!p)}>dark</ToggleButton>
+ 
   <form onSubmit={handleSubmit(onSubmit)}>
     <Box sx={{mb:3}}>
     <Typography variant="h4" gutterBottom>
@@ -63,55 +68,68 @@ return (
     </Typography>
     </Box>
     <Box sx={{mb:3}}>
-    <TextField  {...register('email')} fullWidth  id="outlined-basic" label="Outlined" variant="outlined" color={errors.email ? "error" : "success"}/>
-    <Typography variant="caption" color="error" >
-      {errors?.email?.message}
-      
-    </Typography>
+   <Typography variant="subtitle2" sx={{ color: "rgba(21, 44, 91, 1)", mb: 1, fontWeight: 500 }}>
+            Email Address
+          </Typography>
+          <TextField
+            fullWidth
+            type="email"
+            placeholder="Please type here ..."
+            sx={textFieldStyle}
+            {...register('email')}
+            error={!!errors.email}
+            helperText={errors.email?.message}
+          />
     </Box>   
         <Box sx={{mb:3}}>
 
-    <FormControl {...register('password')} fullWidth variant="outlined" sx={{mb:3}} color={errors.password ? "error" : "success"}>
-          <InputLabel htmlFor="login-Password">Password</InputLabel>
-          <OutlinedInput
-          
-            id="login-Password"
+    <Typography variant="subtitle2" sx={{ color: "rgba(21, 44, 91, 1)", mb: 1, fontWeight: 500 }}>
+            Password
+          </Typography>
+          <TextField
+            fullWidth
             type={showPassword ? 'text' : 'password'}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label={
-                    showPassword ? 'hide the password' : 'display the password'
-                  }
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  onMouseUp={handleMouseUpPassword}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment  >
-            }
-            label="Password"
+            placeholder="Please type here ..."
+            sx={textFieldStyle}
+            {...register('password')}
+            error={!!errors.password}
+            helperText={errors.password?.message}
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end" sx={{ mr: 2 }}>
+                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                      {showPassword ? <VisibilityOff sx={{ color: '#a0aec0' }} /> : <Visibility sx={{ color: '#a0aec0' }} />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }
+            }}
           />
-        </FormControl>
-         <Typography variant="caption" color="error" >
-      {errors?.password?.message}
-      
-    </Typography>
     </Box>
         <Button
-          fullWidth
-           type="submit"
-           color="primary"
-           // onClick={handleClick}
-           loading={loading}
-           loadingPosition="end"
-          variant="contained"
-        >
-          Login
-        </Button>
+            disableElevation
+            loading={loading}
+            type="submit"
+            fullWidth
+            variant="contained"
+            size="large"
+            sx={{ 
+              backgroundColor: '#3b5bdb', 
+              py: 1, 
+              textTransform: 'none', 
+              fontSize: '17px',
+              fontWeight: '500',
+              borderRadius: '8px',
+              boxShadow: '0 4px 12px rgba(59, 91, 219, 0.2)',
+              '&:hover': { 
+                backgroundColor: '#2d46b3',
+                boxShadow: '0 6px 16px rgba(59, 91, 219, 0.3)'
+              }
+            }}
+          >
+            login
+          </Button>
   </form>
-           </ThemeProvider>
 )
 }

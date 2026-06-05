@@ -33,7 +33,7 @@ export default function Register() {
     reset();
   };
 
-  const textFieldStyle = {
+const textFieldStyle = {
     '& .css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input': {
       padding: '8px 14px'
     },
