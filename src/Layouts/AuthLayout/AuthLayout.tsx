@@ -1,10 +1,26 @@
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import bgImg1 from "../../assets/Images/Auth/authbg1.png";
+import bgImg2 from "../../assets/Images/Auth/authbg2.png";
+import bgImg3 from "../../assets/Images/Auth/authbg3.png";
 
 export default function AuthLayout() {
+  const { pathname } = useLocation();
+
+  const getBgClass = () => {
+    if (pathname === "/register" || pathname === "/verify") return bgImg2;
+    if (pathname === "/forget-password" || pathname === "/reset-password")
+      return bgImg1;
+    if (
+      pathname === "/login" ||
+      pathname === "/" ||
+      pathname === "/change-password"
+    )
+      return bgImg3;
+  };
+
   return (
     <Box
       sx={{
@@ -13,7 +29,7 @@ export default function AuthLayout() {
         flexDirection: "column",
         p: { xs: 2, md: 3 },
         boxSizing: "border-box",
-        backgroundColor: "#ffffff", 
+        backgroundColor: "#ffffff",
       }}
     >
       {/* logo */}
@@ -23,10 +39,13 @@ export default function AuthLayout() {
           sx={{
             fontWeight: 700,
             color: "#3b5bdb",
-            fontFamily: "sans-serif"
+            fontFamily: "sans-serif",
           }}
         >
-          Stay<Box component="span" sx={{ color: "rgba(21, 44, 91, 1)" }}>cation.</Box>
+          Stay
+          <Box component="span" sx={{ color: "rgba(21, 44, 91, 1)" }}>
+            cation.
+          </Box>
         </Typography>
       </Box>
 
@@ -50,27 +69,26 @@ export default function AuthLayout() {
             justifyContent: "center",
             height: "100%",
             maxHeight: "100%",
-            p: { xs: 1, md: '12px' },
+            p: { xs: 1, md: "12px" },
           }}
         >
-          
           <Box
             sx={{
               width: "100%",
               maxWidth: 500,
-              mx: 'auto',
+              mx: "auto",
               px: { xs: 1, md: 3 },
               maxHeight: "100%",
               overflowY: "auto",
               scrollBehavior: "smooth",
-              '&::-webkit-scrollbar': {
-                width: '4px',
-                maxHeight: '20px',
+              "&::-webkit-scrollbar": {
+                width: "4px",
+                maxHeight: "20px",
               },
-              '&::-webkit-scrollbar-thumb': {
-                backgroundColor: 'rgba(0,0,0,0.1)',
-                borderRadius: '4px',
-              }
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "rgba(0,0,0,0.1)",
+                borderRadius: "4px",
+              },
             }}
           >
             <Outlet />
@@ -83,7 +101,7 @@ export default function AuthLayout() {
           sx={{
             display: { xs: "none", md: "block" },
             height: "100%",
-            boxSizing: "border-box"
+            boxSizing: "border-box",
           }}
         >
           <Box
@@ -93,12 +111,12 @@ export default function AuthLayout() {
               height: "100%",
               borderRadius: 5,
               overflow: "hidden",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.02)"
+              boxShadow: "0 10px 30px rgba(0,0,0,0.02)",
             }}
           >
             <Box
               component="img"
-              src={bgImg1}
+              src={getBgClass()}
               alt="Background"
               sx={{
                 width: "100%",
@@ -113,7 +131,7 @@ export default function AuthLayout() {
                 bottom: 40,
                 left: 40,
                 color: "#fff",
-                zIndex: 2
+                zIndex: 2,
               }}
             >
               <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
@@ -131,13 +149,13 @@ export default function AuthLayout() {
                 left: 0,
                 right: 0,
                 height: "40%",
-                background: "linear-gradient(to top, rgba(0,0,0,0.4), transparent)",
-                zIndex: 1
+                background:
+                  "linear-gradient(to top, rgba(0,0,0,0.4), transparent)",
+                zIndex: 1,
               }}
             />
           </Box>
         </Grid>
-
       </Grid>
     </Box>
   );
