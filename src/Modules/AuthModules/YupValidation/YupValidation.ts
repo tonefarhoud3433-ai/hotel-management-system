@@ -64,6 +64,20 @@ export const resetSchema = yup.object({
     .oneOf([yup.ref('password')], 'Passwords must match'),
 }).required();
 
+export const changePasswordSchema = yup.object({
+  currentPassword: yup
+    .string()
+    .required('Current password is required'),
+  newPassword: yup
+    .string()
+    .required('New password is required')
+    .min(6, 'New password must be at least 6 characters'),
+  confirmNewPassword: yup
+    .string()
+    .required('Please confirm your new password')
+    .oneOf([yup.ref('newPassword')], 'Passwords must match'),
+});
+
 export const loginSchema = yup.object({
   email: yup
     .string()
