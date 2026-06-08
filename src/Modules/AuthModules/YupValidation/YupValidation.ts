@@ -1,11 +1,18 @@
 import * as yup from 'yup';
+interface RegisterData {
+  
+  
+  
+  profileImage: File | null;
+  
+}
 
 export const registerSchema = yup.object({
-  username: yup
+  userName: yup
     .string()
     .required('Username is required')
     .min(3, 'Username must be at least 3 characters'),
-  phone: yup
+  phoneNumber: yup
     .string()
     .required('Phone number is required')
     .matches(/^[0-9]+$/, 'Must be only digits'),
@@ -24,6 +31,14 @@ export const registerSchema = yup.object({
     .string()
     .required('Please confirm your password')
     .oneOf([yup.ref('password')], 'Passwords must match'),
+  profileImage: yup
+    .mixed<File>()
+    .required('Profile image is required')
+    .test('fileRequired', 'Profile image is required', (value) => {
+    // التحقق من أن المستخدم اختار ملفاً بالفعل ولم يضغط Cancel
+    if (!value || (value instanceof FileList && value.length === 0)) return false;
+    return true;
+  })
 }).required();
 
 export const verifySchema = yup.object({

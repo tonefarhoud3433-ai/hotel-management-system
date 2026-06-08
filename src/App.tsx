@@ -8,6 +8,7 @@ import Register from "./Modules/AuthModules/Register/Register";
 import ResetPassword from "./Modules/AuthModules/ResetPassword/ResetPassword";
 import Verify from "./Modules/AuthModules/Verify/Verify";
 import NotFound from "./Modules/Shared/NotFound/NotFound";
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   const routes = createBrowserRouter([
@@ -28,6 +29,11 @@ function App() {
   ]);
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        theme="colored"
+      />
       <RouterProvider router={routes}></RouterProvider>
     </>
   );
