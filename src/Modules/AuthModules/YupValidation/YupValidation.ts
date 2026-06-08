@@ -64,7 +64,7 @@ export const resetSchema = yup.object({
     .string()
     .required('Email address is required')
     .email('Invalid email format'),
-  code: yup
+  seed: yup
     .string()
     .required('OTP is required')
     .length(4, 'OTP must be 4 characters'),
