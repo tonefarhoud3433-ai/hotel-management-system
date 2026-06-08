@@ -1,10 +1,10 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-//Testtttt Committtttttttttttttttttttttttttttt 
+import { CheckCircle, Visibility, VisibilityOff } from "@mui/icons-material";
 
 import {
   Box,
   Button,
+  CircularProgress,
   Grid,
   IconButton,
   InputAdornment,
@@ -15,25 +15,50 @@ import {
 import { useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { type ResetSchema, resetSchema } from "../YupValidation/YupValidation";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<ResetSchema>({
     resolver: yupResolver(resetSchema),
   });
 
-  const onSubmit: SubmitHandler<ResetSchema> = (data, e) => {
+  const onSubmit: SubmitHandler<ResetSchema> = async (data, e) => {
     e?.preventDefault();
-    console.log("Valid Form Data:", data);
-    reset();
+    setLoading(true);
+    try {
+      let response = await axios.post(
+        "https://upskilling-egypt.com:3000/api/v0/portal/users/reset-password",
+        data,
+      );
+      console.log(response?.data?.message);
+      toast.success(
+        response?.data?.message || "Password reset link sent successfully",
+      );
+      reset();
+
+      navigate("/login");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || " Something went wrong!!");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const password = watch("password");
+  const confirmPassword = watch("confirmPassword");
 
   const textFieldStyle = {
     "& .css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input": {
@@ -123,9 +148,9 @@ export default function ResetPassword() {
               fullWidth
               placeholder="Please type your OTP here ..."
               sx={textFieldStyle}
-              {...register("code")}
-              error={!!errors.code}
-              helperText={errors.code?.message}
+              {...register("seed")}
+              error={!!errors.seed}
+              helperText={errors.seed?.message}
             />
           </Grid>
           {/* Password */}
@@ -185,6 +210,9 @@ export default function ResetPassword() {
                 input: {
                   endAdornment: (
                     <InputAdornment position="end" sx={{ mr: 2 }}>
+                      {!!confirmPassword && password === confirmPassword && (
+                        <CheckCircle sx={{ color: "green" }} />
+                      )}
                       <IconButton
                         onClick={() =>
                           setShowConfirmPassword(!showConfirmPassword)
@@ -209,6 +237,7 @@ export default function ResetPassword() {
             <Button
               disableElevation
               type="submit"
+              disabled={loading}
               fullWidth
               variant="contained"
               size="large"
@@ -226,7 +255,11 @@ export default function ResetPassword() {
                 },
               }}
             >
-              Reset
+              {loading ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : (
+                "Reset"
+              )}
             </Button>
           </Grid>
         </Grid>

@@ -36,7 +36,7 @@ export const apiRegister = (data: FormData) => {
 };
 
 export const apiForgetPassword = (data: ForgetPasswordData) => {
-  return axiosClient.post("", data);
+  return axiosClient.post("/api/v0/portal/users/forgot-password", data);
 };
 
 export const apiReset = (data: ResetPasswordData) => {

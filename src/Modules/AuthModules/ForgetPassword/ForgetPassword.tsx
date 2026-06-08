@@ -1,4 +1,12 @@
-import { Box, Button, Grid, Link, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 import {
   forgetSchema,
@@ -6,8 +14,14 @@ import {
 } from "../YupValidation/YupValidation";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 
 export default function ForgetPassword() {
+  const [loading, setLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -16,11 +30,29 @@ export default function ForgetPassword() {
   } = useForm<ForgetSchema>({
     resolver: yupResolver(forgetSchema),
   });
+  const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<ForgetSchema> = (data, e) => {
+  const onSubmit: SubmitHandler<ForgetSchema> = async (data, e) => {
     e?.preventDefault();
-    console.log("Valid Form Data:", data);
-    reset();
+    setLoading(true);
+
+    try {
+      let response = await axios.post(
+        "https://upskilling-egypt.com:3000/api/v0/portal/users/forgot-password",
+        data,
+      );
+      console.log(response?.data?.message);
+      toast.success(
+        response?.data?.message || "Password reset link sent successfully",
+      );
+      reset();
+
+      navigate("/reset-password");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || " Something went wrong!!");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const textFieldStyle = {
@@ -104,6 +136,7 @@ export default function ForgetPassword() {
               fullWidth
               variant="contained"
               size="large"
+              disabled={loading}
               sx={{
                 backgroundColor: "#3b5bdb",
                 py: 1,
@@ -118,7 +151,11 @@ export default function ForgetPassword() {
                 },
               }}
             >
-              Send mail
+              {loading ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : (
+                "Send mail"
+              )}
             </Button>
           </Grid>
         </Grid>
