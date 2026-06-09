@@ -2,7 +2,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff  from "@mui/icons-material/VisibilityOff";
 import IconButton from "@mui/material/IconButton";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { useForm } from "react-hook-form";
 import Button from "@mui/material/Button";
@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../YupValidation/YupValidation";
 import { apiLogin } from "../../../API/modules/Auth";
+import { AuthContext } from "../../../Contexts/AuthContext";
 interface IFormInput {
   email: string;
   password: string;
@@ -20,6 +21,7 @@ interface IFormInput {
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const {saveUserData} = useContext(AuthContext)!;
   const {register, handleSubmit, formState: {errors}} = useForm<IFormInput>({resolver: yupResolver(loginSchema)});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -52,6 +54,7 @@ const textFieldStyle = {
     try{
       const response = await apiLogin(data);
       localStorage.setItem("token", response?.data?.data?.token);
+      saveUserData();
       navigate("/dashboard");
     } catch (error) {
       console.error("Login error:", error);
