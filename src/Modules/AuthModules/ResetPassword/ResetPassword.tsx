@@ -8,7 +8,6 @@ import {
   Grid,
   IconButton,
   InputAdornment,
-  Link,
   TextField,
   Typography,
 } from "@mui/material";
@@ -17,7 +16,7 @@ import { type SubmitHandler, useForm } from "react-hook-form";
 import { type ResetSchema, resetSchema } from "../YupValidation/YupValidation";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,7 +38,7 @@ export default function ResetPassword() {
     e?.preventDefault();
     setLoading(true);
     try {
-      let response = await axios.post(
+      const response = await axios.post(
         "https://upskilling-egypt.com:3000/api/v0/portal/users/reset-password",
         data,
       );
@@ -107,9 +106,8 @@ export default function ResetPassword() {
         <Typography variant="body1" sx={{ mb: 2 }}>
           You can{" "}
           <Link
-            href="/login"
-            underline="none"
-            sx={{ color: "rgba(235, 81, 72, 1)", fontWeight: "bold" }}
+          
+            to="/login"
           >
             Login here !
           </Link>

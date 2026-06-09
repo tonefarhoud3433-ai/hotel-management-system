@@ -3,11 +3,10 @@ import {
   Button,
   CircularProgress,
   Grid,
-  Link,
   TextField,
   Typography,
 } from "@mui/material";
-
+import {Link} from "react-router-dom";
 import {
   forgetSchema,
   type ForgetSchema,
@@ -99,9 +98,7 @@ export default function ForgetPassword() {
         <Typography variant="body1" sx={{ mb: 4 }}>
           You can{" "}
           <Link
-            href="/login"
-            underline="none"
-            sx={{ color: "rgba(235, 81, 72, 1)", fontWeight: "bold" }}
+          to='/login'
           >
             Login here !
           </Link>

@@ -7,7 +7,6 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
-import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
@@ -20,7 +19,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { CircularProgress } from '@mui/material';
 import { useRef, useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { apiRegister } from '../../../API/modules/Auth';
 import { type RegisterFormData, registerSchema } from '../YupValidation/YupValidation';
 import { toast } from 'react-toastify';
@@ -64,7 +63,6 @@ export default function Register() {
 
   const onSubmit: SubmitHandler<RegisterFormData> = async (data, e) => {
     e?.preventDefault();
-    // console.log("Valid Form Data:", data);
     setLoading(true);
     
     const formData = new FormData();
@@ -82,7 +80,7 @@ export default function Register() {
     }
 
     try {
-      let response = await apiRegister(formData);
+      const response = await apiRegister(formData);
       console.log(response?.data?.message);
       toast.success(response?.data?.message || "registration is successfully")
       setPreviewImage(undefined);
@@ -148,7 +146,7 @@ export default function Register() {
         If you already have an account register
       </Typography>
       <Typography variant="body1" sx={{ mb: 2 }}>
-        You can <Link href="/login" underline="none" sx={{ color: 'rgba(235, 81, 72, 1)', fontWeight: 'bold' }}>Login here !</Link>
+        You can <Link to="/login">Login here !</Link>
       </Typography>
       
 

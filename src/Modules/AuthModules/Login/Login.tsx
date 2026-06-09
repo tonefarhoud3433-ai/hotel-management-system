@@ -11,6 +11,7 @@ import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../YupValidation/YupValidation";
+import { apiLogin } from "../../../API/modules/Auth";
 interface IFormInput {
   email: string;
   password: string;
@@ -46,12 +47,17 @@ const textFieldStyle = {
       }
     }
   };
-  const onSubmit = (data: IFormInput) => {
+  const onSubmit = async (data: IFormInput) => {
     setLoading(true);
-    console.log(data);
-    setTimeout(() => {
+    try{
+      const response = await apiLogin(data);
+      localStorage.setItem("token", response?.data?.data?.token);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login error:", error);
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
 
 return (
