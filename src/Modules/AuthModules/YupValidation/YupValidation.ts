@@ -1,11 +1,5 @@
 import * as yup from 'yup';
-interface RegisterData {
-  
-  
-  
-  profileImage: File | null;
-  
-}
+
 
 export const registerSchema = yup.object({
   userName: yup
@@ -80,7 +74,7 @@ export const resetSchema = yup.object({
 }).required();
 
 export const changePasswordSchema = yup.object({
-  currentPassword: yup
+  oldPassword: yup
     .string()
     .required('Current password is required'),
   newPassword: yup

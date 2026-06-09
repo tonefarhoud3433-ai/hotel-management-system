@@ -5,15 +5,12 @@ import { useState } from "react";
 import { changePasswordSchema } from "../YupValidation/YupValidation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup.js";
-interface IFormInput {
-  currentPassword: string;
-  newPassword: string;
-  confirmNewPassword: string;
-}
+import { apichangePassword, type ChangePasswordData } from "../../../API/modules/Auth";
+
 
 export default function ChangePassword() {
   const [showPassword, setShowPassword] = useState(false);
-  const {register, handleSubmit, formState: {errors}} = useForm<IFormInput>({resolver: yupResolver(changePasswordSchema)});
+  const {register, handleSubmit, formState: {errors}} = useForm<ChangePasswordData>({resolver: yupResolver(changePasswordSchema)});
   const [loading, setLoading] = useState(false);
   const textFieldStyle = {
     '& .css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input': {
@@ -38,12 +35,16 @@ export default function ChangePassword() {
       }
     }
   };
-  const onSubmit = (data:IFormInput) => {
+  const onSubmit = async (data:ChangePasswordData) => {
     setLoading(true);
-    console.log(data);  
-    setTimeout(() => {
+    try{
+      const response = await apichangePassword(data);
+      console.log(response?.data);
+    } catch (error) {
+      console.error("Change password error:", error);
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
   return <form onSubmit={handleSubmit(onSubmit)}>
       <Box sx={{mb:3}}>
@@ -56,9 +57,9 @@ export default function ChangePassword() {
             type={showPassword ? 'text' : 'password'}
             placeholder="Please type here ..."
             sx={textFieldStyle}
-            {...register('currentPassword')}
-            error={!!errors.currentPassword}
-            helperText={errors.currentPassword?.message}
+            {...register('oldPassword')}
+            error={!!errors.oldPassword}
+            helperText={errors.oldPassword?.message}
             slotProps={{
               input: {
                 endAdornment: (
