@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 import "./App.css";
 import AuthLayout from "./Layouts/AuthLayout/AuthLayout";
 import MasterLayout from "./Layouts/MasterLayout/MasterLayout";
@@ -16,8 +16,6 @@ import Home from "./Modules/MasterModules/Home/Home";
 import Rooms from "./Modules/MasterModules/Rooms/Rooms";
 import Users from "./Modules/MasterModules/Users/Users";
 import NotFound from "./Modules/Shared/NotFound/NotFound";
-import { ToastContainer } from 'react-toastify';
-import MasterLayout from "./Layouts/MasterLayout/MasterLayout";
 
 function App() {
   const routes = createBrowserRouter([
@@ -35,9 +33,9 @@ function App() {
         { path: "verify", element: <Verify /> },
       ],
     },
-  {
+    {
       path: "/dashboard",
-      element: <MasterLayout/>,
+      element: <MasterLayout />,
       errorElement: <NotFound />,
       children: [
         { index: true, element: <Home /> },
@@ -46,17 +44,13 @@ function App() {
         { path: "facilities", element: <Facilities /> },
         { path: "ads", element: <ADS /> },
         { path: "booking", element: <Booking /> },
-        { path: "users", element: <Users /> }
+        { path: "users", element: <Users /> },
       ],
-    }
+    },
   ]);
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        theme="colored"
-      />
+      <ToastContainer position="top-right" autoClose={5000} theme="colored" />
       <RouterProvider router={routes}></RouterProvider>
     </>
   );

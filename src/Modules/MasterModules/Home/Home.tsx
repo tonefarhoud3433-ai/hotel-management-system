@@ -1,30 +1,85 @@
-import { Box, Card, Container, Grid, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CircularProgress,
+  Container,
+  Grid,
+  Paper,
+  Typography,
+} from "@mui/material";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 import { PieChart } from "@mui/x-charts/PieChart";
-
-const cards = [
-  { title: "Rooms", value: 100 },
-  { title: "Facilities", value: 160 },
-  { title: "Ads", value: 20 },
-];
-
-const statusData = [
-  { id: 0, value: 50, color: "#5568E8", label: "pending" },
-  { id: 1, value: 25, color: "#FF2436", label: "progress" },
-  { id: 2, value: 15, color: "#9A58D1", label: "completed" },
-  { id: 3, value: 10, color: "#F8A83A", label: "rejected" },
-];
-
-const usersChart = [
-  { id: 0, value: 8, color: "#53C64D" },
-  { id: 1, value: 8, color: "#41B7F1" },
-  { id: 2, value: 8, color: "#53C64D" },
-  { id: 3, value: 8, color: "#41B7F1" },
-  { id: 4, value: 8, color: "#53C64D" },
-  { id: 5, value: 8, color: "#41B7F1" },
-];
+import { getAllFacilities } from "../../../API/modules/AdminData";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { getAllRooms } from "../../../API/modules/AdminRooms";
 
 export default function Home() {
+  const [facilitiesCount, setFacilitiesCount] = useState<number | null>(null);
+  const [loadingFaclities, setLoadingFaclities] = useState<boolean>(true);
+  const [roomsCount, setRoomsCount] = useState<number | null>(null);
+  const [loadingRooms, setLoadingRooms] = useState<boolean>(true);
+
+  const getFacilitiesCount = async () => {
+    try {
+      const response = await getAllFacilities();
+      setFacilitiesCount(response.data?.data?.totalCount);
+    } catch (error) {
+      toast.error((error as string) || "Failed To Fetch Facilities Count");
+    } finally {
+      setLoadingFaclities(false);
+    }
+  };
+  const getRoomsCount = async () => {
+    try {
+      const response = await getAllRooms();
+      setRoomsCount(response.data?.data?.totalCount);
+    } catch (error) {
+      toast.error((error as string) || "Failed To Fetch Facilities Count");
+    } finally {
+      setLoadingRooms(false);
+    }
+  };
+  const cards = [
+    {
+      title: "Rooms",
+      value: loadingRooms ? (
+        <CircularProgress size={20} sx={{ color: "#fff" }} />
+      ) : (
+        roomsCount
+      ),
+    },
+    {
+      title: "Facilities",
+      value: loadingFaclities ? (
+        <CircularProgress size={20} sx={{ color: "#fff" }} />
+      ) : (
+        facilitiesCount
+      ),
+    },
+    { title: "Ads", value: 20 },
+  ];
+
+  const statusData = [
+    { id: 0, value: 50, color: "#5568E8", label: "pending" },
+    { id: 1, value: 25, color: "#FF2436", label: "progress" },
+    { id: 2, value: 15, color: "#9A58D1", label: "completed" },
+    { id: 3, value: 10, color: "#F8A83A", label: "rejected" },
+  ];
+
+  const usersChart = [
+    { id: 0, value: 8, color: "#53C64D" },
+    { id: 1, value: 8, color: "#41B7F1" },
+    { id: 2, value: 8, color: "#53C64D" },
+    { id: 3, value: 8, color: "#41B7F1" },
+    { id: 4, value: 8, color: "#53C64D" },
+    { id: 5, value: 8, color: "#41B7F1" },
+  ];
+
+  useEffect(() => {
+    getFacilitiesCount();
+    getRoomsCount();
+  }, []);
   return (
     <Container maxWidth="xl">
       <Box sx={{ py: 6 }}>
