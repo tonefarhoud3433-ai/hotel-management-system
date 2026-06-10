@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { getAllRooms } from "../../../API/modules/AdminRooms";
 import { getAllAds } from "../../../API/modules/AdminAds";
+import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 
 export default function Home() {
   const [facilitiesCount, setFacilitiesCount] = useState<number | null>(null);
