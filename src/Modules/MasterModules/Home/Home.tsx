@@ -13,12 +13,15 @@ import { getAllFacilities } from "../../../API/modules/AdminData";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { getAllRooms } from "../../../API/modules/AdminRooms";
+import { getAllAds } from "../../../API/modules/AdminAds";
 
 export default function Home() {
   const [facilitiesCount, setFacilitiesCount] = useState<number | null>(null);
   const [loadingFaclities, setLoadingFaclities] = useState<boolean>(true);
   const [roomsCount, setRoomsCount] = useState<number | null>(null);
   const [loadingRooms, setLoadingRooms] = useState<boolean>(true);
+  const [adsCount, setAdsCount] = useState<number | null>(null);
+  const [loadingAds, setLoadingAds] = useState<boolean>(true);
 
   const getFacilitiesCount = async () => {
     try {
@@ -30,12 +33,22 @@ export default function Home() {
       setLoadingFaclities(false);
     }
   };
+  const getAdsCount = async () => {
+    try {
+      const response = await getAllAds();
+      setAdsCount(response.data?.data?.totalCount);
+    } catch (error) {
+      toast.error((error as string) || "Failed To Fetch Ads Count");
+    } finally {
+      setLoadingAds(false);
+    }
+  };
   const getRoomsCount = async () => {
     try {
       const response = await getAllRooms();
       setRoomsCount(response.data?.data?.totalCount);
     } catch (error) {
-      toast.error((error as string) || "Failed To Fetch Facilities Count");
+      toast.error((error as string) || "Failed To Fetch Rooms Count");
     } finally {
       setLoadingRooms(false);
     }
@@ -57,7 +70,14 @@ export default function Home() {
         facilitiesCount
       ),
     },
-    { title: "Ads", value: 20 },
+    {
+      title: "Ads",
+      value: loadingAds ? (
+        <CircularProgress size={20} sx={{ color: "#fff" }} />
+      ) : (
+        adsCount
+      ),
+    },
   ];
 
   const statusData = [
@@ -79,6 +99,7 @@ export default function Home() {
   useEffect(() => {
     getFacilitiesCount();
     getRoomsCount();
+    getAdsCount();
   }, []);
   return (
     <Container maxWidth="xl">
