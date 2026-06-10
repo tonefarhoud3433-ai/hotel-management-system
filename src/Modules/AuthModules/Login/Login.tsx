@@ -86,7 +86,7 @@ return (
         If you don’t have an account register
       </Typography>
       <Typography variant="body1" sx={{ mb: 2 }}>
-        You can    <Link className="customLink_register" to="/login">Register here !</Link>
+        You can    <Link className="customLink_register" to="/register">Register here !</Link>
       </Typography>
     </Box>
     <Box sx={{mb:3}}>

@@ -47,7 +47,7 @@ export default function ChangePassword() {
     setLoading(true);
     try {
       const response = await apichangePassword(data);
-      toast.success(response?.data?.message)
+      toast.success(response?.data?.message || " Change Password is Updated ")
       navegate('/login')
 
     } catch (error :any) {
