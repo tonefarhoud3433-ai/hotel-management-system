@@ -104,12 +104,13 @@ export default function ResetPassword() {
           If you already have an account register
         </Typography>
         <Typography variant="body1" sx={{ mb: 2 }}>
-          You can{" "}
+          You can 
           <Link
+          className="customLink"
           
             to="/login"
           >
-            Login here !
+             Login here !
           </Link>
         </Typography>
 

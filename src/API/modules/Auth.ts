@@ -18,7 +18,7 @@ export interface ResetPasswordData {
 export interface ChangePasswordData {
   oldPassword: string;
   newPassword: string;
-  confirmNewPassword: string;
+  confirmPassword: string;
 }
 
 export interface UpdateProfileData {
@@ -44,5 +44,5 @@ export const apiReset = (data: ResetPasswordData) => {
 };
 
 export const apichangePassword = (data: ChangePasswordData) => {
-  return axiosClient.put("/users/change-password", data);
+  return axiosClient.post("/users/change-password", data);
 };

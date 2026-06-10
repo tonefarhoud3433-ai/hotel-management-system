@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../YupValidation/YupValidation";
 import { apiLogin } from "../../../API/modules/Auth";
@@ -78,16 +78,16 @@ return (
  
   <form onSubmit={handleSubmit(onSubmit)}>
     <Box sx={{mb:3}}>
-    <Typography variant="h4" gutterBottom>
-      Sign in
-    </Typography>
-    <Typography variant="subtitle1" color="textSecondary">
-      If you don’t have an account register
-      You can   <Typography variant="body2" color="primary" sx={{cursor:"pointer"}} onClick={() => navigate('/register')}>
-
-      Register here !
+    <Typography variant="h4" gutterBottom sx={{ color: 'rgba(21, 44, 91, 1)', fontWeight: 'bold' }}>
+        Sign in
       </Typography>
-    </Typography>
+
+      <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
+        If you don’t have an account register
+      </Typography>
+      <Typography variant="body1" sx={{ mb: 2 }}>
+        You can    <Link className="customLink_register" to="/login">Register here !</Link>
+      </Typography>
     </Box>
     <Box sx={{mb:3}}>
    <Typography variant="subtitle2" sx={{ color: "rgba(21, 44, 91, 1)", mb: 1, fontWeight: 500 }}>

@@ -146,7 +146,7 @@ export default function Register() {
         If you already have an account register
       </Typography>
       <Typography variant="body1" sx={{ mb: 2 }}>
-        You can <Link to="/login">Login here !</Link>
+        You can <Link className='customLink' to="/login">Login here !</Link>
       </Typography>
       
 
