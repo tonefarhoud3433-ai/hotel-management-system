@@ -16,6 +16,8 @@ import Home from "./Modules/MasterModules/Home/Home";
 import Rooms from "./Modules/MasterModules/Rooms/Rooms";
 import Users from "./Modules/MasterModules/Users/Users";
 import NotFound from "./Modules/Shared/NotFound/NotFound";
+import { ToastContainer } from 'react-toastify';
+import MasterLayout from "./Layouts/MasterLayout/MasterLayout";
 
 function App() {
   const routes = createBrowserRouter([
@@ -32,7 +34,8 @@ function App() {
         { path: "reset-password", element: <ResetPassword /> },
         { path: "verify", element: <Verify /> },
       ],
-    },{
+    },
+  {
       path: "/dashboard",
       element: <MasterLayout/>,
       errorElement: <NotFound />,
