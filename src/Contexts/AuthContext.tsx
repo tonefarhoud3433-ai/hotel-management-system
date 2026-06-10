@@ -1,5 +1,7 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
-import { jwtDecode } from "jwt-decode";``
+import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
+
 export interface User {
   userName: string;
   email: string;
@@ -9,7 +11,7 @@ export interface User {
   country: string;
   role: string;
   profileImage?: string;
-  exp?: number;
+  exp: string;
 }
 interface AuthContextType {
   userData: User | null;
@@ -25,14 +27,19 @@ export default function AuthContextProvider({ children }: AuthContextProvProp) {
   const [userData, setUserData] = useState<User | null>(null);
 
   const saveUserData = () => {
-    const encoded = localStorage.getItem("userToken");
+    const encoded = localStorage.getItem("token");
     if (encoded) {
       const decoded = jwtDecode<User>(encoded);
-      setUserData(decoded);
+      if (+decoded.exp > Math.trunc(Date.now() / 1000)) {
+        setUserData(decoded);
+      } else {
+        // logOut();
+        toast.info("token expired! please login again");
+      }
     }
   };
   useEffect(() => {
-    if (localStorage.getItem("userToken")) {
+    if (localStorage.getItem("token")) {
       saveUserData();
     }
   }, []);
