@@ -72,7 +72,7 @@ export default function Register() {
     formData.append("phoneNumber", data.phoneNumber);
     formData.append("password", data.password);
     formData.append("confirmPassword", data.confirmPassword);
-    formData.append("role", "user");
+    formData.append("role", "admin");
 
     const profileFile = fileInputRef.current?.files?.[0];
     if (profileFile) {

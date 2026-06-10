@@ -3,7 +3,7 @@ import axios from "axios";
 export const API_BASE_URL = "https://upskilling-egypt.com:3000";
 
 const axiosClient = axios.create({
-  baseURL: `${API_BASE_URL}/api/v0/admin/users`,
+  baseURL: `${API_BASE_URL}/api/v0/admin`,
 });
 
 axiosClient.interceptors.request.use(

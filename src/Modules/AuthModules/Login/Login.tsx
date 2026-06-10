@@ -13,6 +13,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../YupValidation/YupValidation";
 import { apiLogin } from "../../../API/modules/Auth";
 import { AuthContext } from "../../../Contexts/AuthContext";
+import { toast } from "react-toastify";
 interface IFormInput {
   email: string;
   password: string;
@@ -50,18 +51,28 @@ const textFieldStyle = {
     }
   };
   const onSubmit = async (data: IFormInput) => {
-    setLoading(true);
-    try{
-      const response = await apiLogin(data);
-      localStorage.setItem("token", response?.data?.data?.token);
-      saveUserData();
+  setLoading(true);
+  try {
+    const response = await apiLogin(data);
+    const token = response?.data?.data?.token;
+
+    if (token) {
+      localStorage.setItem("token", token);
+
+      saveUserData(); 
+      
+      toast.success(response?.data?.message || "Login successful!");
       navigate("/dashboard");
-    } catch (error) {
-      console.error("Login error:", error);
-    } finally {
-      setLoading(false);
+    } else {
+      toast.error("Invalid token received from server.");
     }
-  };
+  } catch (error: any) {
+    console.error("Login error:", error);
+    toast.error(error?.response?.data?.message || "Login failed!");
+  } finally {
+    setLoading(false);
+  }
+};
 
 return (
  

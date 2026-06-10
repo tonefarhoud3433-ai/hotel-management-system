@@ -1,14 +1,21 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
 import "./App.css";
 import AuthLayout from "./Layouts/AuthLayout/AuthLayout";
+import MasterLayout from "./Layouts/MasterLayout/MasterLayout";
 import ChangePassword from "./Modules/AuthModules/ChangePassword/ChangePassword";
 import ForgetPassword from "./Modules/AuthModules/ForgetPassword/ForgetPassword";
 import Login from "./Modules/AuthModules/Login/Login";
 import Register from "./Modules/AuthModules/Register/Register";
 import ResetPassword from "./Modules/AuthModules/ResetPassword/ResetPassword";
 import Verify from "./Modules/AuthModules/Verify/Verify";
+import ADS from "./Modules/MasterModules/ADS/ADS";
+import Booking from "./Modules/MasterModules/Booking/Booking";
+import Facilities from "./Modules/MasterModules/Facilities/Facilities";
+import Home from "./Modules/MasterModules/Home/Home";
+import Rooms from "./Modules/MasterModules/Rooms/Rooms";
+import Users from "./Modules/MasterModules/Users/Users";
 import NotFound from "./Modules/Shared/NotFound/NotFound";
-import { ToastContainer } from 'react-toastify';
 
 function App() {
   const routes = createBrowserRouter([
@@ -25,7 +32,20 @@ function App() {
         { path: "reset-password", element: <ResetPassword /> },
         { path: "verify", element: <Verify /> },
       ],
-    },
+    },{
+      path: "/dashboard",
+      element: <MasterLayout/>,
+      errorElement: <NotFound />,
+      children: [
+        { index: true, element: <Home /> },
+        { path: "home", element: <Home /> },
+        { path: "rooms", element: <Rooms /> },
+        { path: "facilities", element: <Facilities /> },
+        { path: "ads", element: <ADS /> },
+        { path: "booking", element: <Booking /> },
+        { path: "users", element: <Users /> }
+      ],
+    }
   ]);
   return (
     <>
