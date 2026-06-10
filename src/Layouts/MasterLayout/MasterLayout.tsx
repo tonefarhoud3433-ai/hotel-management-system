@@ -63,12 +63,12 @@ export default function MasterLayout() {
                 Customers
               </MenuItem>
               <MenuItem
-                component={<Link to={"/facilities"} />}
+                component={<Link to={"facilities"} />}
                 icon={<NetworkCell />}
               >
                 Facilities
               </MenuItem>
-              <MenuItem component={<Link to={"/ads"} />} icon={<AdsClick />}>
+              <MenuItem component={<Link to={"ads"} />} icon={<AdsClick />}>
                 ADs
               </MenuItem>
             </Menu>
