@@ -72,7 +72,7 @@ export default function Register() {
     formData.append("phoneNumber", data.phoneNumber);
     formData.append("password", data.password);
     formData.append("confirmPassword", data.confirmPassword);
-    formData.append("role", "user");
+    formData.append("role", "admin");
 
     const profileFile = fileInputRef.current?.files?.[0];
     if (profileFile) {
@@ -146,7 +146,7 @@ export default function Register() {
         If you already have an account register
       </Typography>
       <Typography variant="body1" sx={{ mb: 2 }}>
-        You can <Link to="/login">Login here !</Link>
+        You can <Link className='customLink' to="/login">Login here !</Link>
       </Typography>
       
 

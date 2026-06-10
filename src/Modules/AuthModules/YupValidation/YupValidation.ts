@@ -81,7 +81,7 @@ export const changePasswordSchema = yup.object({
     .string()
     .required('New password is required')
     .min(6, 'New password must be at least 6 characters'),
-  confirmNewPassword: yup
+  confirmPassword: yup
     .string()
     .required('Please confirm your new password')
     .oneOf([yup.ref('newPassword')], 'Passwords must match'),
