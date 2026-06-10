@@ -9,6 +9,7 @@ import ResetPassword from "./Modules/AuthModules/ResetPassword/ResetPassword";
 import Verify from "./Modules/AuthModules/Verify/Verify";
 import NotFound from "./Modules/Shared/NotFound/NotFound";
 import { ToastContainer } from 'react-toastify';
+import MasterLayout from "./Layouts/MasterLayout/MasterLayout";
 
 function App() {
   const routes = createBrowserRouter([
@@ -26,6 +27,12 @@ function App() {
         { path: "verify", element: <Verify /> },
       ],
     },
+    {
+      path : '/dashboard',
+      element : <MasterLayout />,
+      errorElement : <NotFound />,
+      children:[]
+    }
   ]);
   return (
     <>
