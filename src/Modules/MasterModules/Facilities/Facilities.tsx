@@ -24,7 +24,7 @@ import FacilityViewModal, { type Facility } from "../../Shared/ViewModals/Facili
 const paginationModel = { page: 0, pageSize: 5 };
 
 export default function Facilities() {
-    const [openViewModal, setOpenViewModal] = React.useState(true);
+    const [openViewModal, setOpenViewModal] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
     const [facilityName, setFacilityName] = React.useState("");
     const [rowsData, setRowsData] = React.useState([]);
@@ -102,12 +102,12 @@ export default function Facilities() {
     );
 
     const columns: GridColDef[] = [
-        { field: "_id", headerName: "ID", width: 220, align: "center", headerAlign: "center", headerClassName: "custom-id-header" },
-        { field: "name", headerName: "Facility Name", width: 210, align: "center", headerAlign: "center", headerClassName: "custom-id-header" },
+        { field: "_id", headerName: "ID",  align: "center", headerAlign: "center", headerClassName: "custom-id-header" },
+        { field: "name", headerName: "Facility Name", align: "center", headerAlign: "center", headerClassName: "custom-id-header" },
         {
             field: "createdBy",
             headerName: "Created By",
-            width: 150,
+            
             align: "center",
             headerAlign: "center",
             headerClassName: "custom-id-header",
@@ -116,7 +116,6 @@ export default function Facilities() {
         {
             field: "createdAt",
             headerName: "Created At",
-            width: 220,
             align: "center",
             headerAlign: "center",
             headerClassName: "custom-id-header",
@@ -125,7 +124,6 @@ export default function Facilities() {
         {
             field: "actions",
             headerName: "Actions",
-            width: 350,
             align: "center",
             headerAlign: "center",
             headerClassName: "custom-id-header",
