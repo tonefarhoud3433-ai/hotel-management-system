@@ -1,14 +1,18 @@
 import { DataGrid } from "@mui/x-data-grid";
 import type { GridColDef } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
 import {
-  Box,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
+    Box,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    TextField,
+    Card,
+    CardContent,
+    Typography,
+    IconButton,
+    Divider
 } from "@mui/material";
 import * as React from 'react';
 import Button from '@mui/material/Button';
@@ -19,53 +23,59 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import EditDocumentIcon from '@mui/icons-material/EditDocument';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import FacilityViewModal, { type Facility } from "../../Shared/ViewModals/FacilityViewModal";
+
 
 const paginationModel = { page: 0, pageSize: 5 };
 
 export default function Facilities() {
-    const [openViewModal, setOpenViewModal] = React.useState(true);
     const [openModal, setOpenModal] = React.useState(false);
     const [facilityName, setFacilityName] = React.useState("");
     const [rowsData, setRowsData] = React.useState([]);
-    const [selectedFacility, setSelectedFacility] = React.useState<Facility | null >(null);
+    const [selectedFacility, setSelectedFacility] = React.useState<any>(null);
+    const [searchTerm, setSearchTerm] = React.useState("");
+    const [openViewModal, setOpenViewModal] = React.useState(true);
     const [viewFacility, setViewFacility] = React.useState<Facility | null>(null);
 
-  // Delete Modal
-  const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
-  const [selectedId, setSelectedId] = React.useState<number | null>(null);
+    // إدارة حالة الـ Menu (الأكشنز)
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [activeRow, setActiveRow] = React.useState<any>(null);
+    const openMenu = Boolean(anchorEl);
 
-  const fetchData = async () => {
-    try {
-      const response = await getAllFacilities();
-      setRowsData(response?.data?.data?.facilities || []);
-    } catch (error) {
-      console.log(error);
+    const fetchData = async () => {
+        try {
+            const response = await getAllFacilities();
+            setRowsData(response?.data?.data?.facilities || []);
+        } catch (error) {
+            console.log(error);
+        }
     }
-  };
 
-  const handleOpenDelete = (id: number) => {
-    setSelectedId(id);
-    setIsDeleteOpen(true);
-  };
+    const handleOpenAdd = () => {
+        setSelectedFacility(null);
+        setFacilityName("");
+        setOpenModal(true);
+    };
 
-  const handleCloseDelete = () => {
-    setIsDeleteOpen(false);
-    setSelectedId(null);
-  };
+    const handleOpenEdit = (row: any) => {
+        setSelectedFacility(row);
+        setFacilityName(row.name);
+        setOpenModal(true);
+    };
 
-  const handleConfirmDelete = async () => {
-    if (!selectedId) return;
-
-    try {
-      await AdminData.deleteFacilities(selectedId);
+    const handleCloseModal = () => {
+        setOpenModal(false);
+        setFacilityName("");
+        setSelectedFacility(null);
+    };
 
     const handleSaveFacility = async () => {
         if (!facilityName.trim()) return;
         const isEdit = !!selectedFacility;
         try {
             if (isEdit) {
-                await updateFacilities(+selectedFacility._id, { name: facilityName });
+                await updateFacilities(selectedFacility._id, { name: facilityName });
             } else {
                 await addFacilities({ name: facilityName });
             }
@@ -76,43 +86,32 @@ export default function Facilities() {
         }
     };
 
-  // modal Edit
-  const handleOpenEdit = (row: any) => {
-    setSelectedFacility(row);
-    setFacilityName(row.name);
-    setOpenModal(true);
-  };
+    React.useEffect(() => {
+        fetchData();
+    }, []);
 
-  // close modal
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setFacilityName("");
-    setSelectedFacility(null);
-  };
+    const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>, row: any) => {
+        setAnchorEl(event.currentTarget);
+        setActiveRow(row);
+    };
 
-  const handleSaveFacility = async () => {
-    if (!facilityName.trim()) return;
-    const isEdit = !!selectedFacility;
-    try {
-      if (isEdit) {
-        await updateFacilities(selectedFacility._id, { name: facilityName });
-      } else {
-        await addFacilities({ name: facilityName });
-      }
-      handleCloseModal();
-      fetchData();
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    const handleCloseMenu = () => {
+        setAnchorEl(null);
+        setActiveRow(null);
+    };
+
+    const filteredRows = rowsData.filter((row: any) =>
+        row.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     const columns: GridColDef[] = [
-        { field: "_id", headerName: "ID", width: 220, align: "center", headerAlign: "center", headerClassName: "custom-id-header" },
-        { field: "name", headerName: "Facility Name", width: 210, align: "center", headerAlign: "center", headerClassName: "custom-id-header" },
+        { field: "_id", headerName: "ID", flex: 1, minWidth: 150, align: "center", headerAlign: "center", headerClassName: "custom-id-header" },
+        { field: "name", headerName: "Facility Name", flex: 1, minWidth: 150, align: "center", headerAlign: "center", headerClassName: "custom-id-header" },
         {
             field: "createdBy",
             headerName: "Created By",
-            width: 150,
+            flex: 1,
+            minWidth: 120,
             align: "center",
             headerAlign: "center",
             headerClassName: "custom-id-header",
@@ -121,7 +120,8 @@ export default function Facilities() {
         {
             field: "createdAt",
             headerName: "Created At",
-            width: 220,
+            flex: 1,
+            minWidth: 130,
             align: "center",
             headerAlign: "center",
             headerClassName: "custom-id-header",
@@ -130,92 +130,175 @@ export default function Facilities() {
         {
             field: "actions",
             headerName: "Actions",
-            width: 350,
+            flex: 0.8,
+            minWidth: 100,
             align: "center",
             headerAlign: "center",
             headerClassName: "custom-id-header",
             renderCell: (params) => (
-                <>
-                    <div>
-                        <Button
-                            id={buttonId}
-                            aria-controls={open ? menuId : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={open}
-                            onClick={handleClick}
-                            sx={{
-                                minWidth: "auto", 
-                                padding: "6px",  
-                                color: "#6B7280", 
-                                "&:hover": {
-                                    bgcolor: "rgba(0, 0, 0, 0.04)",
-                                    borderRadius: 50, 
-                                }
-                            }}
-                        >
-                            <MoreHorizIcon sx={{ fontSize: 20 }} />
-                        </Button>
-                        <React.Fragment >
-                            <Menu
-                                anchorEl={anchorEl}
-                                id="account-menu"
-                                open={open}
-                                onClose={handleClose}
-                                onClick={handleClose}
-                                slotProps={{
-                                    paper: {
-                                        elevation: 0,
-                                        sx: {
-                                            overflow: 'visible',
-                                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                                            mt: 1.5,
-                                            borderRadius: 4,
-                                            py: 0,
-                                            '& .MuiAvatar-root': { width: 32, height: 32, ml: -0.5, mr: 1, py: 0 },
-                                            '&::before': {
-                                                content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10,
-                                                bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
-                                            },
-                                        },
-                                    },
-                                }}
-                                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                            >
-                                <MenuItem sx={{ py: 1 }} onClick={() => { setViewFacility(params.row); setOpenViewModal(true); }}>
-                                    <RemoveRedEyeIcon sx={{ fontSize: 21, color: "darkblue", mx: 1 }} /> View
-                                </MenuItem>
-                                <MenuItem sx={{ py: 1 }} onClick={() => handleOpenEdit(params.row)}>
-                                    <EditDocumentIcon sx={{ fontSize: 22, color: "orange", mx: 1 }} /> Edit
-                                </MenuItem>
-                                <MenuItem sx={{ py: 1 }} onClick={handleClose}>
-                                    <DeleteForeverIcon sx={{ fontSize: 22, color: "red", mx: 1 }} /> Delete
-                                </MenuItem>
-                            </Menu>
-                        </React.Fragment>
-                    </div>
-                </>
+                <Box>
+                    <IconButton onClick={(e) => handleClickMenu(e, params.row)} sx={{ color: "#6B7280" }}>
+                        <MoreHorizIcon />
+                    </IconButton>
+                </Box>
             ),
         },
     ];
 
-  const id = React.useId();
-  const buttonId = `${id}-button`;
-  const menuId = `${id}-menu`;
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+    return (
+        <>
+            <CustomHeader
+                title="Rooms Table Details"
+                subTitle="You can check all details"
+                buttonText="Add New Room"
+                onButtonClick={handleOpenAdd}
+            />
+            
+            <Box sx={{ width: { xs: "90%", sm: "90%", md: "85%" }, mx: 'auto', mt: 3 }}>
+                
+                {/* شريط البحث */}
+                <Box sx={{ mb: 3 }}>
+                    <TextField
+                        size="small"
+                        placeholder="Search by Facility Name..."
+                        variant="outlined"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        sx={{
+                            width: { xs: "100%", sm: "320px" },
+                            backgroundColor: "#fff",
+                            borderRadius: "8px",
+                            "& .MuiOutlinedInput-root": { borderRadius: "8px" }
+                        }}
+                    />
+                </Box>
 
-  // 2. تصفية (Filtering) البيانات بناءً على اسم المنشأة المكتوب
-  const filteredRows = rowsData.filter((row: any) =>
-    row.name?.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+                {/* 1. عرض الجدول الافتراضي (يظهر فقط من الشاشات المتوسطة sm فما فوق ويختفي في الموبايل xs) */}
+                <Paper sx={{ 
+                    display: { xs: "none", sm: "block" }, // السحر هنا لإخفاء الجدول في الموبايل
+                    elevation: 0, 
+                    boxShadow: "none", 
+                    borderRadius: "16px", 
+                    overflow: "hidden",
+                    width: "100%"
+                }}>
+                    <DataGrid
+                        rows={filteredRows}
+                        columns={columns}
+                        getRowId={(row) => row._id}
+                        initialState={{ pagination: { paginationModel } }}
+                        pageSizeOptions={[5, 10]}
+                        autoHeight
+                        disableRowSelectionOnClick
+                        sx={{
+                            border: 0,
+                            textAlign: "center",
+                            backgroundColor: "#fff",
+                            "& .custom-id-header": { backgroundColor: 'inherit' },
+                            "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: "rgba(226, 229, 235, 1)!important",
+                                color: "#1F2937", fontSize: "15px", fontWeight: "600",
+                            },
+                            "& .MuiDataGrid-row": {
+                                borderBottom: "0px solid rgba(243, 244, 246, 1)",
+                                "&:nth-of-type(even)": { backgroundColor: "rgba(248, 249, 251, 1)" },
+                                "&:nth-of-type(odd)": { backgroundColor: "#fff" },
+                            },
+                            "& .MuiDataGrid-row:hover": { backgroundColor: "#F3F4F6 !important" },
+                        }}
+                    />
+                </Paper>
 
+                {/* 2. عرض البيانات كـ Cards (تظهر فقط في شاشات الموبايل xs وتختفي في الشاشات الأكبر) */}
+                <Box sx={{ display: { xs: "flex", sm: "none" }, flexDirection: "column", gap: 2 ,mb:{xs:3}}}>
+                    {filteredRows.length > 0 ? (
+                        filteredRows.map((row: any) => (
+                            <Card key={row._id} sx={{ borderRadius: "12px", boxShadow: "0px 2px 4px rgba(0,0,0,0.05)", border: "1px solid #E5E7EB" }}>
+                                <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
+                                    
+                                    {/* الجزء العلوي للكارت: اسم المنشأة وزر الأكشن */}
+                                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
+                                        <Typography variant="subtitle1" sx={{ fontWeight: "700", color: "#1F2937" }}>
+                                            {row.name}
+                                        </Typography>
+                                        <IconButton size="small" onClick={(e) => handleClickMenu(e, row)} sx={{ color: "#6B7280" }}>
+                                            <MoreHorizIcon />
+                                        </IconButton>
+                                    </Box>
+                                    
+                                    <Divider sx={{ my: 1, borderColor: "#F3F4F6" }} />
+                                    
+                                    {/* تفاصيل الكارت المتبقية */}
+                                    <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 1 }}>
+                                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                                            <Typography variant="body2" sx={{ color: "#9CA3AF" }}>ID:</Typography>
+                                            <Typography variant="body2" sx={{ color: "#4B5563", maxWidth: "180px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                                {row._id}
+                                            </Typography>
+                                        </Box>
+                                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                                            <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Created By:</Typography>
+                                            <Typography variant="body2" sx={{ color: "#4B5563" }}>
+                                                {row.createdBy?.userName || "N/A"}
+                                            </Typography>
+                                        </Box>
+                                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                                            <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Created At:</Typography>
+                                            <Typography variant="body2" sx={{ color: "#4B5563" }}>
+                                                {new Date(row.createdAt).toLocaleDateString("en-US")}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+
+                                </CardContent>
+                            </Card>
+                        ))
+                    ) : (
+                        <Typography sx={{ textAlign: "center", color: "#9CA3AF", py: 4 }}>
+                            No facilities found
+                        </Typography>
+                    )}
+                </Box>
+
+            </Box>
+
+            {/* قائمة الأكشنز المشتركة (تعمل مع أزرار الجدول وأزرار الكروت في نفس الوقت) */}
+            <Menu
+                anchorEl={anchorEl}
+                id="actions-menu"
+                open={openMenu}
+                onClose={handleCloseMenu}
+                onClick={handleCloseMenu}
+                slotProps={{
+                    paper: {
+                        elevation: 0,
+                        sx: {
+                            overflow: 'visible',
+                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.15))',
+                            mt: 1.5,
+                            borderRadius: 3,
+                            '&::before': {
+                                content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10,
+                                bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
+                            },
+                        },
+                    },
+                }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            >
+                <MenuItem sx={{ py: 1 }} onClick={handleCloseMenu}>
+                    <RemoveRedEyeIcon sx={{ fontSize: 20, color: "darkblue", mx: 1 }} /> View
+                </MenuItem>
+                <MenuItem sx={{ py: 1 }} onClick={() => { if(activeRow) handleOpenEdit(activeRow); handleCloseMenu(); }}>
+                    <EditDocumentIcon sx={{ fontSize: 20, color: "orange", mx: 1 }} /> Edit
+                </MenuItem>
+                <MenuItem sx={{ py: 1 }} onClick={handleCloseMenu}>
+                    <DeleteForeverIcon sx={{ fontSize: 20, color: "red", mx: 1 }} /> Delete
+                </MenuItem>
+            </Menu>
+
+            {/* نافذة الإضافة والتعديل */}
             <Dialog open={openModal} onClose={handleCloseModal} fullWidth maxWidth="xs">
                 <DialogTitle sx={{ textAlign: "center", fontWeight: "bold" }}>
                     {selectedFacility ? "Edit Facility" : "Add New Facility"}
@@ -233,132 +316,6 @@ export default function Facilities() {
                     </Button>
                 </DialogActions>
             </Dialog>
-            <FacilityViewModal open={openViewModal} onClose={() => setOpenViewModal(false)} facility={viewFacility}/>
         </>
-      ),
-    },
-  ];
-
-  return (
-    <>
-      <Box
-        sx={{
-          width: "75%",
-          mx: "auto",
-          mb: 2,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <TextField
-          size="small"
-          placeholder="Search by Facility Name..."
-          variant="outlined"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          sx={{
-            width: "80%",
-            backgroundColor: "#fff",
-            borderRadius: "8px",
-            "& .MuiOutlinedInput-root": { borderRadius: "8px" },
-          }}
-        />
-        <Button
-          variant="contained"
-          color="success"
-          onClick={handleOpenAdd}
-          sx={{ borderRadius: "8px" }}
-        >
-          + Add New Facility
-        </Button>
-      </Box>
-
-      <Paper
-        sx={{
-          width: "75%",
-          mx: "auto",
-          elevation: 0,
-          boxShadow: "none",
-          borderRadius: "16px",
-          overflow: "hidden",
-        }}
-      >
-        <DataGrid
-          rows={filteredRows} // 4. تمرير المصفوفة المفلترة هنا بدلاً من rowsData الأصلية
-          columns={columns}
-          getRowId={(row) => row._id}
-          initialState={{ pagination: { paginationModel } }}
-          pageSizeOptions={[5, 10]}
-          sx={{
-            border: 0,
-            textAlign: "center",
-            backgroundColor: "#fff",
-            "& .custom-id-header": { backgroundColor: "inherit" },
-            "& .MuiDataGrid-columnHeaders": {
-              backgroundColor: "rgba(226, 229, 235, 1)!important",
-              color: "#1F2937",
-              fontSize: "15px",
-              fontWeight: "600",
-            },
-            "& .MuiDataGrid-row": {
-              borderBottom: "0px solid rgba(243, 244, 246, 1)",
-              borderTop: "0px solid rgba(243, 244, 246, 1)",
-              "&:nth-of-type(even)": {
-                borderBottom: "0px solid rgba(243, 244, 246, 1)",
-                backgroundColor: "rgba(248, 249, 251, 1)",
-              },
-              "&:nth-of-type(odd)": { backgroundColor: "#fff" },
-            },
-            "& .MuiDataGrid-row:hover": {
-              backgroundColor: "#F3F4F6 !important",
-            },
-          }}
-        />
-      </Paper>
-
-      <Dialog
-        open={openModal}
-        onClose={handleCloseModal}
-        fullWidth
-        maxWidth="xs"
-      >
-        <DialogTitle sx={{ textAlign: "center", fontWeight: "bold" }}>
-          {selectedFacility ? "Edit Facility" : "Add New Facility"}
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Facility Name"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={facilityName}
-            onChange={(e) => setFacilityName(e.target.value)}
-            sx={{ mt: 1 }}
-          />
-        </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={handleCloseModal} color="inherit">
-            Cancel
-          </Button>
-          <Button
-            onClick={handleSaveFacility}
-            variant="contained"
-            color={selectedFacility ? "warning" : "primary"}
-          >
-            {selectedFacility ? "Update" : "Save"}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <DeleteConfirmations
-        open={isDeleteOpen}
-        onClose={handleCloseDelete}
-        onDelete={handleConfirmDelete}
-        title="Delete This Facility ?"
-      />
-    </>
-  );
+    );
 }
