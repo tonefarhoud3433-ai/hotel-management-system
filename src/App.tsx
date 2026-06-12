@@ -16,6 +16,7 @@ import Home from "./Modules/MasterModules/Home/Home";
 import Rooms from "./Modules/MasterModules/Rooms/Rooms";
 import Users from "./Modules/MasterModules/Users/Users";
 import NotFound from "./Modules/Shared/NotFound/NotFound";
+import ProtecedRoute from "./Modules/Shared/ProtecedRoute/ProtecedRoute";
 
 function App() {
   const routes = createBrowserRouter([
@@ -35,7 +36,7 @@ function App() {
     },
     {
       path: "/dashboard",
-      element: <MasterLayout />,
+      element: <ProtecedRoute><MasterLayout /></ProtecedRoute>,
       errorElement: <NotFound />,
       children: [
         { index: true, element: <Home /> },

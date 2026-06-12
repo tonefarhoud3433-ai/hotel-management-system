@@ -59,7 +59,7 @@ function NavBar() {
               textDecoration: 'none',
             }}
           >
-                        Staycation
+                        <span style={{ color: 'blue' }}>Stay</span>cation
 
           </Typography>
 
@@ -114,7 +114,7 @@ function NavBar() {
               textDecoration: 'none',
             }}
           >
-            Staycation.
+            <span style={{ color: 'blue' }}>Stay</span>cation.
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
