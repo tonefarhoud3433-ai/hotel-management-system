@@ -30,6 +30,9 @@ export interface UpdateProfileData {
 export const apiLogin = (data: LoginData) => {
   return axiosClient.post("/users/login", data);
 };
+export const apiProfile = (id:string | undefined) => {
+  return axiosClient.get(`/users/${id}`);
+};
 
 export const apiRegister = (data: FormData) => {
   return axiosClient.post("/users", data);

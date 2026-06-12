@@ -22,7 +22,7 @@ interface IFormInput {
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const {saveUserData} = useContext(AuthContext)!;
+  const {saveUserData, getProfile} = useContext(AuthContext)!;
   const {register, handleSubmit, formState: {errors}} = useForm<IFormInput>({resolver: yupResolver(loginSchema)});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
