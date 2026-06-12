@@ -75,7 +75,7 @@ export default function MasterLayout() {
             </Menu>
           </Sidebar>
         </Box>
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1, minWidth: 0 }}>
           <NavBar />
           <Outlet />
         </Box>

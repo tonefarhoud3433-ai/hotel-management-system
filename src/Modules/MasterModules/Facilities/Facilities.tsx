@@ -19,10 +19,12 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import EditDocumentIcon from '@mui/icons-material/EditDocument';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import FacilityViewModal from "../../Shared/ViewModals/FacilityViewModal";
 
 const paginationModel = { page: 0, pageSize: 5 };
 
 export default function Facilities() {
+    const [openViewModal, setOpenViewModal] = React.useState(true);
     const [openModal, setOpenModal] = React.useState(false);
     const [facilityName, setFacilityName] = React.useState("");
     const [rowsData, setRowsData] = React.useState([]);
@@ -174,7 +176,7 @@ export default function Facilities() {
                                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                             >
-                                <MenuItem sx={{ py: 1 }} onClick={handleClose}>
+                                <MenuItem sx={{ py: 1 }} onClick={() => setOpenViewModal(true)}>
                                     <RemoveRedEyeIcon sx={{ fontSize: 21, color: "darkblue", mx: 1 }} /> View
                                 </MenuItem>
                                 <MenuItem sx={{ py: 1 }} onClick={() => handleOpenEdit(params.row)}>
@@ -260,6 +262,7 @@ export default function Facilities() {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <FacilityViewModal open={openViewModal} onClose={() => setOpenViewModal(false)} />
         </>
     );
 }
