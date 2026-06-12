@@ -19,7 +19,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import EditDocumentIcon from '@mui/icons-material/EditDocument';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import FacilityViewModal from "../../Shared/ViewModals/FacilityViewModal";
+import FacilityViewModal, { type Facility } from "../../Shared/ViewModals/FacilityViewModal";
 
 const paginationModel = { page: 0, pageSize: 5 };
 
@@ -28,7 +28,8 @@ export default function Facilities() {
     const [openModal, setOpenModal] = React.useState(false);
     const [facilityName, setFacilityName] = React.useState("");
     const [rowsData, setRowsData] = React.useState([]);
-    const [selectedFacility, setSelectedFacility] = React.useState<any>(null);
+    const [selectedFacility, setSelectedFacility] = React.useState<Facility | null >(null);
+    const [viewFacility, setViewFacility] = React.useState<Facility | null>(null);
 
     // 1. تعريف الـ State الخاصة بنص البحث
     const [searchTerm, setSearchTerm] = React.useState("");
@@ -68,7 +69,7 @@ export default function Facilities() {
         const isEdit = !!selectedFacility;
         try {
             if (isEdit) {
-                await updateFacilities(selectedFacility._id, { name: facilityName });
+                await updateFacilities(+selectedFacility._id, { name: facilityName });
             } else {
                 await addFacilities({ name: facilityName });
             }
@@ -176,7 +177,7 @@ export default function Facilities() {
                                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                             >
-                                <MenuItem sx={{ py: 1 }} onClick={() => setOpenViewModal(true)}>
+                                <MenuItem sx={{ py: 1 }} onClick={() => { setViewFacility(params.row); setOpenViewModal(true); }}>
                                     <RemoveRedEyeIcon sx={{ fontSize: 21, color: "darkblue", mx: 1 }} /> View
                                 </MenuItem>
                                 <MenuItem sx={{ py: 1 }} onClick={() => handleOpenEdit(params.row)}>
@@ -262,7 +263,7 @@ export default function Facilities() {
                     </Button>
                 </DialogActions>
             </Dialog>
-            <FacilityViewModal open={openViewModal} onClose={() => setOpenViewModal(false)} />
+            <FacilityViewModal open={openViewModal} onClose={() => setOpenViewModal(false)} facility={viewFacility}/>
         </>
     );
 }
