@@ -27,6 +27,9 @@ export interface UpdateProfileData {
   userPhone: string;
 }
 
+export const getAllUsers = () => {
+  return axiosClient.get("/users");
+};
 export const apiLogin = (data: LoginData) => {
   return axiosClient.post("/users/login", data);
 };
