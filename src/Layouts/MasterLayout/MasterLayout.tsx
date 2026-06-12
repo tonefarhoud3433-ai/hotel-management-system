@@ -12,6 +12,7 @@ import { Box, Stack } from "@mui/material";
 import { useState } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Link, Outlet } from "react-router-dom";
+import NavBar from "../../Modules/Shared/NavBar/NavBar";
 
 export default function MasterLayout() {
   const [collapsed, setCollapsed] = useState(false);
@@ -75,6 +76,7 @@ export default function MasterLayout() {
           </Sidebar>
         </Box>
         <Box sx={{ flexGrow: 1 }}>
+          <NavBar />
           <Outlet />
         </Box>
       </Stack>
