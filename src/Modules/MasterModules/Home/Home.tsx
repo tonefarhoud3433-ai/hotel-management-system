@@ -14,8 +14,15 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { getAllRooms } from "../../../API/modules/AdminRooms";
 import { getAllAds } from "../../../API/modules/AdminAds";
-import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
+import { AdminBooking, Auth } from "../../../API";
 
+interface User {
+  users: object[];
+  totalCount: number;
+}
+interface BookingItem {
+  status: "completed" | "pending";
+}
 export default function Home() {
   const [facilitiesCount, setFacilitiesCount] = useState<number | null>(null);
   const [loadingFaclities, setLoadingFaclities] = useState<boolean>(true);
@@ -23,10 +30,44 @@ export default function Home() {
   const [loadingRooms, setLoadingRooms] = useState<boolean>(true);
   const [adsCount, setAdsCount] = useState<number | null>(null);
   const [loadingAds, setLoadingAds] = useState<boolean>(true);
+  const [usersData, setUsersData] = useState<User | null>(null);
+  const [loadingUsersData, setLoadingUsersData] = useState<boolean>(true);
+  const [statusCounts, setStatusCounts] = useState({
+    pending: 0,
+    completed: 0,
+  });
+  const [loadingBookings, setLoadingBookings] = useState<boolean>(true);
 
+  const getBookingsStatusCount = async () => {
+    setLoadingBookings(true);
+    try {
+      const response = await AdminBooking.getAllBookings();
+      const bookings: BookingItem[] = response.data?.data?.booking || [];
+
+      const counts = bookings.reduce(
+        (acc, item) => {
+          if (item.status in acc) {
+            acc[item.status] += 1;
+          }
+          return acc;
+        },
+        { pending: 0, completed: 0 },
+      );
+
+      setStatusCounts(counts);
+    } catch (error) {
+      toast.error("Failed To Fetch Bookings Status");
+    } finally {
+      setLoadingBookings(false);
+    }
+  };
   const getFacilitiesCount = async () => {
+    setLoadingFaclities(true);
+
     try {
       const response = await getAllFacilities();
+      // console.log("Facilities:", response);
+
       setFacilitiesCount(response.data?.data?.totalCount);
     } catch (error) {
       toast.error((error as string) || "Failed To Fetch Facilities Count");
@@ -34,9 +75,13 @@ export default function Home() {
       setLoadingFaclities(false);
     }
   };
+
   const getAdsCount = async () => {
+    setLoadingAds(true);
     try {
       const response = await getAllAds();
+      // console.log("Ads:", response);
+
       setAdsCount(response.data?.data?.totalCount);
     } catch (error) {
       toast.error((error as string) || "Failed To Fetch Ads Count");
@@ -44,14 +89,29 @@ export default function Home() {
       setLoadingAds(false);
     }
   };
+
   const getRoomsCount = async () => {
+    setLoadingRooms(true);
     try {
       const response = await getAllRooms();
+      // console.log("Rooms:", response);
       setRoomsCount(response.data?.data?.totalCount);
     } catch (error) {
       toast.error((error as string) || "Failed To Fetch Rooms Count");
     } finally {
       setLoadingRooms(false);
+    }
+  };
+  const getAllUsers = async () => {
+    setLoadingUsersData(true);
+    try {
+      const response = await Auth.getAllUsers();
+      console.log("Users:", response);
+      setUsersData(response.data?.data);
+    } catch (error) {
+      toast.error((error as string) || "Failed To Fetch Users Count");
+    } finally {
+      setLoadingUsersData(false);
     }
   };
   const cards = [
@@ -82,25 +142,26 @@ export default function Home() {
   ];
 
   const statusData = [
-    { id: 0, value: 50, color: "#5568E8", label: "pending" },
-    { id: 1, value: 25, color: "#FF2436", label: "progress" },
-    { id: 2, value: 15, color: "#9A58D1", label: "completed" },
-    { id: 3, value: 10, color: "#F8A83A", label: "rejected" },
+    { id: 0, value: statusCounts.pending, color: "#5568E8", label: "pending" },
+    {
+      id: 2,
+      value: statusCounts.completed,
+      color: "#9A58D1",
+      label: "completed",
+    },
   ];
 
   const usersChart = [
-    { id: 0, value: 8, color: "#53C64D" },
-    { id: 1, value: 8, color: "#41B7F1" },
-    { id: 2, value: 8, color: "#53C64D" },
-    { id: 3, value: 8, color: "#41B7F1" },
-    { id: 4, value: 8, color: "#53C64D" },
-    { id: 5, value: 8, color: "#41B7F1" },
+    { id: 0, value: usersData?.users.length, color: "#53C64D" },
+    { id: 1, value: usersData?.totalCount, color: "#41B7F1" },
   ];
 
   useEffect(() => {
     getFacilitiesCount();
     getRoomsCount();
     getAdsCount();
+    getAllUsers();
+    getBookingsStatusCount();
   }, []);
   return (
     <Container maxWidth="xl">
@@ -195,17 +256,34 @@ export default function Home() {
                   position: "relative",
                 }}
               >
-                <PieChart
-                  series={[
-                    {
-                      innerRadius: 60,
-                      outerRadius: 100,
-                      data: statusData,
-                    },
-                  ]}
-                  hideLegend
-                  margin={{ top: 0, bottom: 0, left: 0, right: 0 }}
-                />
+                {loadingBookings ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "100%",
+                    }}
+                  >
+                    <CircularProgress />
+                  </Box>
+                ) : (
+                  <PieChart
+                    series={[
+                      {
+                        innerRadius: 60,
+                        outerRadius: 100,
+                        data: statusData,
+                      },
+                    ]}
+                    margin={{ top: 0, bottom: 0, left: 0, right: 0 }}
+                    slotProps={{
+                      legend: {
+                        sx: { display: "none" },
+                      },
+                    }}
+                  />
+                )}
               </Box>
 
               <Box
@@ -231,7 +309,7 @@ export default function Home() {
                       }}
                     />
                     <Typography sx={{ color: "#7C8698", fontSize: "1rem" }}>
-                      {item.label}
+                      {item.label} ({item.value})
                     </Typography>
                   </Box>
                 ))}
@@ -260,24 +338,35 @@ export default function Home() {
                   mb: 3,
                 }}
               >
-                <Box
-                  sx={{
-                    position: "relative",
-                    width: 200,
-                    height: 200,
-                  }}
-                >
-                  <PieChart
-                    series={[
-                      {
-                        innerRadius: 65,
-                        outerRadius: 85,
-                        data: usersChart,
-                      },
-                    ]}
-                    margin={{ top: 0, bottom: 0, left: 0, right: 0 }}
-                    hideLegend
-                  />
+                <Box sx={{ position: "relative", width: 200, height: 200 }}>
+                  {loadingUsersData ? (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "100%",
+                      }}
+                    >
+                      <CircularProgress />
+                    </Box>
+                  ) : (
+                    <PieChart
+                      series={[
+                        {
+                          innerRadius: 65,
+                          outerRadius: 85,
+                          data: usersChart,
+                        },
+                      ]}
+                      margin={{ top: 0, bottom: 0, left: 0, right: 0 }}
+                      slotProps={{
+                        legend: {
+                          sx: { display: "none" },
+                        },
+                      }}
+                    />
+                  )}
 
                   <Typography
                     sx={{
@@ -317,7 +406,11 @@ export default function Home() {
                     <Typography>User</Typography>
                   </Box>
                   <Typography sx={{ fontSize: "1.1rem", fontWeight: 600 }}>
-                    25
+                    {loadingUsersData ? (
+                      <CircularProgress size={20} sx={{ color: "#55db0d" }} />
+                    ) : (
+                      usersData?.users.length
+                    )}
                   </Typography>
                 </Box>
 
@@ -341,7 +434,11 @@ export default function Home() {
                     <Typography sx={{ fontSize: "1.1rem" }}>Admin</Typography>
                   </Box>
                   <Typography sx={{ fontSize: "1.1rem", fontWeight: 600 }}>
-                    10
+                    {loadingUsersData ? (
+                      <CircularProgress size={20} sx={{ color: "#55db0d" }} />
+                    ) : (
+                      usersData?.totalCount
+                    )}
                   </Typography>
                 </Box>
               </Box>
