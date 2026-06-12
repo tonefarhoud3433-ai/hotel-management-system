@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { getAllRooms } from "../../../API/modules/AdminRooms";
 import { getAllAds } from "../../../API/modules/AdminAds";
 import { AdminBooking, Auth } from "../../../API";
+import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 
 interface User {
   users: object[];
@@ -254,6 +255,9 @@ export default function Home() {
                   maxWidth: 300,
                   height: 300,
                   position: "relative",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
                 {loadingBookings ? (
@@ -268,21 +272,38 @@ export default function Home() {
                     <CircularProgress />
                   </Box>
                 ) : (
-                  <PieChart
-                    series={[
-                      {
-                        innerRadius: 60,
-                        outerRadius: 100,
-                        data: statusData,
-                      },
-                    ]}
-                    margin={{ top: 0, bottom: 0, left: 0, right: 0 }}
-                    slotProps={{
-                      legend: {
-                        sx: { display: "none" },
-                      },
-                    }}
-                  />
+                  <>
+                    <PieChart
+                      series={[
+                        {
+                          innerRadius: 60,
+                          outerRadius: 100,
+                          data: statusData,
+                        },
+                      ]}
+                      margin={{ top: 0, bottom: 0, left: 0, right: 0 }}
+                      slotProps={{
+                        legend: {
+                          sx: { display: "none" },
+                        },
+                      }}
+                    />
+
+                    <Typography
+                      sx={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        fontSize: "1.3rem",
+                        fontWeight: 500,
+                        pointerEvents: "none",
+                        color: "#333",
+                      }}
+                    >
+                      Bookings
+                    </Typography>
+                  </>
                 )}
               </Box>
 

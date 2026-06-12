@@ -1,14 +1,14 @@
-import { DataGrid } from "@mui/x-data-grid"; 
+import { DataGrid } from "@mui/x-data-grid";
 import type { GridColDef } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import {
-    Box,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    TextField,
+  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
 } from "@mui/material";
 import * as React from 'react';
 import Button from '@mui/material/Button';
@@ -31,38 +31,34 @@ export default function Facilities() {
     const [selectedFacility, setSelectedFacility] = React.useState<Facility | null >(null);
     const [viewFacility, setViewFacility] = React.useState<Facility | null>(null);
 
-    // 1. تعريف الـ State الخاصة بنص البحث
-    const [searchTerm, setSearchTerm] = React.useState("");
+  // Delete Modal
+  const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
+  const [selectedId, setSelectedId] = React.useState<number | null>(null);
 
-    const fetchData = async () => {
-        try {
-            const response = await getAllFacilities();
-            setRowsData(response?.data?.data?.facilities || []);
-        } catch (error) {
-            console.log(error);
-        }
+  const fetchData = async () => {
+    try {
+      const response = await getAllFacilities();
+      setRowsData(response?.data?.data?.facilities || []);
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    // modal Add 
-    const handleOpenAdd = () => {
-        setSelectedFacility(null);
-        setFacilityName("");
-        setOpenModal(true);
-    };
+  const handleOpenDelete = (id: number) => {
+    setSelectedId(id);
+    setIsDeleteOpen(true);
+  };
 
-    // modal Edit 
-    const handleOpenEdit = (row: any) => {
-        setSelectedFacility(row);
-        setFacilityName(row.name);
-        setOpenModal(true);
-    };
+  const handleCloseDelete = () => {
+    setIsDeleteOpen(false);
+    setSelectedId(null);
+  };
 
-    // close modal
-    const handleCloseModal = () => {
-        setOpenModal(false);
-        setFacilityName("");
-        setSelectedFacility(null);
-    };
+  const handleConfirmDelete = async () => {
+    if (!selectedId) return;
+
+    try {
+      await AdminData.deleteFacilities(selectedId);
 
     const handleSaveFacility = async () => {
         if (!facilityName.trim()) return;
@@ -80,26 +76,35 @@ export default function Facilities() {
         }
     };
 
-    React.useEffect(() => {
-        fetchData();
-    }, []);
+  // modal Edit
+  const handleOpenEdit = (row: any) => {
+    setSelectedFacility(row);
+    setFacilityName(row.name);
+    setOpenModal(true);
+  };
 
-    const id = React.useId();
-    const buttonId = `${id}-button`;
-    const menuId = `${id}-menu`;
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+  // close modal
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setFacilityName("");
+    setSelectedFacility(null);
+  };
 
-    // 2. تصفية (Filtering) البيانات بناءً على اسم المنشأة المكتوب
-    const filteredRows = rowsData.filter((row: any) =>
-        row.name?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  const handleSaveFacility = async () => {
+    if (!facilityName.trim()) return;
+    const isEdit = !!selectedFacility;
+    try {
+      if (isEdit) {
+        await updateFacilities(selectedFacility._id, { name: facilityName });
+      } else {
+        await addFacilities({ name: facilityName });
+      }
+      handleCloseModal();
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
     const columns: GridColDef[] = [
         { field: "_id", headerName: "ID", width: 220, align: "center", headerAlign: "center", headerClassName: "custom-id-header" },
@@ -194,57 +199,22 @@ export default function Facilities() {
         },
     ];
 
-    return (
-        <>
-            
-            <Box sx={{ width: "75%", mx: "auto", mb: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <TextField
-                    size="small"
-                    placeholder="Search by Facility Name..."
-                    variant="outlined"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    sx={{ 
-                        width: "80%", 
-                        backgroundColor: "#fff", 
-                        borderRadius: "8px",
-                        "& .MuiOutlinedInput-root": { borderRadius: "8px" } 
-                    }}
-                />
-                <Button variant="contained" color="success" onClick={handleOpenAdd} sx={{ borderRadius: "8px" }}>
-                    + Add New Facility
-                </Button>
-            </Box>
+  const id = React.useId();
+  const buttonId = `${id}-button`;
+  const menuId = `${id}-menu`;
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-            <Paper sx={{ width: "75%", mx: "auto", elevation: 0, boxShadow: "none", borderRadius: "16px", overflow: "hidden" }}>
-                <DataGrid
-                    rows={filteredRows} // 4. تمرير المصفوفة المفلترة هنا بدلاً من rowsData الأصلية
-                    columns={columns}
-                    getRowId={(row) => row._id}
-                    initialState={{ pagination: { paginationModel } }}
-                    pageSizeOptions={[5, 10]}
-                    sx={{
-                        border: 0,
-                        textAlign: "center",
-                        backgroundColor: "#fff",
-                        "& .custom-id-header": { backgroundColor: 'inherit' },
-                        "& .MuiDataGrid-columnHeaders": {
-                            backgroundColor: "rgba(226, 229, 235, 1)!important",
-                            color: "#1F2937", fontSize: "15px", fontWeight: "600",
-                        },
-                        "& .MuiDataGrid-row": {
-                            borderBottom: "0px solid rgba(243, 244, 246, 1)",
-                            borderTop: "0px solid rgba(243, 244, 246, 1)",
-                            "&:nth-of-type(even)": {
-                                borderBottom: "0px solid rgba(243, 244, 246, 1)",
-                                backgroundColor: "rgba(248, 249, 251, 1)",
-                            },
-                            "&:nth-of-type(odd)": { backgroundColor: "#fff" },
-                        },
-                        "& .MuiDataGrid-row:hover": { backgroundColor: "#F3F4F6 !important" },
-                    }}
-                />
-            </Paper>
+  // 2. تصفية (Filtering) البيانات بناءً على اسم المنشأة المكتوب
+  const filteredRows = rowsData.filter((row: any) =>
+    row.name?.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
             <Dialog open={openModal} onClose={handleCloseModal} fullWidth maxWidth="xs">
                 <DialogTitle sx={{ textAlign: "center", fontWeight: "bold" }}>
@@ -265,5 +235,130 @@ export default function Facilities() {
             </Dialog>
             <FacilityViewModal open={openViewModal} onClose={() => setOpenViewModal(false)} facility={viewFacility}/>
         </>
-    );
+      ),
+    },
+  ];
+
+  return (
+    <>
+      <Box
+        sx={{
+          width: "75%",
+          mx: "auto",
+          mb: 2,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <TextField
+          size="small"
+          placeholder="Search by Facility Name..."
+          variant="outlined"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          sx={{
+            width: "80%",
+            backgroundColor: "#fff",
+            borderRadius: "8px",
+            "& .MuiOutlinedInput-root": { borderRadius: "8px" },
+          }}
+        />
+        <Button
+          variant="contained"
+          color="success"
+          onClick={handleOpenAdd}
+          sx={{ borderRadius: "8px" }}
+        >
+          + Add New Facility
+        </Button>
+      </Box>
+
+      <Paper
+        sx={{
+          width: "75%",
+          mx: "auto",
+          elevation: 0,
+          boxShadow: "none",
+          borderRadius: "16px",
+          overflow: "hidden",
+        }}
+      >
+        <DataGrid
+          rows={filteredRows} // 4. تمرير المصفوفة المفلترة هنا بدلاً من rowsData الأصلية
+          columns={columns}
+          getRowId={(row) => row._id}
+          initialState={{ pagination: { paginationModel } }}
+          pageSizeOptions={[5, 10]}
+          sx={{
+            border: 0,
+            textAlign: "center",
+            backgroundColor: "#fff",
+            "& .custom-id-header": { backgroundColor: "inherit" },
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: "rgba(226, 229, 235, 1)!important",
+              color: "#1F2937",
+              fontSize: "15px",
+              fontWeight: "600",
+            },
+            "& .MuiDataGrid-row": {
+              borderBottom: "0px solid rgba(243, 244, 246, 1)",
+              borderTop: "0px solid rgba(243, 244, 246, 1)",
+              "&:nth-of-type(even)": {
+                borderBottom: "0px solid rgba(243, 244, 246, 1)",
+                backgroundColor: "rgba(248, 249, 251, 1)",
+              },
+              "&:nth-of-type(odd)": { backgroundColor: "#fff" },
+            },
+            "& .MuiDataGrid-row:hover": {
+              backgroundColor: "#F3F4F6 !important",
+            },
+          }}
+        />
+      </Paper>
+
+      <Dialog
+        open={openModal}
+        onClose={handleCloseModal}
+        fullWidth
+        maxWidth="xs"
+      >
+        <DialogTitle sx={{ textAlign: "center", fontWeight: "bold" }}>
+          {selectedFacility ? "Edit Facility" : "Add New Facility"}
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Facility Name"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={facilityName}
+            onChange={(e) => setFacilityName(e.target.value)}
+            sx={{ mt: 1 }}
+          />
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button onClick={handleCloseModal} color="inherit">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSaveFacility}
+            variant="contained"
+            color={selectedFacility ? "warning" : "primary"}
+          >
+            {selectedFacility ? "Update" : "Save"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <DeleteConfirmations
+        open={isDeleteOpen}
+        onClose={handleCloseDelete}
+        onDelete={handleConfirmDelete}
+        title="Delete This Facility ?"
+      />
+    </>
+  );
 }
