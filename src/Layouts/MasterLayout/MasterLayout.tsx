@@ -49,19 +49,19 @@ export default function MasterLayout() {
                 Dashboard
               </MenuItem>
               <MenuItem
-                component={<Link to={"reservations"} />}
+                component={<Link to={"booking"} />}
                 icon={<Assignment />}
               >
-                Reservations
+                bookings
               </MenuItem>
               <MenuItem component={<Link to={"rooms"} />} icon={<Bed />}>
                 Rooms
               </MenuItem>
               <MenuItem
-                component={<Link to={"customers"} />}
+                component={<Link to={"users"} />}
                 icon={<Person />}
               >
-                Customers
+                users
               </MenuItem>
               <MenuItem
                 component={<Link to={"facilities"} />}

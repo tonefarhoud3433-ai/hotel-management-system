@@ -30,12 +30,12 @@ import FacilityViewModal, { type Facility } from "../../Shared/ViewModals/Facili
 const paginationModel = { page: 0, pageSize: 5 };
 
 export default function Facilities() {
+    const [openViewModal, setOpenViewModal] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
     const [facilityName, setFacilityName] = React.useState("");
     const [rowsData, setRowsData] = React.useState([]);
     const [selectedFacility, setSelectedFacility] = React.useState<any>(null);
     const [searchTerm, setSearchTerm] = React.useState("");
-    const [openViewModal, setOpenViewModal] = React.useState(true);
     const [viewFacility, setViewFacility] = React.useState<Facility | null>(null);
 
     // إدارة حالة الـ Menu (الأكشنز)
@@ -62,6 +62,12 @@ export default function Facilities() {
         setSelectedFacility(row);
         setFacilityName(row.name);
         setOpenModal(true);
+    };
+
+    // دالة لفتح المودال الخاص بالـ View وتمرير البيانات له بشكل سليم
+    const handleOpenView = (row: any) => {
+        setViewFacility(row);
+        setOpenViewModal(true);
     };
 
     const handleCloseModal = () => {
@@ -173,9 +179,9 @@ export default function Facilities() {
                     />
                 </Box>
 
-                {/* 1. عرض الجدول الافتراضي (يظهر فقط من الشاشات المتوسطة sm فما فوق ويختفي في الموبايل xs) */}
+                {/* 1. عرض الجدول الافتراضي للشاشات المتوسطة والكبيرة */}
                 <Paper sx={{ 
-                    display: { xs: "none", sm: "block" }, // السحر هنا لإخفاء الجدول في الموبايل
+                    display: { xs: "none", sm: "block" }, 
                     elevation: 0, 
                     boxShadow: "none", 
                     borderRadius: "16px", 
@@ -209,14 +215,13 @@ export default function Facilities() {
                     />
                 </Paper>
 
-                {/* 2. عرض البيانات كـ Cards (تظهر فقط في شاشات الموبايل xs وتختفي في الشاشات الأكبر) */}
+                {/* 2. عرض البيانات كـ Cards للموبايل */}
                 <Box sx={{ display: { xs: "flex", sm: "none" }, flexDirection: "column", gap: 2 ,mb:{xs:3}}}>
                     {filteredRows.length > 0 ? (
                         filteredRows.map((row: any) => (
                             <Card key={row._id} sx={{ borderRadius: "12px", boxShadow: "0px 2px 4px rgba(0,0,0,0.05)", border: "1px solid #E5E7EB" }}>
                                 <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
                                     
-                                    {/* الجزء العلوي للكارت: اسم المنشأة وزر الأكشن */}
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
                                         <Typography variant="subtitle1" sx={{ fontWeight: "700", color: "#1F2937" }}>
                                             {row.name}
@@ -228,7 +233,6 @@ export default function Facilities() {
                                     
                                     <Divider sx={{ my: 1, borderColor: "#F3F4F6" }} />
                                     
-                                    {/* تفاصيل الكارت المتبقية */}
                                     <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 1 }}>
                                         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                                             <Typography variant="body2" sx={{ color: "#9CA3AF" }}>ID:</Typography>
@@ -262,7 +266,7 @@ export default function Facilities() {
 
             </Box>
 
-            {/* قائمة الأكشنز المشتركة (تعمل مع أزرار الجدول وأزرار الكروت في نفس الوقت) */}
+            {/* قائمة الأكشنز المشتركة */}
             <Menu
                 anchorEl={anchorEl}
                 id="actions-menu"
@@ -287,12 +291,15 @@ export default function Facilities() {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-                <MenuItem sx={{ py: 1 }} onClick={handleCloseMenu}>
+                {/* تم تعديل زر الـ View هنا ليستخدم الـ activeRow بدلاً من الـ params المفقودة */}
+                <MenuItem sx={{ py: 1 }} onClick={() => { if(activeRow) handleOpenView(activeRow); handleCloseMenu(); }}>
                     <RemoveRedEyeIcon sx={{ fontSize: 20, color: "darkblue", mx: 1 }} /> View
                 </MenuItem>
+                
                 <MenuItem sx={{ py: 1 }} onClick={() => { if(activeRow) handleOpenEdit(activeRow); handleCloseMenu(); }}>
                     <EditDocumentIcon sx={{ fontSize: 20, color: "orange", mx: 1 }} /> Edit
                 </MenuItem>
+                
                 <MenuItem sx={{ py: 1 }} onClick={handleCloseMenu}>
                     <DeleteForeverIcon sx={{ fontSize: 20, color: "red", mx: 1 }} /> Delete
                 </MenuItem>
@@ -316,6 +323,8 @@ export default function Facilities() {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            <FacilityViewModal open={openViewModal} onClose={() => setOpenViewModal(false)} facility={viewFacility}/>
         </>
     );
 }
