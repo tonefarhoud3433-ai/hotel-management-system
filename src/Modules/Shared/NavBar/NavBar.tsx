@@ -39,7 +39,7 @@ function NavBar() {
   };
 
   return (
-    <Box sx={{p:2,position:'sticky',top:0,zIndex:999}}>
+    <Box sx={{p:2, pb:{xs:1},pt:0,mt:2,boxShadow:'',position:'sticky',top:0,zIndex:999, bgcolor:'white'}}>
     <AppBar position="static" sx={{ backgroundColor: 'rgb(234, 235, 236)', color: 'black',borderRadius: 4,boxShadow: 'none' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{display:'flex',justifyContent:'space-between'}}>
