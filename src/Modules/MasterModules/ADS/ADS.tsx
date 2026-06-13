@@ -1,7 +1,438 @@
-import React from 'react'
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import EditDocumentIcon from "@mui/icons-material/EditDocument";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import {
+  Box,
+  Card,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Paper from "@mui/material/Paper";
+import type { GridColDef } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
+import * as React from "react";
+import { toast } from "react-toastify";
+
+import { getAllAds, addAds, deleteAds, updateAds, viewAds } from "../../../API/modules/AdminAds";
+import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
+import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
+import ViewADS from "../../Shared/ViewModals/viewADS";
+
+const paginationModel = { page: 0, pageSize: 5 };
 
 export default function ADS() {
+  const [openViewModal, setOpenViewModal] = React.useState(false);
+  const [openModal, setOpenModal] = React.useState(false);
+
+  const [adRoomId, setAdRoomId] = React.useState("");
+  const [adDiscount, setAdDiscount] = React.useState("");
+
+  const [rowsData, setRowsData] = React.useState([]);
+  const [selectedAd, setSelectedAd] = React.useState<any>(null);
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [viewAd, setViewAd] = React.useState<any>(null);
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [activeRow, setActiveRow] = React.useState<any>(null);
+  const openMenu = Boolean(anchorEl);
+  const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
+  const [selectedId, setSelectedId] = React.useState<any>(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await getAllAds();
+      
+      const adsList = response?.data?.data?.ads || [];
+      setRowsData(adsList);
+    } catch (error) {
+      console.error("Error fetching ads data:", error);
+    }
+  };
+
+  const handleOpenDelete = (id: any) => {
+    setSelectedId(id);
+    setIsDeleteOpen(true);
+  };
+
+  const handleCloseDelete = () => {
+    setIsDeleteOpen(false);
+    setSelectedId(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedId) return;
+    try {
+      await deleteAds(selectedId);
+      toast.success("Ad deleted successfully!");
+      handleCloseDelete();
+      fetchData();
+    } catch (err: any) {
+      const errorMessage = err?.response?.data?.message || "Failed to delete this ad!";
+      toast.error(errorMessage);
+    }
+  };
+
+  const handleOpenAdd = () => {
+    setSelectedAd(null);
+    setAdRoomId("");
+    setAdDiscount("");
+    setOpenModal(true);
+  };
+
+  const handleOpenEdit = (row: any) => {
+    setSelectedAd(row);
+    // Support picking fallback IDs if structural parameters are flat vs nested
+    setAdRoomId(row.room?._id || row.room || "");
+    setAdDiscount(row.room?.discount ?? row.discount ?? "");
+    setOpenModal(true);
+  };
+
+  const handleOpenView = async (row: any) => {
+    try {
+      const response = await viewAds(row._id);
+      console.log(response);
+      
+      setViewAd(response?.data?.data || row);
+      setOpenViewModal(true);
+    } catch (error) {
+      setViewAd(row);
+      setOpenViewModal(true);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setAdRoomId("");
+    setAdDiscount("");
+    setSelectedAd(null);
+  };
+
+  const handleSaveAd = async () => {
+    if (!adRoomId.trim()) {
+      toast.error("Please enter a valid Room ID");
+      return;
+    }
+
+    const bodyData: any = {
+      room: adRoomId,
+      discount: Number(adDiscount) || 0,
+      isActive: true
+    };
+
+    const isEdit = !!selectedAd;
+    try {
+      if (isEdit) {
+        await updateAds(selectedAd._id, bodyData);
+        toast.success("Ad updated successfully!");
+      } else {
+        await addAds(bodyData);
+        toast.success("Ad created successfully!");
+      }
+      handleCloseModal();
+      fetchData();
+    } catch (error: any) {
+      console.error("Error saving ad:", error);
+      const errorMessage = error?.response?.data?.message || "An error occurred while saving the ad!";
+      toast.error(errorMessage);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>, row: any) => {
+    setAnchorEl(event.currentTarget);
+    setActiveRow(row);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+    setActiveRow(null);
+  };
+
+  const filteredRows = rowsData.filter((row: any) => {
+    const roomNum = row.room?.roomNumber || row.roomNumber || "";
+    return roomNum.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
+  const columns: GridColDef[] = [
+    {
+      field: "roomNumber",
+      headerName: "Room Name / Number",
+      flex: 1,
+      minWidth: 150,
+      align: "center",
+      headerAlign: "center",
+      headerClassName: "custom-id-header",
+      valueGetter: (value, row) => row.room?.roomNumber || row.roomNumber || "N/A"
+    },
+    {
+      field: "price",
+      headerName: "Price",
+      flex: 1,
+      minWidth: 120,
+      align: "center",
+      headerAlign: "center",
+      headerClassName: "custom-id-header",
+      valueGetter: (value, row) => row.room?.price ?? row.price ?? null,
+      valueFormatter: (value) => (value != null ? `$${Number(value).toLocaleString()}` : "N/A"),
+    },
+    {
+      field: "discount",
+      headerName: "Discount",
+      flex: 1,
+      minWidth: 120,
+      align: "center",
+      headerAlign: "center",
+      headerClassName: "custom-id-header",
+      valueGetter: (value, row) => row.room?.discount ?? row.discount ?? 0,
+      valueFormatter: (value) => (value != null ? `${value}%` : "0%"),
+    },
+    {
+      field: "capacity",
+      headerName: "Capacity",
+      flex: 1,
+      minWidth: 120,
+      align: "center",
+      headerAlign: "center",
+      headerClassName: "custom-id-header",
+      valueGetter: (value, row) => row.room?.capacity ?? row.capacity ?? null,
+      valueFormatter: (value) => (value != null ? `${value} Guests` : "N/A"),
+    },
+    {
+      field: "isActive",
+      headerName: "Active",
+      flex: 1,
+      minWidth: 120,
+      align: "center",
+      headerAlign: "center",
+      headerClassName: "custom-id-header",
+      valueGetter: (value, row) => row.isActive,
+      renderCell: (params) => (
+        <span style={{
+          color: params.value ? "#10B981" : "#EF4444",
+          fontWeight: "600",
+          backgroundColor: params.value ? "#E6F4EA" : "#FCE8E6",
+          padding: "4px 12px",
+          borderRadius: "6px"
+        }}>
+          {params.value ? "Yes" : "No"}
+        </span>
+      ),
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 0.8,
+      minWidth: 100,
+      align: "center",
+      headerAlign: "center",
+      headerClassName: "custom-id-header",
+      renderCell: (params) => (
+        <Box>
+          <IconButton onClick={(e) => handleClickMenu(e, params.row)} sx={{ color: "#6B7280" }}>
+            <MoreHorizIcon />
+          </IconButton>
+        </Box>
+      ),
+    },
+  ];
+
   return (
-    <div>ADS</div>
-  )
+    <>
+      <CustomHeader
+        title="Ads Table Details"
+        subTitle="You can check all details"
+        buttonText="Add New Ad"
+        onButtonClick={handleOpenAdd}
+      />
+
+      <Box sx={{ width: { xs: "90%", sm: "90%", md: "85%" }, mx: "auto", mt: 3 }}>
+        <Box sx={{ mb: 3 }}>
+          <TextField
+            size="small"
+            placeholder="Search by Room Number..."
+            variant="outlined"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            sx={{
+              width: { xs: "100%", sm: "320px" },
+              backgroundColor: "#fff",
+              borderRadius: "8px",
+              "& .MuiOutlinedInput-root": { borderRadius: "8px" },
+            }}
+          />
+        </Box>
+
+        {/* Desktop DataGrid View */}
+        <Paper
+          sx={{
+            display: { xs: "none", sm: "block" },
+            elevation: 0,
+            boxShadow: "none",
+            borderRadius: "16px",
+            overflow: "hidden",
+            width: "100%",
+          }}
+        >
+          <DataGrid
+            rows={filteredRows}
+            columns={columns}
+            getRowId={(row) => row._id}
+            initialState={{ pagination: { paginationModel } }}
+            pageSizeOptions={[5, 10]}
+            autoHeight
+            disableRowSelectionOnClick
+            sx={{
+              border: 0,
+              textAlign: "center",
+              backgroundColor: "#fff",
+              "& .custom-id-header": { backgroundColor: "inherit" },
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: "rgba(226, 229, 235, 1)!important",
+                color: "#1F2937",
+                fontSize: "15px",
+                fontWeight: "600",
+              },
+              "& .MuiDataGrid-row": {
+                borderBottom: "0px solid rgba(243, 244, 246, 1)",
+                "&:nth-of-type(even)": { backgroundColor: "rgba(248, 249, 251, 1)" },
+                "&:nth-of-type(odd)": { backgroundColor: "#fff" },
+              },
+              "& .MuiDataGrid-row:hover": { backgroundColor: "#F3F4F6 !important" },
+            }}
+          />
+        </Paper>
+
+        {/* Mobile Responsive Cards View */}
+        <Box sx={{ display: { xs: "flex", sm: "none" }, flexDirection: "column", gap: 2, mb: 3 }}>
+          {filteredRows.length > 0 ? (
+            filteredRows.map((row: any) => {
+              const roomNumber = row.room?.roomNumber || row.roomNumber || "N/A";
+              const price = row.room?.price ?? row.price;
+              const discount = row.room?.discount ?? row.discount;
+              
+              return (
+                <Card
+                  key={row._id}
+                  sx={{ borderRadius: "12px", boxShadow: "0px 2px 4px rgba(0,0,0,0.05)", border: "1px solid #E5E7EB" }}
+                >
+                  <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
+                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
+                      <Typography variant="subtitle1" sx={{ fontWeight: "700", color: "#1F2937" }}>
+                        Room: {roomNumber}
+                      </Typography>
+                      <IconButton size="small" onClick={(e) => handleClickMenu(e, row)} sx={{ color: "#6B7280" }}>
+                        <MoreHorizIcon />
+                      </IconButton>
+                    </Box>
+
+                    <Divider sx={{ my: 1, borderColor: "#F3F4F6" }} />
+
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 1 }}>
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Price:</Typography>
+                        <Typography variant="body2" sx={{ color: "#4B5563", fontWeight: "600" }}>
+                          {price ? `$${price}` : "N/A"}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Discount:</Typography>
+                        <Typography variant="body2" sx={{ color: "#4B5563" }}>
+                          {discount ? `${discount}%` : "0%"}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Active:</Typography>
+                        <Typography variant="body2" sx={{ color: row.isActive ? "#10B981" : "#EF4444", fontWeight: "700" }}>
+                          {row.isActive ? "Yes" : "No"}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              );
+            })
+          ) : (
+            <Typography sx={{ textAlign: "center", color: "#9CA3AF", py: 4 }}>
+              No ads found
+            </Typography>
+          )}
+        </Box>
+      </Box>
+
+      {/* Floating Action Context Menu */}
+      <Menu
+        anchorEl={anchorEl}
+        id="actions-menu"
+        open={openMenu}
+        onClose={handleCloseMenu}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+      >
+        <MenuItem onClick={() => { if (activeRow) handleOpenView(activeRow); handleCloseMenu(); }}>
+          <RemoveRedEyeIcon sx={{ fontSize: 20, color: "darkblue", mx: 1 }} /> View
+        </MenuItem>
+        <MenuItem onClick={() => { if (activeRow) handleOpenEdit(activeRow); handleCloseMenu(); }}>
+          <EditDocumentIcon sx={{ fontSize: 20, color: "orange", mx: 1 }} /> Edit
+        </MenuItem>
+        <MenuItem onClick={() => { if (activeRow) handleOpenDelete(activeRow._id); handleCloseMenu(); }}>
+          <DeleteForeverIcon sx={{ fontSize: 20, color: "red", mx: 1 }} /> Delete
+        </MenuItem>
+      </Menu>
+
+      {/* Mutation Form Dialog for creating and modifying Ads */}
+      <Dialog open={openModal} onClose={handleCloseModal} fullWidth maxWidth="xs">
+        <DialogTitle sx={{ textAlign: "center", fontWeight: "bold" }}>
+          {selectedAd ? "Edit Ad" : "Add New Ad"}
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Room ID"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={adRoomId}
+            onChange={(e) => setAdRoomId(e.target.value)}
+            sx={{ mt: 1 }}
+            disabled={!!selectedAd} // Disables room modification during edits to stay clean
+          />
+          <TextField
+            margin="dense"
+            label="Discount %"
+            type="number"
+            fullWidth
+            variant="outlined"
+            value={adDiscount}
+            onChange={(e) => setAdDiscount(e.target.value)}
+            sx={{ mt: 2 }}
+          />
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button onClick={handleCloseModal} color="inherit">Cancel</Button>
+          <Button onClick={handleSaveAd} variant="contained" color={selectedAd ? "warning" : "primary"}>
+            {selectedAd ? "Update" : "Save"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Linked Modals */}
+      <ViewADS open={openViewModal} onClose={() => setOpenViewModal(false)} facility={viewAd} />
+      <DeleteConfirmations open={isDeleteOpen} onClose={handleCloseDelete} onDelete={handleConfirmDelete} title="Delete This Ad ?" />
+    </>
+  );
 }
