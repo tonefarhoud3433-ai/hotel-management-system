@@ -8,6 +8,7 @@ import {
   Grid,
   Card,
   Chip,
+  Stack,
 } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -123,16 +124,16 @@ export default function ViewADS({
               height: '180px',
               objectFit: 'cover',
               borderRadius: 3,
-              mb: 2,
+              mb: 1,
               boxShadow: 'inset 0 0 20px rgba(0,0,0,0.1)'
             }}
           />
         )}
 
         {/* Main Room Highlight Header */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3, mt: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1, mt: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            <Box sx={{ bgcolor: '#eff6ff', p: 1.2, borderRadius: 3, display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ bgcolor: '#eff6ff9e', p: 1.2, borderRadius: 3, display: 'flex', alignItems: 'center' }}>
               <MeetingRoomIcon sx={{ color: '#1d4ed8', fontSize: '2rem' }} />
             </Box>
             <Box>
@@ -159,14 +160,17 @@ export default function ViewADS({
         </Box>
 
         {/* Info Grid Cards */}
-        <Grid container spacing={2} sx={{ mb: 3 }}>
+        <Grid container spacing={2} sx={{ mb: 1 }}>
           {/* Base Price Card */}
           <Grid item xs={6} sm={4}>
             <Card variant="outlined" sx={{ p: 2, borderRadius: 3, border: '1px solid #f3f4f6', bgcolor: '#fbfbfb', textAlign: 'center' }}>
+                                <Stack sx={{display:'flex',flexDirection:'row',alignItems:'center'}}>
+
               <AttachMoneyIcon sx={{ color: '#059669', mb: 0.5 }} />
               <Typography variant="caption" display="block" sx={{ fontWeight: 600, color: '#6b7280' }}>
                 Base Price
               </Typography>
+              </Stack>
               <Typography variant="body1" sx={{ color: '#111827', fontWeight: 700, mt: 0.5 }}>
                 {price !== undefined ? `$${price}` : "N/A"}
               </Typography>
@@ -176,10 +180,12 @@ export default function ViewADS({
           {/* Discount Card */}
           <Grid item xs={6} sm={4}>
             <Card variant="outlined" sx={{ p: 2, borderRadius: 3, border: '1px solid #f3f4f6', bgcolor: '#fbfbfb', textAlign: 'center' }}>
-              <PercentIcon sx={{ color: '#d97706', mb: 0.5, fontSize: '1.2rem' }} />
+                <Stack sx={{display:'flex',flexDirection:'row',alignItems:'center'}}>
+              <PercentIcon sx={{ color: '#d97706', mx: 0.5, fontSize: '1.2rem' }} />
               <Typography variant="caption" display="block" sx={{ fontWeight: 600, color: '#6b7280' }}>
                 Discount Ratio
               </Typography>
+              </Stack>
               <Typography variant="body1" sx={{ color: '#111827', fontWeight: 700, mt: 0.5 }}>
                 {discount !== undefined ? `${discount}%` : "0%"}
               </Typography>
@@ -189,10 +195,13 @@ export default function ViewADS({
           {/* Capacity Card */}
           <Grid item xs={12} sm={4}>
             <Card variant="outlined" sx={{ p: 2, borderRadius: 3, border: '1px solid #f3f4f6', bgcolor: '#fbfbfb', textAlign: 'center' }}>
-              <PeopleIcon sx={{ color: '#2563eb', mb: 0.5 }} />
+                <Stack sx={{display:'flex',flexDirection:'row',alignItems:'center'}}>
+
+              <PeopleIcon sx={{ color: '#2563eb',mx:0.5 }} />
               <Typography variant="caption" display="block" sx={{ fontWeight: 600, color: '#6b7280' }}>
                 Max Capacity
               </Typography>
+                </Stack>
               <Typography variant="body1" sx={{ color: '#111827', fontWeight: 700, mt: 0.5 }}>
                 {capacity !== undefined ? `${capacity} Guests` : "N/A"}
               </Typography>
@@ -201,7 +210,7 @@ export default function ViewADS({
         </Grid>
 
         {/* Database Reference ID */}
-        <Box sx={{ mb: 3, p: 1.5, bgcolor: '#f8fafc', borderRadius: 2.5, border: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={{ mb: 1, p: 1.5, bgcolor: '#f8fafc', borderRadius: 2.5, border: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', gap: 1 }}>
           <KeyIcon sx={{ color: '#94a3b8', fontSize: '1.1rem' }} />
           <Box>
             <Typography variant="caption" display="block" sx={{ fontWeight: 700, color: '#64748b', fontSize: '0.7rem', textTransform: 'uppercase' }}>
