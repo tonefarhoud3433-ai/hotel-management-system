@@ -76,12 +76,15 @@ export default function Users() {
     setActiveRow(null);
   };
 
-  const filteredRows = rowsData.filter((row: any) => {
-    const roomNum = row.room?.roomNumber || "N/A";
-    const user = row.user?.userName || "";
+ const filteredRows = rowsData.filter((row: any) => {
+    // الوصول للبيانات مباشرة من row بناءً على هيكلية الـ User
+    const userName = row.userName?.toLowerCase() || "";
+    const email = row.email?.toLowerCase() || "";
+    const search = searchTerm.toLowerCase();
+
     return (
-      roomNum.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.toLowerCase().includes(searchTerm.toLowerCase())
+      userName.includes(search) || 
+      email.includes(search)
     );
   });
 
@@ -164,7 +167,7 @@ export default function Users() {
         <Box sx={{ mb: 3 }}>
           <TextField
             size="small"
-            placeholder="Search by Room or User..."
+            placeholder="Search by User..."
             variant="outlined"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -314,7 +317,7 @@ export default function Users() {
 <ViewUser 
   open={openViewModal} 
   onClose={() => setOpenViewModal(false)} 
-  facility={viewBooking} // تأكد أن هذه هي الحالة التي تحتوي على بيانات المستخدم المختار
+  facility={viewBooking} 
 />
 
     </>
