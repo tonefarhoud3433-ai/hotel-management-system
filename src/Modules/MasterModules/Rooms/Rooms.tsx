@@ -3,11 +3,11 @@ import EditDocumentIcon from "@mui/icons-material/EditDocument";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import SearchIcon from "@mui/icons-material/Search";
-import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import PercentIcon from '@mui/icons-material/Percent';
-import PeopleIcon from '@mui/icons-material/People';
-import CloseIcon from '@mui/icons-material/Close';
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import PercentIcon from "@mui/icons-material/Percent";
+import PeopleIcon from "@mui/icons-material/People";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Card,
@@ -31,13 +31,15 @@ import type { GridColDef } from "@mui/x-data-grid";
 import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
 import { toast } from "react-toastify";
-import { getAllRooms, addRoom, viewRoom, deleteRoom, updateRoom } from "../../../API/modules/AdminRooms";
+import {
+  getAllRooms,
+  addRoom,
+  viewRoom,
+  deleteRoom,
+  updateRoom,
+} from "../../../API/modules/AdminRooms";
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
-<<<<<<< HEAD
-import FacilityViewModal from "../../Shared/ViewModals/FacilityViewModal";
-=======
->>>>>>> 7ce355a647eddafb5381dd71b85c60eeedc575b6
 import ViewRooms from "../../Shared/ViewModals/viewRooms";
 
 const paginationModel = { page: 0, pageSize: 5 };
@@ -87,7 +89,8 @@ export default function Rooms() {
       handleCloseDelete();
       fetchData();
     } catch (err: any) {
-      const errorMessage = err?.response?.data?.message || "Failed to delete this room!";
+      const errorMessage =
+        err?.response?.data?.message || "Failed to delete this room!";
       toast.error(errorMessage);
     }
   };
@@ -131,7 +134,7 @@ export default function Rooms() {
 
     // Maps the payload body object wrapper
     const bodyData: any = {
-      roomNumber: roomNumberValue
+      roomNumber: roomNumberValue,
     };
 
     const isEdit = !!selectedRoom;
@@ -147,7 +150,9 @@ export default function Rooms() {
       fetchData();
     } catch (error: any) {
       console.error("Error saving room:", error);
-      const errorMessage = error?.response?.data?.message || "An error occurred while saving the room!";
+      const errorMessage =
+        error?.response?.data?.message ||
+        "An error occurred while saving the room!";
       toast.error(errorMessage);
     }
   };
@@ -156,7 +161,10 @@ export default function Rooms() {
     fetchData();
   }, []);
 
-  const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>, row: any) => {
+  const handleClickMenu = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    row: any,
+  ) => {
     setAnchorEl(event.currentTarget);
     setActiveRow(row);
   };
@@ -167,7 +175,7 @@ export default function Rooms() {
   };
 
   const filteredRows = rowsData.filter((row: any) =>
-    row.roomNumber?.toLowerCase().includes(searchTerm.toLowerCase())
+    row.roomNumber?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const columns: GridColDef[] = [
@@ -189,16 +197,27 @@ export default function Rooms() {
       headerAlign: "center",
       headerClassName: "custom-id-header",
       renderCell: (params) => {
-        const imageUrl = Array.isArray(params.value) ? params.value[0] : params.value;
+        const imageUrl = Array.isArray(params.value)
+          ? params.value[0]
+          : params.value;
         return imageUrl ? (
           <Box
             component="img"
             src={imageUrl}
             alt="Room"
-            sx={{ width: 45, height: 45, borderRadius: 2, objectFit: "cover", my: 0.5, border: "1px solid #E5E7EB" }}
+            sx={{
+              width: 45,
+              height: 45,
+              borderRadius: 2,
+              objectFit: "cover",
+              my: 0.5,
+              border: "1px solid #E5E7EB",
+            }}
           />
         ) : (
-          <span style={{ color: "#9ca3af", fontSize: "0.85rem" }}>No Image</span>
+          <span style={{ color: "#9ca3af", fontSize: "0.85rem" }}>
+            No Image
+          </span>
         );
       },
     },
@@ -210,7 +229,8 @@ export default function Rooms() {
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueFormatter: (value) => (value != null ? `$${Number(value).toLocaleString()}` : "N/A"),
+      valueFormatter: (value) =>
+        value != null ? `$${Number(value).toLocaleString()}` : "N/A",
     },
     {
       field: "discount",
@@ -242,7 +262,10 @@ export default function Rooms() {
       headerClassName: "custom-id-header",
       renderCell: (params) => (
         <Box>
-          <IconButton onClick={(e) => handleClickMenu(e, params.row)} sx={{ color: "#6B7280" }}>
+          <IconButton
+            onClick={(e) => handleClickMenu(e, params.row)}
+            sx={{ color: "#6B7280" }}
+          >
             <MoreHorizIcon />
           </IconButton>
         </Box>
@@ -259,7 +282,9 @@ export default function Rooms() {
         onButtonClick={handleOpenAdd}
       />
 
-      <Box sx={{ width: { xs: "90%", sm: "90%", md: "85%" }, mx: "auto", mt: 3 }}>
+      <Box
+        sx={{ width: { xs: "90%", sm: "90%", md: "85%" }, mx: "auto", mt: 3 }}
+      >
         {/* Search Bar */}
         <Box sx={{ mb: 3 }}>
           <TextField
@@ -316,49 +341,100 @@ export default function Rooms() {
               },
               "& .MuiDataGrid-row": {
                 borderBottom: "0px solid rgba(243, 244, 246, 1)",
-                "&:nth-of-type(even)": { backgroundColor: "rgba(248, 249, 251, 1)" },
+                "&:nth-of-type(even)": {
+                  backgroundColor: "rgba(248, 249, 251, 1)",
+                },
                 "&:nth-of-type(odd)": { backgroundColor: "#fff" },
               },
-              "& .MuiDataGrid-row:hover": { backgroundColor: "#F3F4F6 !important" },
+              "& .MuiDataGrid-row:hover": {
+                backgroundColor: "#F3F4F6 !important",
+              },
             }}
           />
         </Paper>
 
         {/* 2. Mobile Responsive Layout (Cards) */}
-        <Box sx={{ display: { xs: "flex", sm: "none" }, flexDirection: "column", gap: 2, mb: 3 }}>
+        <Box
+          sx={{
+            display: { xs: "flex", sm: "none" },
+            flexDirection: "column",
+            gap: 2,
+            mb: 3,
+          }}
+        >
           {filteredRows.length > 0 ? (
             filteredRows.map((row: any) => (
               <Card
                 key={row._id}
-                sx={{ borderRadius: "12px", boxShadow: "0px 2px 4px rgba(0,0,0,0.05)", border: "1px solid #E5E7EB" }}
+                sx={{
+                  borderRadius: "12px",
+                  boxShadow: "0px 2px 4px rgba(0,0,0,0.05)",
+                  border: "1px solid #E5E7EB",
+                }}
               >
                 <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
-                  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: "700", color: "#1F2937" }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      mb: 1,
+                    }}
+                  >
+                    <Typography
+                      variant="subtitle1"
+                      sx={{ fontWeight: "700", color: "#1F2937" }}
+                    >
                       Room: {row.roomNumber}
                     </Typography>
-                    <IconButton size="small" onClick={(e) => handleClickMenu(e, row)} sx={{ color: "#6B7280" }}>
+                    <IconButton
+                      size="small"
+                      onClick={(e) => handleClickMenu(e, row)}
+                      sx={{ color: "#6B7280" }}
+                    >
                       <MoreHorizIcon />
                     </IconButton>
                   </Box>
 
                   <Divider sx={{ my: 1, borderColor: "#F3F4F6" }} />
 
-                  <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 1 }}>
-                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                      <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Price:</Typography>
-                      <Typography variant="body2" sx={{ color: "#4B5563", fontWeight: "600" }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 1,
+                      mt: 1,
+                    }}
+                  >
+                    <Box
+                      sx={{ display: "flex", justifyContent: "space-between" }}
+                    >
+                      <Typography variant="body2" sx={{ color: "#9CA3AF" }}>
+                        Price:
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "#4B5563", fontWeight: "600" }}
+                      >
                         {row.price ? `$${row.price}` : "N/A"}
                       </Typography>
                     </Box>
-                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                      <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Discount:</Typography>
+                    <Box
+                      sx={{ display: "flex", justifyContent: "space-between" }}
+                    >
+                      <Typography variant="body2" sx={{ color: "#9CA3AF" }}>
+                        Discount:
+                      </Typography>
                       <Typography variant="body2" sx={{ color: "#4B5563" }}>
                         {row.discount ? `${row.discount}%` : "0%"}
                       </Typography>
                     </Box>
-                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                      <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Capacity:</Typography>
+                    <Box
+                      sx={{ display: "flex", justifyContent: "space-between" }}
+                    >
+                      <Typography variant="body2" sx={{ color: "#9CA3AF" }}>
+                        Capacity:
+                      </Typography>
                       <Typography variant="body2" sx={{ color: "#4B5563" }}>
                         {row.capacity ? `${row.capacity} Guests` : "N/A"}
                       </Typography>
@@ -384,19 +460,42 @@ export default function Rooms() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={() => { if (activeRow) handleOpenView(activeRow); handleCloseMenu(); }}>
-          <RemoveRedEyeIcon sx={{ fontSize: 20, color: "darkblue", mx: 1 }} /> View
+        <MenuItem
+          onClick={() => {
+            if (activeRow) handleOpenView(activeRow);
+            handleCloseMenu();
+          }}
+        >
+          <RemoveRedEyeIcon sx={{ fontSize: 20, color: "darkblue", mx: 1 }} />{" "}
+          View
         </MenuItem>
-        <MenuItem onClick={() => { if (activeRow) handleOpenEdit(activeRow); handleCloseMenu(); }}>
-          <EditDocumentIcon sx={{ fontSize: 20, color: "orange", mx: 1 }} /> Edit
+        <MenuItem
+          onClick={() => {
+            if (activeRow) handleOpenEdit(activeRow);
+            handleCloseMenu();
+          }}
+        >
+          <EditDocumentIcon sx={{ fontSize: 20, color: "orange", mx: 1 }} />{" "}
+          Edit
         </MenuItem>
-        <MenuItem onClick={() => { if (activeRow) handleOpenDelete(activeRow._id); handleCloseMenu(); }}>
-          <DeleteForeverIcon sx={{ fontSize: 20, color: "red", mx: 1 }} /> Delete
+        <MenuItem
+          onClick={() => {
+            if (activeRow) handleOpenDelete(activeRow._id);
+            handleCloseMenu();
+          }}
+        >
+          <DeleteForeverIcon sx={{ fontSize: 20, color: "red", mx: 1 }} />{" "}
+          Delete
         </MenuItem>
       </Menu>
 
       {/* Edit / Add Room Dialog */}
-      <Dialog open={openModal} onClose={handleCloseModal} fullWidth maxWidth="xs">
+      <Dialog
+        open={openModal}
+        onClose={handleCloseModal}
+        fullWidth
+        maxWidth="xs"
+      >
         <DialogTitle sx={{ textAlign: "center", fontWeight: "bold" }}>
           {selectedRoom ? "Edit Room" : "Add New Room"}
         </DialogTitle>
@@ -414,17 +513,19 @@ export default function Rooms() {
           />
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={handleCloseModal} color="inherit">Cancel</Button>
-          <Button onClick={handleSaveRoom} variant="contained" color={selectedRoom ? "warning" : "primary"}>
+          <Button onClick={handleCloseModal} color="inherit">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSaveRoom}
+            variant="contained"
+            color={selectedRoom ? "warning" : "primary"}
+          >
             {selectedRoom ? "Update" : "Save"}
           </Button>
         </DialogActions>
       </Dialog>
 
-<<<<<<< HEAD
-      {/* View Modal */}
-      <ViewRooms open={openViewModal} onClose={() => setOpenViewModal(false)} room={viewRoom} />
-=======
       {/* Room Details View Modal */}
       <Dialog
         open={openViewModal}
@@ -433,15 +534,30 @@ export default function Rooms() {
         fullWidth
         slotProps={{ paper: { sx: { borderRadius: 4, p: 1 } } }}
       >
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 3, pt: 2 }}>
-          <Typography variant="subtitle2" sx={{ color: '#1976d2', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1rem' }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            px: 3,
+            pt: 2,
+          }}
+        >
+          <Typography
+            variant="subtitle2"
+            sx={{
+              color: "#1976d2",
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.1rem",
+            }}
+          >
             Room Details View
           </Typography>
           <IconButton onClick={() => setOpenViewModal(false)} size="small">
             <CloseIcon fontSize="small" />
           </IconButton>
         </Box>
->>>>>>> 7ce355a647eddafb5381dd71b85c60eeedc575b6
 
         <DialogContent sx={{ px: 3, py: 2 }}>
           {viewRoomData?.images?.[0] && (
@@ -449,52 +565,132 @@ export default function Rooms() {
               component="img"
               src={viewRoomData.images[0]}
               alt="Room Preview"
-              sx={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: 3, mb: 3 }}
+              sx={{
+                width: "100%",
+                height: "200px",
+                objectFit: "cover",
+                borderRadius: 3,
+                mb: 3,
+              }}
             />
           )}
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
-            <Box sx={{ bgcolor: '#eff6ff', p: 1, borderRadius: 2, display: 'flex' }}>
-              <MeetingRoomIcon sx={{ color: '#1d4ed8', fontSize: '1.8rem' }} />
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 3 }}>
+            <Box
+              sx={{
+                bgcolor: "#eff6ff",
+                p: 1,
+                borderRadius: 2,
+                display: "flex",
+              }}
+            >
+              <MeetingRoomIcon sx={{ color: "#1d4ed8", fontSize: "1.8rem" }} />
             </Box>
-            <Typography variant="h5" sx={{ fontWeight: 800, color: '#111827' }}>
+            <Typography variant="h5" sx={{ fontWeight: 800, color: "#111827" }}>
               Room {viewRoomData?.roomNumber || "N/A"}
             </Typography>
           </Box>
 
           <Grid container spacing={2} sx={{ mb: 2 }}>
             <Grid item xs={4}>
-              <Card variant="outlined" sx={{ p: 1.5, borderRadius: 2.5, textAlign: 'center', bgcolor: '#fbfbfb' }}>
-                <AttachMoneyIcon sx={{ color: '#059669', mb: 0.5 }} />
-                <Typography variant="caption" display="block" sx={{ color: '#6b7280', fontWeight: 600 }}>Price</Typography>
-                <Typography variant="body2" sx={{ fontWeight: 700, mt: 0.5 }}>${viewRoomData?.price || 0}</Typography>
+              <Card
+                variant="outlined"
+                sx={{
+                  p: 1.5,
+                  borderRadius: 2.5,
+                  textAlign: "center",
+                  bgcolor: "#fbfbfb",
+                }}
+              >
+                <AttachMoneyIcon sx={{ color: "#059669", mb: 0.5 }} />
+                <Typography
+                  variant="caption"
+                  display="block"
+                  sx={{ color: "#6b7280", fontWeight: 600 }}
+                >
+                  Price
+                </Typography>
+                <Typography variant="body2" sx={{ fontWeight: 700, mt: 0.5 }}>
+                  ${viewRoomData?.price || 0}
+                </Typography>
               </Card>
             </Grid>
             <Grid item xs={4}>
-              <Card variant="outlined" sx={{ p: 1.5, borderRadius: 2.5, textAlign: 'center', bgcolor: '#fbfbfb' }}>
-                <PercentIcon sx={{ color: '#d97706', mb: 0.5, fontSize: '1.1rem' }} />
-                <Typography variant="caption" display="block" sx={{ color: '#6b7280', fontWeight: 600 }}>Discount</Typography>
-                <Typography variant="body2" sx={{ fontWeight: 700, mt: 0.5 }}>{viewRoomData?.discount || 0}%</Typography>
+              <Card
+                variant="outlined"
+                sx={{
+                  p: 1.5,
+                  borderRadius: 2.5,
+                  textAlign: "center",
+                  bgcolor: "#fbfbfb",
+                }}
+              >
+                <PercentIcon
+                  sx={{ color: "#d97706", mb: 0.5, fontSize: "1.1rem" }}
+                />
+                <Typography
+                  variant="caption"
+                  display="block"
+                  sx={{ color: "#6b7280", fontWeight: 600 }}
+                >
+                  Discount
+                </Typography>
+                <Typography variant="body2" sx={{ fontWeight: 700, mt: 0.5 }}>
+                  {viewRoomData?.discount || 0}%
+                </Typography>
               </Card>
             </Grid>
             <Grid item xs={4}>
-              <Card variant="outlined" sx={{ p: 1.5, borderRadius: 2.5, textAlign: 'center', bgcolor: '#fbfbfb' }}>
-                <PeopleIcon sx={{ color: '#2563eb', mb: 0.5 }} />
-                <Typography variant="caption" display="block" sx={{ color: '#6b7280', fontWeight: 600 }}>Capacity</Typography>
-                <Typography variant="body2" sx={{ fontWeight: 700, mt: 0.5 }}>{viewRoomData?.capacity || 0} G</Typography>
+              <Card
+                variant="outlined"
+                sx={{
+                  p: 1.5,
+                  borderRadius: 2.5,
+                  textAlign: "center",
+                  bgcolor: "#fbfbfb",
+                }}
+              >
+                <PeopleIcon sx={{ color: "#2563eb", mb: 0.5 }} />
+                <Typography
+                  variant="caption"
+                  display="block"
+                  sx={{ color: "#6b7280", fontWeight: 600 }}
+                >
+                  Capacity
+                </Typography>
+                <Typography variant="body2" sx={{ fontWeight: 700, mt: 0.5 }}>
+                  {viewRoomData?.capacity || 0} G
+                </Typography>
               </Card>
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setOpenViewModal(false)} variant="contained" sx={{ bgcolor: '#1e293b', borderRadius: 2, '&:hover': { bgcolor: '#0f172a' } }}>
+          <Button
+            onClick={() => setOpenViewModal(false)}
+            variant="contained"
+            sx={{
+              bgcolor: "#1e293b",
+              borderRadius: 2,
+              "&:hover": { bgcolor: "#0f172a" },
+            }}
+          >
             Close
           </Button>
         </DialogActions>
       </Dialog>
-      <ViewRooms open={openViewModal} onClose={() => setOpenViewModal(false)} facility={viewRoomData} />
+      <ViewRooms
+        open={openViewModal}
+        onClose={() => setOpenViewModal(false)}
+        facility={viewRoomData}
+      />
       {/* Delete Modal */}
-      <DeleteConfirmations open={isDeleteOpen} onClose={handleCloseDelete} onDelete={handleConfirmDelete} title="Delete This Room ?" />
+      <DeleteConfirmations
+        open={isDeleteOpen}
+        onClose={handleCloseDelete}
+        onDelete={handleConfirmDelete}
+        title="Delete This Room ?"
+      />
     </>
   );
 }
