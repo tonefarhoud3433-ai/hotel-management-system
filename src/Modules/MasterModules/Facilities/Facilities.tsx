@@ -34,6 +34,7 @@ import FacilityViewModal, {
 import { AdminData } from "../../../API";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
 import { toast } from "react-toastify";
+import { number } from "yup";
 
 const paginationModel = { page: 0, pageSize: 5 };
 
@@ -62,7 +63,7 @@ export default function Facilities() {
     }
   };
 
-  // Delete Modal - تم تعديل الـ type لـ string ليطابق الـ State والـ ID الخاص بـ MongoDB
+
   const handleOpenDelete = (id: string) => {
     setSelectedId(id);
     setIsDeleteOpen(true);
@@ -73,12 +74,12 @@ export default function Facilities() {
     setSelectedId(null);
   };
 
-  // تم إصلاح إغلاق الأقواس { } هنا بالكامل
+  
   const handleConfirmDelete = async () => {
     if (!selectedId) return;
 
     try {
-      await AdminData.deleteFacilities(selectedId);
+      await AdminData.deleteFacilities(+selectedId);
       toast.success("Deleted successfully!");
       handleCloseDelete();
       fetchData();
