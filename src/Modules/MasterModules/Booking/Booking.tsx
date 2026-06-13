@@ -1,7 +1,372 @@
-import React from 'react'
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import {
+  Box,
+  Card,
+  CardContent,
+  Divider,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Paper from "@mui/material/Paper";
+import type { GridColDef } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
+import * as React from "react";
+import { toast } from "react-toastify";
+
+import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
+import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
+import ViewADS from "../../Shared/ViewModals/viewADS"; // يمكنك استبداله لاحقاً بـ ViewBooking إذا كان متوفراً
+import { deleteBookings, getAllBookings } from "../../../API/modules/AdminBooking";
+import { ViewKanban } from "@mui/icons-material";
+import ViewBooking from "../../Shared/ViewModals/ViewBooking";
+
+const paginationModel = { page: 0, pageSize: 5 };
+
+const formatDate = (dateString: string) => {
+  if (!dateString) return "N/A";
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
 
 export default function Booking() {
+  const [openViewModal, setOpenViewModal] = React.useState(false);
+  const [rowsData, setRowsData] = React.useState([]);
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [viewBooking, setViewBooking] = React.useState<any>(null);
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [activeRow, setActiveRow] = React.useState<any>(null);
+  const openMenu = Boolean(anchorEl);
+  const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
+  const [selectedId, setSelectedId] = React.useState<any>(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await getAllBookings();
+      // سحب المصفوفة الصحيحة بناءً على الـ JSON الخاص بك (booking)
+      const bookingList = response?.data?.data?.booking || [];
+      setRowsData(bookingList);
+    } catch (error) {
+      console.error("Error fetching bookings data:", error);
+    }
+  };
+
+  const handleOpenDelete = (id: any) => {
+    setSelectedId(id);
+    setIsDeleteOpen(true);
+  };
+
+  const handleCloseDelete = () => {
+    setIsDeleteOpen(false);
+    setSelectedId(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedId) return;
+    try {
+      await deleteBookings(selectedId);
+      toast.success("Booking deleted successfully!");
+      handleCloseDelete();
+      fetchData();
+    } catch (err: any) {
+      const errorMessage = err?.response?.data?.message || "Failed to delete this Booking!";
+      toast.error(errorMessage);
+    }
+  };
+
+  const handleOpenView = (row: any) => {
+    setViewBooking(row);
+    setOpenViewModal(true);
+  };
+
+  React.useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>, row: any) => {
+    setAnchorEl(event.currentTarget);
+    setActiveRow(row);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+    setActiveRow(null);
+  };
+
+  const filteredRows = rowsData.filter((row: any) => {
+    const roomNum = row.room?.roomNumber || "N/A";
+    const user = row.user?.userName || "";
+    return (
+      roomNum.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
+
+  const columns: GridColDef[] = [
+    {
+      field: "roomNumber",
+      headerName: "Room Number",
+      flex: 1,
+      minWidth: 130,
+      align: "center",
+      headerAlign: "center",
+      headerClassName: "custom-id-header",
+      valueGetter: (value, row) => row.room?.roomNumber || "Deleted Room",
+    },
+    {
+      field: "userName",
+      headerName: "User Name",
+      flex: 1,
+      minWidth: 140,
+      align: "center",
+      headerAlign: "center",
+      headerClassName: "custom-id-header",
+      valueGetter: (value, row) => row.user?.userName || "N/A",
+    },
+    {
+      field: "totalPrice",
+      headerName: "Total Price",
+      flex: 1,
+      minWidth: 120,
+      align: "center",
+      headerAlign: "center",
+      headerClassName: "custom-id-header",
+      valueFormatter: (value) => (value != null ? `$${Number(value).toLocaleString()}` : "N/A"),
+    },
+    {
+      field: "startDate",
+      headerName: "Start Date",
+      flex: 1,
+      minWidth: 130,
+      align: "center",
+      headerAlign: "center",
+      headerClassName: "custom-id-header",
+      valueFormatter: (value) => formatDate(value),
+    },
+    {
+      field: "endDate",
+      headerName: "End Date",
+      flex: 1,
+      minWidth: 130,
+      align: "center",
+      headerAlign: "center",
+      headerClassName: "custom-id-header",
+      valueFormatter: (value) => formatDate(value),
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      flex: 1,
+      minWidth: 130,
+      align: "center",
+      headerAlign: "center",
+      headerClassName: "custom-id-header",
+      renderCell: (params) => {
+        const isCompleted = params.value === "completed";
+        return (
+          <span
+            style={{
+              color: isCompleted ? "#10B981" : "#D97706",
+              fontWeight: "600",
+              backgroundColor: isCompleted ? "#E6F4EA" : "#FEF3C7",
+              padding: "4px 12px",
+              borderRadius: "6px",
+              textTransform: "capitalize",
+            }}
+          >
+            {params.value}
+          </span>
+        );
+      },
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 0.6,
+      minWidth: 80,
+      align: "center",
+      headerAlign: "center",
+      headerClassName: "custom-id-header",
+      renderCell: (params) => (
+        <Box>
+          <IconButton onClick={(e) => handleClickMenu(e, params.row)} sx={{ color: "#6B7280" }}>
+            <MoreHorizIcon />
+          </IconButton>
+        </Box>
+      ),
+    },
+  ];
+
   return (
-    <div>Booking</div>
-  )
+    <>
+      <CustomHeader
+        title="Bookings Table Details"
+        subTitle="You can check and monitor all global user bookings"
+      />
+
+      <Box sx={{ width: { xs: "90%", sm: "90%", md: "85%" }, mx: "auto", mt: 3 }}>
+        <Box sx={{ mb: 3 }}>
+          <TextField
+            size="small"
+            placeholder="Search by Room or User..."
+            variant="outlined"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            sx={{
+              width: { xs: "100%", sm: "320px" },
+              backgroundColor: "#fff",
+              borderRadius: "8px",
+              "& .MuiOutlinedInput-root": { borderRadius: "8px" },
+            }}
+          />
+        </Box>
+
+        {/* Desktop DataGrid View */}
+        <Paper
+          sx={{
+            display: { xs: "none", sm: "block" },
+            elevation: 0,
+            boxShadow: "none",
+            borderRadius: "16px",
+            overflow: "hidden",
+            width: "100%",
+          }}
+        >
+          <DataGrid
+            rows={filteredRows}
+            columns={columns}
+            getRowId={(row) => row._id}
+            initialState={{ pagination: { paginationModel } }}
+            pageSizeOptions={[5, 10]}
+            autoHeight
+            disableRowSelectionOnClick
+            sx={{
+              border: 0,
+              textAlign: "center",
+              backgroundColor: "#fff",
+              "& .custom-id-header": { backgroundColor: "inherit" },
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: "rgba(226, 229, 235, 1)!important",
+                color: "#1F2937",
+                fontSize: "15px",
+                fontWeight: "600",
+              },
+              "& .MuiDataGrid-row": {
+                borderBottom: "0px solid rgba(243, 244, 246, 1)",
+                "&:nth-of-type(even)": { backgroundColor: "rgba(248, 249, 251, 1)" },
+                "&:nth-of-type(odd)": { backgroundColor: "#fff" },
+              },
+              "& .MuiDataGrid-row:hover": { backgroundColor: "#F3F4F6 !important" },
+            }}
+          />
+        </Paper>
+
+        {/* Mobile Responsive Cards View */}
+        <Box sx={{ display: { xs: "flex", sm: "none" }, flexDirection: "column", gap: 2, mb: 3 }}>
+          {filteredRows.length > 0 ? (
+            filteredRows.map((row: any) => {
+              const roomNumber = row.room?.roomNumber || "Deleted Room";
+              const clientName = row.user?.userName || "N/A";
+              const isCompleted = row.status === "completed";
+
+              return (
+                <Card
+                  key={row._id}
+                  sx={{
+                    borderRadius: "12px",
+                    boxShadow: "0px 2px 4px rgba(0,0,0,0.05)",
+                    border: "1px solid #E5E7EB",
+                  }}
+                >
+                  <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
+                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
+                      <Typography variant="subtitle1" sx={{ fontWeight: "700", color: "#1F2937" }}>
+                        Room: {roomNumber}
+                      </Typography>
+                      <IconButton size="small" onClick={(e) => handleClickMenu(e, row)} sx={{ color: "#6B7280" }}>
+                        <MoreHorizIcon />
+                      </IconButton>
+                    </Box>
+
+                    <Divider sx={{ my: 1, borderColor: "#F3F4F6" }} />
+
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 1 }}>
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Client:</Typography>
+                        <Typography variant="body2" sx={{ color: "#4B5563", fontWeight: "600" }}>
+                          {clientName}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Total Price:</Typography>
+                        <Typography variant="body2" sx={{ color: "#4B5563", fontWeight: "600" }}>
+                          {row.totalPrice ? `$${row.totalPrice}` : "N/A"}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Duration:</Typography>
+                        <Typography variant="body2" sx={{ color: "#4B5563", fontSize: "0.8rem" }}>
+                          {formatDate(row.startDate)} - {formatDate(row.endDate)}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Status:</Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: isCompleted ? "#10B981" : "#D97706",
+                            fontWeight: "700",
+                            backgroundColor: isCompleted ? "#E6F4EA" : "#FEF3C7",
+                            padding: "2px 8px",
+                            borderRadius: "4px",
+                            textTransform: "capitalize",
+                          }}
+                        >
+                          {row.status}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              );
+            })
+          ) : (
+            <Typography sx={{ textAlign: "center", color: "#9CA3AF", py: 4 }}>
+              No bookings found
+            </Typography>
+          )}
+        </Box>
+      </Box>
+
+      {/* Floating Action Context Menu */}
+      <Menu
+        anchorEl={anchorEl}
+        id="actions-menu"
+        open={openMenu}
+        onClose={handleCloseMenu}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+      >
+        <MenuItem onClick={() => { if (activeRow) handleOpenView(activeRow); handleCloseMenu(); }}>
+          <RemoveRedEyeIcon sx={{ fontSize: 20, color: "darkblue", mx: 1 }} /> View
+        </MenuItem>
+
+        <MenuItem onClick={() => { if (activeRow) handleOpenDelete(activeRow._id); handleCloseMenu(); }}>
+          <DeleteForeverIcon sx={{ fontSize: 20, color: "red", mx: 1 }} /> Delete
+        </MenuItem>
+      </Menu>
+
+      {/* Linked Modals */}
+      <ViewBooking open={openViewModal} onClose={() => setOpenViewModal(false)} facility={viewBooking} />
+      <DeleteConfirmations open={isDeleteOpen} onClose={handleCloseDelete} onDelete={handleConfirmDelete} title="Delete This Booking ?" />
+    </>
+  );
 }
