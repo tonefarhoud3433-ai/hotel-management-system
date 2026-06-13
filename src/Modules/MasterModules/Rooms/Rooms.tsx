@@ -2,6 +2,12 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditDocumentIcon from "@mui/icons-material/EditDocument";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import SearchIcon from "@mui/icons-material/Search";
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import PercentIcon from '@mui/icons-material/Percent';
+import PeopleIcon from '@mui/icons-material/People';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   Box,
   Card,
@@ -14,6 +20,8 @@ import {
   IconButton,
   TextField,
   Typography,
+  InputAdornment,
+  Grid,
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
@@ -23,10 +31,10 @@ import type { GridColDef } from "@mui/x-data-grid";
 import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
 import { toast } from "react-toastify";
-import { getAllRooms } from "../../../API/modules/AdminRooms";
+import { getAllRooms, addRoom, viewRoom, deleteRoom, updateRoom } from "../../../API/modules/AdminRooms";
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
-import FacilityViewModal from "../../Shared/ViewModals/FacilityViewModal";
+import ViewRooms from "../../Shared/ViewModals/viewRooms";
 
 const paginationModel = { page: 0, pageSize: 5 };
 
@@ -37,14 +45,14 @@ export default function Rooms() {
   const [rowsData, setRowsData] = React.useState([]);
   const [selectedRoom, setSelectedRoom] = React.useState<any>(null);
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [viewRoom, setViewRoom] = React.useState<any>(null);
+  const [viewRoomData, setViewRoomData] = React.useState<any>(null);
 
   // Actions Menu State Management
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [activeRow, setActiveRow] = React.useState<any>(null);
   const openMenu = Boolean(anchorEl);
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
-  const [selectedId, setSelectedId] = React.useState<string | null>(null);
+  const [selectedId, setSelectedId] = React.useState<any>(null);
 
   const fetchData = async () => {
     try {
@@ -57,7 +65,7 @@ export default function Rooms() {
     }
   };
 
-  const handleOpenDelete = (id: string) => {
+  const handleOpenDelete = (id: any) => {
     setSelectedId(id);
     setIsDeleteOpen(true);
   };
@@ -70,9 +78,8 @@ export default function Rooms() {
   const handleConfirmDelete = async () => {
     if (!selectedId) return;
     try {
-      // NOTE: Replace this placeholder with your actual AdminRooms delete endpoint once available
-      // await deleteRoom(selectedId); 
-      toast.success("Deleted successfully!");
+      await deleteRoom(selectedId);
+      toast.success("Room deleted successfully!");
       handleCloseDelete();
       fetchData();
     } catch (err: any) {
@@ -89,13 +96,21 @@ export default function Rooms() {
 
   const handleOpenEdit = (row: any) => {
     setSelectedRoom(row);
-    setRoomNumberValue(row.roomNumber);
+    setRoomNumberValue(row.roomNumber || "");
     setOpenModal(true);
   };
 
-  const handleOpenView = (row: any) => {
-    setViewRoom(row);
-    setOpenViewModal(true);
+  const handleOpenView = async (row: any) => {
+    try {
+      const response = await viewRoom(row._id);
+      console.log(response);
+
+      setViewRoomData(response?.data?.data || row);
+      setOpenViewModal(true);
+    } catch (error) {
+      setViewRoomData(row);
+      setOpenViewModal(true);
+    }
   };
 
   const handleCloseModal = () => {
@@ -105,19 +120,31 @@ export default function Rooms() {
   };
 
   const handleSaveRoom = async () => {
-    if (!roomNumberValue.trim()) return;
+    if (!roomNumberValue.trim()) {
+      toast.error("Please enter a valid Room Number");
+      return;
+    }
+
+    // Maps the payload body object wrapper
+    const bodyData: any = {
+      roomNumber: roomNumberValue
+    };
+
     const isEdit = !!selectedRoom;
     try {
       if (isEdit) {
-        // NOTE: Replace these with actual Room mutations when integrated
-        // await updateRoom(selectedRoom._id, { roomNumber: roomNumberValue });
+        await updateRoom(selectedRoom._id, bodyData);
+        toast.success("Room updated successfully!");
       } else {
-        // await addRoom({ roomNumber: roomNumberValue });
+        await addRoom(bodyData);
+        toast.success("Room created successfully!");
       }
       handleCloseModal();
       fetchData();
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      console.error("Error saving room:", error);
+      const errorMessage = error?.response?.data?.message || "An error occurred while saving the room!";
+      toast.error(errorMessage);
     }
   };
 
@@ -135,7 +162,6 @@ export default function Rooms() {
     setActiveRow(null);
   };
 
-  // FIX: Search now filters correctly by 'roomNumber' instead of non-existent 'name'
   const filteredRows = rowsData.filter((row: any) =>
     row.roomNumber?.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -165,10 +191,10 @@ export default function Rooms() {
             component="img"
             src={imageUrl}
             alt="Room"
-            sx={{ width: 45, height: 45, borderRadius: 1, objectFit: "cover", my: 0.5 }}
+            sx={{ width: 45, height: 45, borderRadius: 2, objectFit: "cover", my: 0.5, border: "1px solid #E5E7EB" }}
           />
         ) : (
-          <span style={{ color: "#9ca3af" }}>No Image</span>
+          <span style={{ color: "#9ca3af", fontSize: "0.85rem" }}>No Image</span>
         );
       },
     },
@@ -238,6 +264,13 @@ export default function Rooms() {
             variant="outlined"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: "#9CA3AF", fontSize: "1.2rem" }} />
+                </InputAdornment>
+              ),
+            }}
             sx={{
               width: { xs: "100%", sm: "320px" },
               backgroundColor: "#fff",
@@ -307,7 +340,6 @@ export default function Rooms() {
 
                   <Divider sx={{ my: 1, borderColor: "#F3F4F6" }} />
 
-                  {/* FIX: Synchronized parameters on cards with real data values */}
                   <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 1 }}>
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                       <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Price:</Typography>
@@ -345,59 +377,16 @@ export default function Rooms() {
         id="actions-menu"
         open={openMenu}
         onClose={handleCloseMenu}
-        slotProps={{
-          paper: {
-            elevation: 0,
-            sx: {
-              overflow: "visible",
-              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.15))",
-              mt: 1.5,
-              borderRadius: 3,
-              "&::before": {
-                content: '""',
-                display: "block",
-                position: "absolute",
-                top: 0,
-                right: 14,
-                width: 10,
-                height: 10,
-                bgcolor: "background.paper",
-                transform: "translateY(-50%) rotate(45deg)",
-                zIndex: 0,
-              },
-            },
-          },
-        }}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem
-          sx={{ py: 1 }}
-          onClick={() => {
-            if (activeRow) handleOpenView(activeRow);
-            handleCloseMenu();
-          }}
-        >
+        <MenuItem onClick={() => { if (activeRow) handleOpenView(activeRow); handleCloseMenu(); }}>
           <RemoveRedEyeIcon sx={{ fontSize: 20, color: "darkblue", mx: 1 }} /> View
         </MenuItem>
-
-        <MenuItem
-          sx={{ py: 1 }}
-          onClick={() => {
-            if (activeRow) handleOpenEdit(activeRow);
-            handleCloseMenu();
-          }}
-        >
+        <MenuItem onClick={() => { if (activeRow) handleOpenEdit(activeRow); handleCloseMenu(); }}>
           <EditDocumentIcon sx={{ fontSize: 20, color: "orange", mx: 1 }} /> Edit
         </MenuItem>
-
-        <MenuItem
-          sx={{ py: 1 }}
-          onClick={() => {
-            if (activeRow) handleOpenDelete(activeRow._id);
-            handleCloseMenu();
-          }}
-        >
+        <MenuItem onClick={() => { if (activeRow) handleOpenDelete(activeRow._id); handleCloseMenu(); }}>
           <DeleteForeverIcon sx={{ fontSize: 20, color: "red", mx: 1 }} /> Delete
         </MenuItem>
       </Menu>
@@ -422,19 +411,79 @@ export default function Rooms() {
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={handleCloseModal} color="inherit">Cancel</Button>
-          <Button
-            onClick={handleSaveRoom}
-            variant="contained"
-            color={selectedRoom ? "warning" : "primary"}
-          >
+          <Button onClick={handleSaveRoom} variant="contained" color={selectedRoom ? "warning" : "primary"}>
             {selectedRoom ? "Update" : "Save"}
           </Button>
         </DialogActions>
       </Dialog>
 
-      {/* View Modal */}
-      <FacilityViewModal open={openViewModal} onClose={() => setOpenViewModal(false)} facility={viewRoom} />
+      {/* Room Details View Modal */}
+      <Dialog
+        open={openViewModal}
+        onClose={() => setOpenViewModal(false)}
+        maxWidth="sm"
+        fullWidth
+        slotProps={{ paper: { sx: { borderRadius: 4, p: 1 } } }}
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 3, pt: 2 }}>
+          <Typography variant="subtitle2" sx={{ color: '#1976d2', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1rem' }}>
+            Room Details View
+          </Typography>
+          <IconButton onClick={() => setOpenViewModal(false)} size="small">
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </Box>
 
+        <DialogContent sx={{ px: 3, py: 2 }}>
+          {viewRoomData?.images?.[0] && (
+            <Box
+              component="img"
+              src={viewRoomData.images[0]}
+              alt="Room Preview"
+              sx={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: 3, mb: 3 }}
+            />
+          )}
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
+            <Box sx={{ bgcolor: '#eff6ff', p: 1, borderRadius: 2, display: 'flex' }}>
+              <MeetingRoomIcon sx={{ color: '#1d4ed8', fontSize: '1.8rem' }} />
+            </Box>
+            <Typography variant="h5" sx={{ fontWeight: 800, color: '#111827' }}>
+              Room {viewRoomData?.roomNumber || "N/A"}
+            </Typography>
+          </Box>
+
+          <Grid container spacing={2} sx={{ mb: 2 }}>
+            <Grid item xs={4}>
+              <Card variant="outlined" sx={{ p: 1.5, borderRadius: 2.5, textAlign: 'center', bgcolor: '#fbfbfb' }}>
+                <AttachMoneyIcon sx={{ color: '#059669', mb: 0.5 }} />
+                <Typography variant="caption" display="block" sx={{ color: '#6b7280', fontWeight: 600 }}>Price</Typography>
+                <Typography variant="body2" sx={{ fontWeight: 700, mt: 0.5 }}>${viewRoomData?.price || 0}</Typography>
+              </Card>
+            </Grid>
+            <Grid item xs={4}>
+              <Card variant="outlined" sx={{ p: 1.5, borderRadius: 2.5, textAlign: 'center', bgcolor: '#fbfbfb' }}>
+                <PercentIcon sx={{ color: '#d97706', mb: 0.5, fontSize: '1.1rem' }} />
+                <Typography variant="caption" display="block" sx={{ color: '#6b7280', fontWeight: 600 }}>Discount</Typography>
+                <Typography variant="body2" sx={{ fontWeight: 700, mt: 0.5 }}>{viewRoomData?.discount || 0}%</Typography>
+              </Card>
+            </Grid>
+            <Grid item xs={4}>
+              <Card variant="outlined" sx={{ p: 1.5, borderRadius: 2.5, textAlign: 'center', bgcolor: '#fbfbfb' }}>
+                <PeopleIcon sx={{ color: '#2563eb', mb: 0.5 }} />
+                <Typography variant="caption" display="block" sx={{ color: '#6b7280', fontWeight: 600 }}>Capacity</Typography>
+                <Typography variant="body2" sx={{ fontWeight: 700, mt: 0.5 }}>{viewRoomData?.capacity || 0} G</Typography>
+              </Card>
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button onClick={() => setOpenViewModal(false)} variant="contained" sx={{ bgcolor: '#1e293b', borderRadius: 2, '&:hover': { bgcolor: '#0f172a' } }}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <ViewRooms open={openViewModal} onClose={() => setOpenViewModal(false)} facility={viewRoomData} />
       {/* Delete Modal */}
       <DeleteConfirmations open={isDeleteOpen} onClose={handleCloseDelete} onDelete={handleConfirmDelete} title="Delete This Room ?" />
     </>
