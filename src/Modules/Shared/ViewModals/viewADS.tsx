@@ -182,7 +182,7 @@ export default function ViewADS({
             <Card variant="outlined" sx={{ p: 2, borderRadius: 3, border: '1px solid #f3f4f6', bgcolor: '#fbfbfb', textAlign: 'center' }}>
                 <Stack sx={{display:'flex',flexDirection:'row',alignItems:'center'}}>
               <PercentIcon sx={{ color: '#d97706', mx: 0.5, fontSize: '1.2rem' }} />
-              <Typography variant="caption" display="block" sx={{ fontWeight: 600, color: '#6b7280' }}>
+              <Typography variant="caption"  sx={{display:'block', fontWeight: 600, color: '#6b7280' }}>
                 Discount Ratio
               </Typography>
               </Stack>

@@ -27,6 +27,7 @@ import { getAllRooms } from "../../../API/modules/AdminRooms";
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
 import FacilityViewModal from "../../Shared/ViewModals/FacilityViewModal";
+import ViewRooms from "../../Shared/ViewModals/viewRooms";
 
 const paginationModel = { page: 0, pageSize: 5 };
 
@@ -433,7 +434,7 @@ export default function Rooms() {
       </Dialog>
 
       {/* View Modal */}
-      <FacilityViewModal open={openViewModal} onClose={() => setOpenViewModal(false)} facility={viewRoom} />
+      <ViewRooms open={openViewModal} onClose={() => setOpenViewModal(false)} room={viewRoom} />
 
       {/* Delete Modal */}
       <DeleteConfirmations open={isDeleteOpen} onClose={handleCloseDelete} onDelete={handleConfirmDelete} title="Delete This Room ?" />
