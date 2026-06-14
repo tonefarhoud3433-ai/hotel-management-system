@@ -18,11 +18,12 @@ import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
 import { toast } from "react-toastify";
 
+import {
+  deleteBookings,
+  getAllBookings,
+} from "../../../API/modules/AdminBooking";
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
-import ViewADS from "../../Shared/ViewModals/viewADS"; // يمكنك استبداله لاحقاً بـ ViewBooking إذا كان متوفراً
-import { deleteBookings, getAllBookings } from "../../../API/modules/AdminBooking";
-import { ViewKanban } from "@mui/icons-material";
 import ViewBooking from "../../Shared/ViewModals/ViewBooking";
 
 const paginationModel = { page: 0, pageSize: 5 };
@@ -77,7 +78,8 @@ export default function Booking() {
       handleCloseDelete();
       fetchData();
     } catch (err: any) {
-      const errorMessage = err?.response?.data?.message || "Failed to delete this Booking!";
+      const errorMessage =
+        err?.response?.data?.message || "Failed to delete this Booking!";
       toast.error(errorMessage);
     }
   };
@@ -91,7 +93,10 @@ export default function Booking() {
     fetchData();
   }, []);
 
-  const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>, row: any) => {
+  const handleClickMenu = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    row: any,
+  ) => {
     setAnchorEl(event.currentTarget);
     setActiveRow(row);
   };
@@ -139,7 +144,8 @@ export default function Booking() {
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueFormatter: (value) => (value != null ? `$${Number(value).toLocaleString()}` : "N/A"),
+      valueFormatter: (value) =>
+        value != null ? `$${Number(value).toLocaleString()}` : "N/A",
     },
     {
       field: "startDate",
@@ -197,7 +203,10 @@ export default function Booking() {
       headerClassName: "custom-id-header",
       renderCell: (params) => (
         <Box>
-          <IconButton onClick={(e) => handleClickMenu(e, params.row)} sx={{ color: "#6B7280" }}>
+          <IconButton
+            onClick={(e) => handleClickMenu(e, params.row)}
+            sx={{ color: "#6B7280" }}
+          >
             <MoreHorizIcon />
           </IconButton>
         </Box>
@@ -212,7 +221,9 @@ export default function Booking() {
         subTitle="You can check and monitor all global user bookings"
       />
 
-      <Box sx={{ width: { xs: "90%", sm: "90%", md: "85%" }, mx: "auto", mt: 3 }}>
+      <Box
+        sx={{ width: { xs: "90%", sm: "90%", md: "85%" }, mx: "auto", mt: 3 }}
+      >
         <Box sx={{ mb: 3 }}>
           <TextField
             size="small"
@@ -261,16 +272,27 @@ export default function Booking() {
               },
               "& .MuiDataGrid-row": {
                 borderBottom: "0px solid rgba(243, 244, 246, 1)",
-                "&:nth-of-type(even)": { backgroundColor: "rgba(248, 249, 251, 1)" },
+                "&:nth-of-type(even)": {
+                  backgroundColor: "rgba(248, 249, 251, 1)",
+                },
                 "&:nth-of-type(odd)": { backgroundColor: "#fff" },
               },
-              "& .MuiDataGrid-row:hover": { backgroundColor: "#F3F4F6 !important" },
+              "& .MuiDataGrid-row:hover": {
+                backgroundColor: "#F3F4F6 !important",
+              },
             }}
           />
         </Paper>
 
         {/* Mobile Responsive Cards View */}
-        <Box sx={{ display: { xs: "flex", sm: "none" }, flexDirection: "column", gap: 2, mb: 3 }}>
+        <Box
+          sx={{
+            display: { xs: "flex", sm: "none" },
+            flexDirection: "column",
+            gap: 2,
+            mb: 3,
+          }}
+        >
           {filteredRows.length > 0 ? (
             filteredRows.map((row: any) => {
               const roomNumber = row.room?.roomNumber || "Deleted Room";
@@ -287,44 +309,106 @@ export default function Booking() {
                   }}
                 >
                   <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
-                      <Typography variant="subtitle1" sx={{ fontWeight: "700", color: "#1F2937" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mb: 1,
+                      }}
+                    >
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ fontWeight: "700", color: "#1F2937" }}
+                      >
                         Room: {roomNumber}
                       </Typography>
-                      <IconButton size="small" onClick={(e) => handleClickMenu(e, row)} sx={{ color: "#6B7280" }}>
+                      <IconButton
+                        size="small"
+                        onClick={(e) => handleClickMenu(e, row)}
+                        sx={{ color: "#6B7280" }}
+                      >
                         <MoreHorizIcon />
                       </IconButton>
                     </Box>
 
                     <Divider sx={{ my: 1, borderColor: "#F3F4F6" }} />
 
-                    <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 1 }}>
-                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Client:</Typography>
-                        <Typography variant="body2" sx={{ color: "#4B5563", fontWeight: "600" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 1,
+                        mt: 1,
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>
+                          Client:
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "#4B5563", fontWeight: "600" }}
+                        >
                           {clientName}
                         </Typography>
                       </Box>
-                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Total Price:</Typography>
-                        <Typography variant="body2" sx={{ color: "#4B5563", fontWeight: "600" }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>
+                          Total Price:
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "#4B5563", fontWeight: "600" }}
+                        >
                           {row.totalPrice ? `$${row.totalPrice}` : "N/A"}
                         </Typography>
                       </Box>
-                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Duration:</Typography>
-                        <Typography variant="body2" sx={{ color: "#4B5563", fontSize: "0.8rem" }}>
-                          {formatDate(row.startDate)} - {formatDate(row.endDate)}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>
+                          Duration:
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "#4B5563", fontSize: "0.8rem" }}
+                        >
+                          {formatDate(row.startDate)} -{" "}
+                          {formatDate(row.endDate)}
                         </Typography>
                       </Box>
-                      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Status:</Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>
+                          Status:
+                        </Typography>
                         <Typography
                           variant="body2"
                           sx={{
                             color: isCompleted ? "#10B981" : "#D97706",
                             fontWeight: "700",
-                            backgroundColor: isCompleted ? "#E6F4EA" : "#FEF3C7",
+                            backgroundColor: isCompleted
+                              ? "#E6F4EA"
+                              : "#FEF3C7",
                             padding: "2px 8px",
                             borderRadius: "4px",
                             textTransform: "capitalize",
@@ -355,18 +439,39 @@ export default function Booking() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={() => { if (activeRow) handleOpenView(activeRow); handleCloseMenu(); }}>
-          <RemoveRedEyeIcon sx={{ fontSize: 20, color: "darkblue", mx: 1 }} /> View
+        <MenuItem
+          onClick={() => {
+            if (activeRow) handleOpenView(activeRow);
+            handleCloseMenu();
+          }}
+        >
+          <RemoveRedEyeIcon sx={{ fontSize: 20, color: "darkblue", mx: 1 }} />{" "}
+          View
         </MenuItem>
 
-        <MenuItem onClick={() => { if (activeRow) handleOpenDelete(activeRow._id); handleCloseMenu(); }}>
-          <DeleteForeverIcon sx={{ fontSize: 20, color: "red", mx: 1 }} /> Delete
+        <MenuItem
+          onClick={() => {
+            if (activeRow) handleOpenDelete(activeRow._id);
+            handleCloseMenu();
+          }}
+        >
+          <DeleteForeverIcon sx={{ fontSize: 20, color: "red", mx: 1 }} />{" "}
+          Delete
         </MenuItem>
       </Menu>
 
       {/* Linked Modals */}
-      <ViewBooking open={openViewModal} onClose={() => setOpenViewModal(false)} facility={viewBooking} />
-      <DeleteConfirmations open={isDeleteOpen} onClose={handleCloseDelete} onDelete={handleConfirmDelete} title="Delete This Booking ?" />
+      <ViewBooking
+        open={openViewModal}
+        onClose={() => setOpenViewModal(false)}
+        facility={viewBooking}
+      />
+      <DeleteConfirmations
+        open={isDeleteOpen}
+        onClose={handleCloseDelete}
+        onDelete={handleConfirmDelete}
+        title="Delete This Booking ?"
+      />
     </>
   );
 }

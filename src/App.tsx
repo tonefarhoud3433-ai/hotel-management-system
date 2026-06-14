@@ -17,6 +17,7 @@ import Rooms from "./Modules/MasterModules/Rooms/Rooms";
 import Users from "./Modules/MasterModules/Users/Users";
 import NotFound from "./Modules/Shared/NotFound/NotFound";
 import ProtecedRoute from "./Modules/Shared/ProtecedRoute/ProtecedRoute";
+import RoomData from "./Modules/MasterModules/Rooms/RoomData";
 
 function App() {
   const routes = createBrowserRouter([
@@ -36,12 +37,18 @@ function App() {
     },
     {
       path: "/dashboard",
-      element: <ProtecedRoute><MasterLayout /></ProtecedRoute>,
+      element: (
+        <ProtecedRoute>
+          <MasterLayout />
+        </ProtecedRoute>
+      ),
       errorElement: <NotFound />,
       children: [
         { index: true, element: <Home /> },
         { path: "home", element: <Home /> },
         { path: "rooms", element: <Rooms /> },
+        { path: "room-add", element: <RoomData /> },
+        { path: "room-edit/:id", element: <RoomData /> },
         { path: "facilities", element: <Facilities /> },
         { path: "ads", element: <ADS /> },
         { path: "booking", element: <Booking /> },

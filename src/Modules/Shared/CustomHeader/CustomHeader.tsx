@@ -3,8 +3,8 @@ import { Box, Button, Divider, Typography } from "@mui/material";
 interface CustomHeaderProps {
   title: string;
   subTitle: string;
-  buttonText: string;
-  onButtonClick: () => void;
+  buttonText?: string; // علامة ? تعني أنه اختياري
+  onButtonClick?: () => void; // علامة ? تعني أنه اختياري
 }
 
 export default function CustomHeader({
@@ -24,7 +24,7 @@ export default function CustomHeader({
           gap: 2,
           py: 2,
           mb: 2,
-          mt:4
+          mt: 4,
         }}
       >
         <Box>
@@ -50,27 +50,31 @@ export default function CustomHeader({
           </Typography>
         </Box>
 
-        <Button
-          variant="contained"
-          onClick={onButtonClick}
-          sx={{
-            bgcolor: "#2442CB",
-            color: "#fff",
-            textTransform: "none",
-            fontWeight: 700,
-            px: 4,
-            py: 1.2,
-            borderRadius: "8px",
-            boxShadow: "none",
-            width: { xs: "100%", sm: "auto" },
-            hover: {
-              bgcolor: "#1E36A8",
+        {/* لن يتم رندر الزرار إلا إذا قمت بتمرير buttonText */}
+        {buttonText && (
+          <Button
+            variant="contained"
+            onClick={onButtonClick}
+            sx={{
+              bgcolor: "#2442CB",
+              color: "#fff",
+              textTransform: "none",
+              fontWeight: 700,
+              px: 4,
+              py: 1.2,
+              borderRadius: "8px",
               boxShadow: "none",
-            },
-          }}
-        >
-          {buttonText}
-        </Button>
+              width: { xs: "100%", sm: "auto" },
+              "&:hover": {
+                // تعديل بسيط هنا لتصحيح الـ hover في mui
+                bgcolor: "#1E36A8",
+                boxShadow: "none",
+              },
+            }}
+          >
+            {buttonText}
+          </Button>
+        )}
       </Box>
       <Divider sx={{ mb: 2 }} />
     </>
