@@ -14,6 +14,7 @@ interface DeleteModalProps {
   onDelete: () => void;
   title?: string;
   description?: string;
+  btnText?:string
 }
 
 export default function DeleteConfirmations({
@@ -22,6 +23,7 @@ export default function DeleteConfirmations({
   onDelete,
   title = "Delete This Item ?",
   description = "are you sure you want to delete this item ? if you are sure just click on delete it",
+  btnText = 'delete it'
 }: DeleteModalProps) {
   return (
     <Dialog
@@ -120,7 +122,7 @@ export default function DeleteConfirmations({
             },
           }}
         >
-          Delete It
+          {btnText} 
         </Button>
       </DialogContent>
     </Dialog>
