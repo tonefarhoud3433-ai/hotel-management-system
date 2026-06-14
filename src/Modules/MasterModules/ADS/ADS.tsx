@@ -138,20 +138,25 @@ export default function ADS() {
   };
 
   const handleSaveAd = async () => {
-  if (!adRoomId) { // التأكد من اختيار غرفة
+  if (!adRoomId) {
     toast.error("Please select a room");
     return;
   }
 
-  const bodyData: any = {
+  const bodyData = {
+    room: adRoomId, // تأكد من إرسال الـ room هنا
+    discount: Number(adDiscount) || 0,
+    isActive: adIsActive
+  };
+  const bodyEditeData = {
     discount: Number(adDiscount) || 0,
     isActive: adIsActive
   };
 
   try {
     if (selectedAd) {
-      // --- التصحيح هنا: إضافة bodyData للدالة ---
-      await updateAds(selectedAd._id, bodyData); 
+      // نرسل الـ bodyData كاملة
+      await updateAds(selectedAd._id, bodyEditeData); 
       toast.success("Ad updated successfully!");
     } else {
       await addAds(bodyData);
@@ -160,10 +165,9 @@ export default function ADS() {
     handleCloseModal();
     fetchData();
   } catch (error: any) {
-    console.error("Error saving ad:", error);
-    // إظهار رسالة الخطأ الحقيقية من الـ API
-    const errorMessage = error?.response?.data?.message || "An error occurred!";
-    toast.error(errorMessage);
+    // هذه الخطوة ضرورية جداً لمعرفة سبب الرفض من الـ Backend
+    console.log("Error details:", error.response?.data); 
+    toast.error(error?.response?.data?.message || "Failed to save!");
   }
 };
 

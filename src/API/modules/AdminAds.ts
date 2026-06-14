@@ -4,7 +4,7 @@ export const getAllAds = () => {
     return axiosClient.get("/ads");
 };
 
-export const addAds = (data: { name: string }) => {
+export const addAds = (data: { room: string; discount: number; isActive: boolean }) => {
     return axiosClient.post("/ads", data);
 };
 
@@ -15,8 +15,7 @@ export const viewAds = (id: number) => {
 export const deleteAds = (id: number) => {
     return axiosClient.delete(`/ads/${id}`);
 };
-// tonyyyy 
 
-export const updateAds = (id: string, data: { discount: number; isActive: boolean }) => {
+export const updateAds = (id: string, data: {  discount: number; isActive: boolean }) => {
     return axiosClient.put(`/ads/${id}`, data);
 };
