@@ -2,6 +2,7 @@ import { createContext, useEffect, useState, type ReactNode } from "react";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
 import { apiProfile } from "../API/modules/Auth";
+import type { UserData } from "../Modules/Shared/ViewModals/ViewUser";
 
 export interface User {
   _id: string;
@@ -19,7 +20,8 @@ interface AuthContextType {
   userData: User | null;
   saveUserData: () => void;
   getProfile: (id: string | undefined) => void;
-  profile: User | null;
+  profile: UserData | null;
+  logOut:()=>void
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -29,15 +31,14 @@ interface AuthContextProvProp {
 }
 export default function AuthContextProvider({ children }: AuthContextProvProp) {
   const [userData, setUserData] = useState<User | null>(null);
-  const [profile, setProfile] = useState<User | null>(null);
-
+  const [profile, setProfile] = useState<UserData | null>(null);
 
   const getProfile = async (id: string | undefined) => {
     try {
       const response = await apiProfile(id);
       
       setProfile(response?.data?.data?.user);
-      console.log(profile);
+      console.log(response?.data?.data?.user);
       
   }
       catch (error) {
@@ -46,9 +47,11 @@ export default function AuthContextProvider({ children }: AuthContextProvProp) {
     };
 
   const logOut = () => {
+    console.log("logging out...");
     localStorage.removeItem("token");
     setUserData(null);
     setProfile(null);
+    
   };
   const saveUserData = () => {
     const encoded = localStorage.getItem("token");
@@ -75,7 +78,7 @@ export default function AuthContextProvider({ children }: AuthContextProvProp) {
     }
   }, []);
   return (
-    <AuthContext.Provider value={{ userData, saveUserData, profile, getProfile }}>
+    <AuthContext.Provider value={{ userData, saveUserData, profile, getProfile, logOut }}>
       {children}
     </AuthContext.Provider>
   );

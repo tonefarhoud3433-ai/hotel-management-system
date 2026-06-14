@@ -5,21 +5,20 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { AuthContext } from '../../../Contexts/AuthContext';
 import { useContext } from 'react';
-import { API_BASE_URL } from '../../../API/axsiosClient';
+import DeleteConfirmations from '../DeleteConfirmations/DeleteConfirmations';
+import ViewUser from '../ViewModals/ViewUser';
 
-const pages = [""];
-const settings = ['Profile', 'Logout'];
+
 
 function NavBar() {
-    const {profile} = useContext(AuthContext)!;
+    const {profile,logOut} = useContext(AuthContext)!;
+    const [confirmLogOut,setConfirmLogOut] = React.useState(false);
+    const [viewProfile,setViewProfile] = React.useState(false);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -38,7 +37,7 @@ function NavBar() {
     setAnchorElUser(null);
   };
 
-  return (
+  return (<>
     <Box sx={{p:2, pb:{xs:1},pt:0,mt:2,boxShadow:'',position:'sticky',top:0,zIndex:999, bgcolor:'white'}}>
     <AppBar position="static" sx={{ backgroundColor: 'rgb(234, 235, 236)', color: 'black',borderRadius: 4,boxShadow: 'none' }}>
       <Container maxWidth="xl">
@@ -69,7 +68,7 @@ function NavBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Box sx={{width: 32, height: 32, borderRadius: '50%'}} crossOrigin='anonymous' component={'img'} alt="Remy Sharp" src={`https://upskilling-egypt.com:3000/${profile?.profileImage}`} />
+                <Box sx={{width: 32, height: 32, borderRadius: '50%'}} crossOrigin='anonymous' component={'img'} alt="Remy Sharp" src={profile?.profileImage} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -88,17 +87,21 @@ function NavBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                <MenuItem  onClick={()=>{handleCloseUserMenu();setViewProfile(true)}}>
+                  <Typography sx={{ textAlign: 'center' }}>profile</Typography>
                 </MenuItem>
-              ))}
+                <MenuItem  onClick={()=>{handleCloseUserMenu();setConfirmLogOut(true)}}>
+                  <Typography sx={{ textAlign: 'center' }}>logout</Typography>
+                </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
     </Box>
+    <DeleteConfirmations title='Logout' description='are you sure you want to log out?' btnText='logOut'  onDelete={logOut} open={confirmLogOut} onClose={()=>setConfirmLogOut(false)} />
+    <ViewUser facility={profile} onClose={()=>setViewProfile(false)} open={viewProfile}/>
+    </>
   );
 }
 export default NavBar;
