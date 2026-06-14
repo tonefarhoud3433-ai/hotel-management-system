@@ -41,17 +41,19 @@ import {
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
 import ViewRooms from "../../Shared/ViewModals/viewRooms";
+import { useNavigate } from "react-router-dom";
 
 const paginationModel = { page: 0, pageSize: 5 };
 
 export default function Rooms() {
+  const navigate = useNavigate();
   const [openViewModal, setOpenViewModal] = React.useState(false);
   const [openModal, setOpenModal] = React.useState(false);
   const [roomNumberValue, setRoomNumberValue] = React.useState("");
   const [selectedRoom, setSelectedRoom] = React.useState<any>(null);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [viewRoomData, setViewRoomData] = React.useState<any>(null);
-  
+
   // Actions Menu State Management
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [activeRow, setActiveRow] = React.useState<any>(null);
@@ -60,7 +62,7 @@ export default function Rooms() {
   const [selectedId, setSelectedId] = React.useState<any>(null);
   // -----
   const [rowsData, setRowsData] = React.useState([]);
-  
+
   const fetchData = async () => {
     try {
       const response = await getAllRooms();
@@ -97,15 +99,11 @@ export default function Rooms() {
   };
 
   const handleOpenAdd = () => {
-    setSelectedRoom(null);
-    setRoomNumberValue("");
-    setOpenModal(true);
+    navigate("/dashboard/room-add");
   };
 
   const handleOpenEdit = (row: any) => {
-    setSelectedRoom(row);
-    setRoomNumberValue(row.roomNumber || "");
-    setOpenModal(true);
+    navigate(`/dashboard/room-edit/${row._id}`);
   };
 
   const handleOpenView = async (row: any) => {
@@ -561,6 +559,7 @@ export default function Rooms() {
         </Box>
 
         <DialogContent sx={{ px: 3, py: 2 }}>
+          {/* المعرض الرئيسي أو أول صورة مفرَدة */}
           {viewRoomData?.images?.[0] && (
             <Box
               component="img"
@@ -568,12 +567,44 @@ export default function Rooms() {
               alt="Room Preview"
               sx={{
                 width: "100%",
-                height: "200px",
+                height: "220px",
                 objectFit: "cover",
                 borderRadius: 3,
-                mb: 3,
+                mb: 2,
               }}
             />
+          )}
+
+          {/* معرض باقي الصور (إذا وجدت أكثر من صورة) */}
+          {viewRoomData?.images && viewRoomData.images.length > 1 && (
+            <Box sx={{ mb: 3 }}>
+              <Typography
+                variant="body2"
+                sx={{ color: "#6b7280", fontWeight: 600, mb: 1 }}
+              >
+                More Images Room Gallery:
+              </Typography>
+              <Grid container spacing={1}>
+                {viewRoomData.images
+                  .slice(1)
+                  .map((imgUrl: string, idx: number) => (
+                    <Grid item xs={4} key={idx}>
+                      <Box
+                        component="img"
+                        src={imgUrl}
+                        alt={`Room Gallery ${idx + 1}`}
+                        sx={{
+                          width: "100%",
+                          height: "80px",
+                          objectFit: "cover",
+                          borderRadius: 2,
+                          border: "1px solid #E5E7EB",
+                        }}
+                      />
+                    </Grid>
+                  ))}
+              </Grid>
+            </Box>
           )}
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 3 }}>

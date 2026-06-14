@@ -4,8 +4,10 @@ export const getAllRooms = () => {
     return axiosClient.get("/rooms");
 };
 
-export const addRoom = (data: { name: string }) => {
-    return axiosClient.post("/rooms", data);
+export const addRoom = (data: FormData) => {
+    return axiosClient.post("/rooms", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
 };
 
 export const viewRoom = (id: number) => {
@@ -16,6 +18,8 @@ export const deleteRoom = (id: number) => {
     return axiosClient.delete(`/rooms/${id}`);
 };
 
-export const updateRoom = (id: number, data: { name: string }) => {
-    return axiosClient.put(`/rooms/${id}`, data);
+export const updateRoom = (id: number, data: FormData) => {
+    return axiosClient.put(`/rooms/${id}`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
 };

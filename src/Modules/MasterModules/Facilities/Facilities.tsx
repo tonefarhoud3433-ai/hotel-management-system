@@ -63,7 +63,6 @@ export default function Facilities() {
     }
   };
 
-
   const handleOpenDelete = (id: string) => {
     setSelectedId(id);
     setIsDeleteOpen(true);
@@ -74,7 +73,6 @@ export default function Facilities() {
     setSelectedId(null);
   };
 
-  
   const handleConfirmDelete = async () => {
     if (!selectedId) return;
 
@@ -218,7 +216,7 @@ export default function Facilities() {
       <CustomHeader
         title="Facilities Table Details"
         subTitle="You can check all details"
-        buttonText="Add New Room"
+        buttonText="Add New Facility"
         onButtonClick={handleOpenAdd}
       />
 
