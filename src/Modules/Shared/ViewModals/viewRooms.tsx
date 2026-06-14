@@ -13,25 +13,6 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-<<<<<<< HEAD
-import type { Facility } from "./FacilityViewModal";
-import { DoneTwoTone, Star } from "@mui/icons-material";
-
-export interface Room {
-  _id: string
-  roomNumber: string
-  price: number
-  capacity: number
-  discount: number
-  facilities: Facility[]
-  createdBy: {
-    _id: string
-    userName: string
-  }
-  images: string[]
-  createdAt: string
-  updatedAt: string
-=======
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import PercentIcon from '@mui/icons-material/Percent';
 import PeopleIcon from '@mui/icons-material/People';
@@ -53,17 +34,12 @@ export interface RoomDetailData {
     _id: string;
     userName: string;
   };
->>>>>>> 7ce355a647eddafb5381dd71b85c60eeedc575b6
 }
 
 interface ModalProps {
   open: boolean;
   onClose: () => void;
-<<<<<<< HEAD
   room: Room | null;
-=======
-  facility: any; 
->>>>>>> 7ce355a647eddafb5381dd71b85c60eeedc575b6
 }
 
 const formatDate = (dateString: string | undefined) => {

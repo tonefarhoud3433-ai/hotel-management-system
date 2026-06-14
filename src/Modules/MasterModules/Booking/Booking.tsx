@@ -112,14 +112,14 @@ export default function Booking() {
 
   const columns: GridColDef[] = [
     {
-      field: "roomNumber",
-      headerName: "Room Number",
+      field: "_id",
+      headerName: "ID Booking",
       flex: 1,
       minWidth: 130,
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueGetter: (value, row) => row.room?.roomNumber || "Deleted Room",
+      valueGetter: (value, row) => row?._id || "Deleted Room",
     },
     {
       field: "userName",

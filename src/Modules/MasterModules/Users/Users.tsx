@@ -18,7 +18,6 @@ import * as React from "react";
 
 import { getAllUsers } from "../../../API/modules/AdminUsers";
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
-import ViewBooking from "../../Shared/ViewModals/ViewBooking";
 import ViewUser from "../../Shared/ViewModals/ViewUser";
 
 const paginationModel = { page: 0, pageSize: 5 };

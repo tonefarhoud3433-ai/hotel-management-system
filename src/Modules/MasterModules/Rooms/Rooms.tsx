@@ -34,10 +34,6 @@ import { toast } from "react-toastify";
 import { getAllRooms, addRoom, viewRoom, deleteRoom, updateRoom } from "../../../API/modules/AdminRooms";
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
-<<<<<<< HEAD
-import FacilityViewModal from "../../Shared/ViewModals/FacilityViewModal";
-=======
->>>>>>> 7ce355a647eddafb5381dd71b85c60eeedc575b6
 import ViewRooms from "../../Shared/ViewModals/viewRooms";
 
 const paginationModel = { page: 0, pageSize: 5 };
@@ -421,10 +417,6 @@ export default function Rooms() {
         </DialogActions>
       </Dialog>
 
-<<<<<<< HEAD
-      {/* View Modal */}
-      <ViewRooms open={openViewModal} onClose={() => setOpenViewModal(false)} room={viewRoom} />
-=======
       {/* Room Details View Modal */}
       <Dialog
         open={openViewModal}
@@ -441,7 +433,6 @@ export default function Rooms() {
             <CloseIcon fontSize="small" />
           </IconButton>
         </Box>
->>>>>>> 7ce355a647eddafb5381dd71b85c60eeedc575b6
 
         <DialogContent sx={{ px: 3, py: 2 }}>
           {viewRoomData?.images?.[0] && (

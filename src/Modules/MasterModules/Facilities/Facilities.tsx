@@ -79,7 +79,7 @@ export default function Facilities() {
     if (!selectedId) return;
 
     try {
-      await AdminData.deleteFacilities(+selectedId);
+      await AdminData.deleteFacilities(selectedId);
       toast.success("Deleted successfully!");
       handleCloseDelete();
       fetchData();
@@ -216,7 +216,7 @@ export default function Facilities() {
   return (
     <>
       <CustomHeader
-        title="Rooms Table Details"
+        title="Facilities Table Details"
         subTitle="You can check all details"
         buttonText="Add New Room"
         onButtonClick={handleOpenAdd}

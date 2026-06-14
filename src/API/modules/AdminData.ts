@@ -13,7 +13,7 @@ export const viewFacilities = (id: number) => {
     return axiosClient.get(`/room-facilities/${id}`);
 };
 
-export const deleteFacilities = (id: number) => {
+export const deleteFacilities = (id:any) => {
     return axiosClient.delete(`/room-facilities/${id}`);
 };
 
