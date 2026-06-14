@@ -246,8 +246,32 @@ export default function RoomData() {
     );
   }
 
+  const textFieldStyle = {
+    '& .css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input': {
+      padding: '10px 14px'
+    },
+    '& .css-1dune0f-MuiInputBase-input-MuiOutlinedInput-input': {
+      padding: '10px 14px'
+    },
+    '& .MuiOutlinedInput-root': {
+      backgroundColor: 'rgba(245, 246, 248, 1)',
+      borderRadius: '6px',
+      '& fieldset': {
+        borderColor: '#e2e8f0',
+        borderWidth: '0px',
+      },
+      '&:hover fieldset': {
+        borderColor: '#cbd5e1',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: 'rgba(21, 44, 91, 1)',
+        borderWidth: '2px'
+      }
+    }
+  };
+
   return (
-    <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="md" sx={{ mt:2 }}>
       <Button
         startIcon={<ArrowBackIcon />}
         onClick={() => navigate("/dashboard/rooms")}
@@ -258,7 +282,7 @@ export default function RoomData() {
 
       <Paper
         elevation={0}
-        sx={{ p: 4, borderRadius: "16px", border: "1px solid #F3F4F6" }}
+        sx={{ px:4,py:2 , borderRadius: "16px", border: "1px solid #F3F4F6" }}
       >
         <Typography
           variant="h5"
@@ -270,36 +294,28 @@ export default function RoomData() {
         <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={3}>
             {/* Input Fields */}
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 label="Room Number"
                 fullWidth
-                variant="outlined"
                 value={roomNumber}
                 onChange={(e) => setRoomNumber(e.target.value)}
-                sx={{
-                  backgroundColor: "#F9FAFB",
-                  "& .MuiOutlinedInput-root": { borderRadius: "8px" },
-                }}
+                sx={textFieldStyle}
               />
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }} >
               <TextField
                 label="Price"
                 type="number"
                 fullWidth
-                variant="outlined"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                sx={{
-                  backgroundColor: "#F9FAFB",
-                  "& .MuiOutlinedInput-root": { borderRadius: "8px" },
-                }}
+                sx={textFieldStyle}
               />
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 label="Capacity"
                 type="number"
@@ -307,14 +323,11 @@ export default function RoomData() {
                 variant="outlined"
                 value={capacity}
                 onChange={(e) => setCapacity(e.target.value)}
-                sx={{
-                  backgroundColor: "#F9FAFB",
-                  "& .MuiOutlinedInput-root": { borderRadius: "8px" },
-                }}
+                sx={textFieldStyle}
               />
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 label="Discount"
                 type="number"
@@ -322,14 +335,11 @@ export default function RoomData() {
                 variant="outlined"
                 value={discount}
                 onChange={(e) => setDiscount(e.target.value)}
-                sx={{
-                  backgroundColor: "#F9FAFB",
-                  "& .MuiOutlinedInput-root": { borderRadius: "8px" },
-                }}
+                sx={textFieldStyle}
               />
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <FormControl fullWidth sx={{ backgroundColor: "#F9FAFB" }}>
                 <InputLabel id="facilities-select-label">Facilities</InputLabel>
                 <Select
@@ -371,14 +381,14 @@ export default function RoomData() {
             </Grid>
 
             {/* Drag & Drop Area */}
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Box
                 onDragEnter={handleDrag}
                 onDragOver={handleDrag}
                 onDragLeave={handleDrag}
                 onDrop={handleDrop}
                 sx={{
-                  height: "160px",
+                  height: "150px",
                   border: isDragActive
                     ? "2px dashed #2196F3"
                     : "2px dashed #4caf50",
@@ -406,7 +416,7 @@ export default function RoomData() {
                   onChange={handleFileChange}
                 />
                 <CloudUploadIcon sx={{ fontSize: "2.5rem" }} />
-                <Typography variant="body1" sx={{ fontWeight: "600" }}>
+                <Typography sx={{ fontWeight: "600", textAlign: "center", width: { md: '100%', sm: '80%' }, fontSize: { md: '18px' } }}>
                   Drag & Drop or{" "}
                   <span style={{ textDecoration: "underline" }}>
                     Choose Room Images
@@ -459,31 +469,43 @@ export default function RoomData() {
             </Grid>
           </Grid>
 
-          <Box
-            sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}
+          <Grid container
+            direction="row"
+            spacing={1}
+            sx={{
+              my:2,
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
           >
-            <Button
-              onClick={() => navigate("/dashboard/rooms")}
-              variant="outlined"
-              color="inherit"
-              sx={{ px: 4, borderRadius: "8px", textTransform: "none" }}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={loading}
-              sx={{
-                px: 4,
-                borderRadius: "8px",
-                textTransform: "none",
-                background: "linear-gradient(45deg, #2196F3, #21CBF3)",
-              }}
-            >
-              {loading ? "Saving..." : isEdit ? "Update Room" : "Save Room"}
-            </Button>
-          </Box>
+            <Grid  >
+
+              <Button
+                onClick={() => navigate("/dashboard/rooms")}
+                variant="outlined"
+                color="inherit"
+                sx={{ px: 4, borderRadius: "8px", textTransform: "none" }}
+              >
+                Cancel
+              </Button>
+            </Grid>
+
+            <Grid >
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={loading}
+                sx={{
+                  px: 4,
+                  borderRadius: "8px",
+                  textTransform: "none",
+                  background: "linear-gradient(45deg, #2196F3, #21CBF3)",
+                }}
+              >
+                {loading ? "Saving..." : isEdit ? "Update Room" : "Save Room"}
+              </Button>
+            </Grid>
+          </Grid>
         </Box>
       </Paper>
     </Container>

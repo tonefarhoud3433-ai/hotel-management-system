@@ -9,6 +9,7 @@ import {
   IconButton,
   TextField,
   Typography,
+  Skeleton
 } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -48,15 +49,18 @@ export default function Booking() {
   const openMenu = Boolean(anchorEl);
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
   const [selectedId, setSelectedId] = React.useState<any>(null);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   const fetchData = async () => {
+    setIsLoading(true); // ابدأ الـ Loading
     try {
       const response = await getAllBookings();
-      // سحب المصفوفة الصحيحة بناءً على الـ JSON الخاص بك (booking)
       const bookingList = response?.data?.data?.booking || [];
       setRowsData(bookingList);
     } catch (error) {
       console.error("Error fetching bookings data:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -232,7 +236,7 @@ export default function Booking() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             sx={{
-              width: { xs: "100%", sm: "320px",md:'100%' },
+              width: { xs: "100%", sm: "320px", md: '100%' },
               backgroundColor: "#fff",
               borderRadius: "8px",
               "& .MuiOutlinedInput-root": { borderRadius: "8px" },
@@ -241,48 +245,55 @@ export default function Booking() {
         </Box>
 
         {/* Desktop DataGrid View */}
-        <Paper
-          sx={{
-            display: { xs: "none", sm: "block" },
-            elevation: 0,
-            boxShadow: "none",
-            borderRadius: "16px",
-            overflow: "hidden",
-            width: "100%",
-          }}
-        >
-          <DataGrid
-            rows={filteredRows}
-            columns={columns}
-            getRowId={(row) => row._id}
-            initialState={{ pagination: { paginationModel } }}
-            pageSizeOptions={[5, 10]}
-            autoHeight
-            disableRowSelectionOnClick
-            sx={{
-              border: 0,
-              textAlign: "center",
-              backgroundColor: "#fff",
-              "& .custom-id-header": { backgroundColor: "inherit" },
-              "& .MuiDataGrid-columnHeaders": {
-                backgroundColor: "rgba(226, 229, 235, 1)!important",
-                color: "#1F2937",
-                fontSize: "15px",
-                fontWeight: "600",
-              },
-              "& .MuiDataGrid-row": {
-                borderBottom: "0px solid rgba(243, 244, 246, 1)",
-                "&:nth-of-type(even)": {
-                  backgroundColor: "rgba(248, 249, 251, 1)",
+        <Paper sx={{
+          display: { xs: "none", sm: "block" },
+          elevation: 0,
+          boxShadow: "none",
+          borderRadius: "16px",
+          overflow: "hidden",
+          width: "100%",
+        }}>
+          {isLoading ? (
+            <Box sx={{ p: 2 }}>
+              {[...Array(5)].map((_, i) => (
+                <Skeleton key={i} variant="rectangular"  animation="pulse" height={40} sx={{ my: 1, borderRadius: 2 }} />
+              ))}
+            </Box>
+          ) : (
+            <DataGrid
+              rows={filteredRows}
+              columns={columns}
+              getRowId={(row) => row._id}
+              initialState={{ pagination: { paginationModel } }}
+              pageSizeOptions={[5, 10]}
+              autoHeight
+              disableRowSelectionOnClick
+              sx={{
+                border: 0,
+                textAlign: "center",
+                backgroundColor: "#fff",
+                "& .custom-id-header": { backgroundColor: "inherit" },
+                "& .MuiDataGrid-columnHeaders": {
+                  backgroundColor: "rgba(226, 229, 235, 1)!important",
+                  color: "#1F2937",
+                  fontSize: "15px",
+                  fontWeight: "600",
                 },
-                "&:nth-of-type(odd)": { backgroundColor: "#fff" },
-              },
-              "& .MuiDataGrid-row:hover": {
-                backgroundColor: "#F3F4F6 !important",
-              },
-            }}
-          />
+                "& .MuiDataGrid-row": {
+                  borderBottom: "0px solid rgba(243, 244, 246, 1)",
+                  "&:nth-of-type(even)": {
+                    backgroundColor: "rgba(248, 249, 251, 1)",
+                  },
+                  "&:nth-of-type(odd)": { backgroundColor: "#fff" },
+                },
+                "& .MuiDataGrid-row:hover": {
+                  backgroundColor: "#F3F4F6 !important",
+                },
+              }}
+            />
+          )}
         </Paper>
+
 
         {/* Mobile Responsive Cards View */}
         <Box
@@ -475,3 +486,6 @@ export default function Booking() {
     </>
   );
 }
+
+
+
