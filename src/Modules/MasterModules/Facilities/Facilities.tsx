@@ -232,7 +232,7 @@ export default function Facilities() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             sx={{
-              width: { xs: "100%", sm: "320px" },
+              width: { xs: "100%", sm: "320px",md:'100%' },
               backgroundColor: "#fff",
               borderRadius: "8px",
               "& .MuiOutlinedInput-root": { borderRadius: "8px" },

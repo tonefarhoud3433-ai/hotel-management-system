@@ -194,7 +194,7 @@ export default function ADS() {
   const columns: GridColDef[] = [
     {
       field: "roomNumber",
-      headerName: "Room Name / Number",
+      headerName: "Room Number",
       flex: 1,
       minWidth: 150,
       align: "center",
@@ -292,7 +292,7 @@ export default function ADS() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             sx={{
-              width: { xs: "100%", sm: "320px" },
+              width: { xs: "100%", sm: "320px",md:'100%' },
               backgroundColor: "#fff",
               borderRadius: "8px",
               "& .MuiOutlinedInput-root": { borderRadius: "8px" },

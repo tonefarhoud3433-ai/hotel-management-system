@@ -15,7 +15,7 @@ export const viewAds = (id: number) => {
 export const deleteAds = (id: number) => {
     return axiosClient.delete(`/ads/${id}`);
 };
-
+  
 export const updateAds = (id: string, data: {  discount: number; isActive: boolean }) => {
     return axiosClient.put(`/ads/${id}`, data);
 };

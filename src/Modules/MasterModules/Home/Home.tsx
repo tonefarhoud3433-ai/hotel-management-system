@@ -67,7 +67,6 @@ export default function Home() {
 
     try {
       const response = await getAllFacilities();
-      // console.log("Facilities:", response);
 
       setFacilitiesCount(response.data?.data?.totalCount);
     } catch (error) {
@@ -81,7 +80,6 @@ export default function Home() {
     setLoadingAds(true);
     try {
       const response = await getAllAds();
-      // console.log("Ads:", response);
 
       setAdsCount(response.data?.data?.totalCount);
     } catch (error) {
@@ -95,7 +93,6 @@ export default function Home() {
     setLoadingRooms(true);
     try {
       const response = await getAllRooms();
-      // console.log("Rooms:", response);
       setRoomsCount(response.data?.data?.totalCount);
     } catch (error) {
       toast.error((error as string) || "Failed To Fetch Rooms Count");

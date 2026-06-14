@@ -76,10 +76,8 @@ export default function Users() {
   };
 
   const filteredRows = rowsData.filter((row: any) => {
-    const roomNum = row.room?.roomNumber || "N/A";
-    const user = row.user?.userName || "";
+    const user = row?.userName || "";
     return (
-      roomNum.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
@@ -163,12 +161,12 @@ export default function Users() {
         <Box sx={{ mb: 3 }}>
           <TextField
             size="small"
-            placeholder="Search by Room or User..."
+            placeholder="Search by  User Name..."
             variant="outlined"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             sx={{
-              width: { xs: "100%", sm: "320px" },
+              width: { xs: "100%", sm: "320px",md:'100%' },
               backgroundColor: "#fff",
               borderRadius: "8px",
               "& .MuiOutlinedInput-root": { borderRadius: "8px" },
