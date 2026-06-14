@@ -5,3 +5,4 @@ export * as AdminRooms from "./modules/AdminRooms";
 export * as AdminAds from "./modules/AdminAds";
 export * as AdminBooking from "./modules/AdminBooking"
 export * as AdminUsers from "./modules/AdminUsers"
+export * as DashboardCharts from "./modules/DashboardCharts"

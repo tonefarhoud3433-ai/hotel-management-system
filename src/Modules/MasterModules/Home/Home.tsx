@@ -9,161 +9,82 @@ import {
 } from "@mui/material";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 import { PieChart } from "@mui/x-charts/PieChart";
-import { getAllFacilities } from "../../../API/modules/AdminData";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { getAllRooms } from "../../../API/modules/AdminRooms";
-import { getAllAds } from "../../../API/modules/AdminAds";
-import { AdminBooking, Auth } from "../../../API";
-import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
+import {
+  getDashboardCharts,
+  type DashboardDataResponse,
+} from "../../../API/modules/DashboardCharts";
 
-interface User {
-  users: object[];
-  totalCount: number;
-}
-interface BookingItem {
-  status: "completed" | "pending";
-}
 export default function Home() {
-  const [facilitiesCount, setFacilitiesCount] = useState<number | null>(null);
-  const [loadingFaclities, setLoadingFaclities] = useState<boolean>(true);
-  const [roomsCount, setRoomsCount] = useState<number | null>(null);
-  const [loadingRooms, setLoadingRooms] = useState<boolean>(true);
-  const [adsCount, setAdsCount] = useState<number | null>(null);
-  const [loadingAds, setLoadingAds] = useState<boolean>(true);
-  const [usersData, setUsersData] = useState<User | null>(null);
-  const [loadingUsersData, setLoadingUsersData] = useState<boolean>(true);
-  const [statusCounts, setStatusCounts] = useState({
-    pending: 0,
-    completed: 0,
-  });
-  const [loadingBookings, setLoadingBookings] = useState<boolean>(true);
+  const [dashboardData, setDashboardData] = useState<
+    DashboardDataResponse["data"] | null
+  >(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const getBookingsStatusCount = async () => {
-    setLoadingBookings(true);
-    try {
-      const response = await AdminBooking.getAllBookings();
-      const bookings: BookingItem[] = response.data?.data?.booking || [];
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      setLoading(true);
+      try {
+        const response = await getDashboardCharts();
+        setDashboardData(response.data.data);
+      } catch (error) {
+        toast.error("Failed To Fetch Dashboard Summary Data");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      const counts = bookings.reduce(
-        (acc, item) => {
-          if (item.status in acc) {
-            acc[item.status] += 1;
-          }
-          return acc;
-        },
-        { pending: 0, completed: 0 },
-      );
+    fetchDashboardData();
+  }, []);
 
-      setStatusCounts(counts);
-    } catch (error) {
-      toast.error("Failed To Fetch Bookings Status");
-    } finally {
-      setLoadingBookings(false);
-    }
-  };
-  const getFacilitiesCount = async () => {
-    setLoadingFaclities(true);
-
-    try {
-      const response = await getAllFacilities();
-      // console.log("Facilities:", response);
-
-      setFacilitiesCount(response.data?.data?.totalCount);
-    } catch (error) {
-      toast.error((error as string) || "Failed To Fetch Facilities Count");
-    } finally {
-      setLoadingFaclities(false);
-    }
-  };
-
-  const getAdsCount = async () => {
-    setLoadingAds(true);
-    try {
-      const response = await getAllAds();
-      // console.log("Ads:", response);
-
-      setAdsCount(response.data?.data?.totalCount);
-    } catch (error) {
-      toast.error((error as string) || "Failed To Fetch Ads Count");
-    } finally {
-      setLoadingAds(false);
-    }
-  };
-
-  const getRoomsCount = async () => {
-    setLoadingRooms(true);
-    try {
-      const response = await getAllRooms();
-      // console.log("Rooms:", response);
-      setRoomsCount(response.data?.data?.totalCount);
-    } catch (error) {
-      toast.error((error as string) || "Failed To Fetch Rooms Count");
-    } finally {
-      setLoadingRooms(false);
-    }
-  };
-  const getAllUsers = async () => {
-    setLoadingUsersData(true);
-    try {
-      const response = await Auth.getAllUsers();
-      console.log("Users:", response);
-      setUsersData(response.data?.data);
-    } catch (error) {
-      toast.error((error as string) || "Failed To Fetch Users Count");
-    } finally {
-      setLoadingUsersData(false);
-    }
-  };
   const cards = [
     {
       title: "Rooms",
-      value: loadingRooms ? (
+      value: loading ? (
         <CircularProgress size={20} sx={{ color: "#fff" }} />
       ) : (
-        roomsCount
+        (dashboardData?.rooms ?? 0)
       ),
     },
     {
       title: "Facilities",
-      value: loadingFaclities ? (
+      value: loading ? (
         <CircularProgress size={20} sx={{ color: "#fff" }} />
       ) : (
-        facilitiesCount
+        (dashboardData?.facilities ?? 0)
       ),
     },
     {
       title: "Ads",
-      value: loadingAds ? (
+      value: loading ? (
         <CircularProgress size={20} sx={{ color: "#fff" }} />
       ) : (
-        adsCount
+        (dashboardData?.ads ?? 0)
       ),
     },
   ];
 
   const statusData = [
-    { id: 0, value: statusCounts.pending, color: "#5568E8", label: "pending" },
+    {
+      id: 0,
+      value: dashboardData?.bookings.pending ?? 0,
+      color: "#5568E8",
+      label: "pending",
+    },
     {
       id: 2,
-      value: statusCounts.completed,
+      value: dashboardData?.bookings.completed ?? 0,
       color: "#9A58D1",
       label: "completed",
     },
   ];
 
   const usersChart = [
-    { id: 0, value: usersData?.users.length, color: "#53C64D" },
-    { id: 1, value: usersData?.totalCount, color: "#41B7F1" },
+    { id: 0, value: dashboardData?.users.user ?? 0, color: "#53C64D" },
+    { id: 1, value: dashboardData?.users.admin ?? 0, color: "#41B7F1" },
   ];
 
-  useEffect(() => {
-    getFacilitiesCount();
-    getRoomsCount();
-    getAdsCount();
-    getAllUsers();
-    getBookingsStatusCount();
-  }, []);
   return (
     <Container maxWidth="xl">
       <Box sx={{ py: 6 }}>
@@ -260,7 +181,7 @@ export default function Home() {
                   alignItems: "center",
                 }}
               >
-                {loadingBookings ? (
+                {loading ? (
                   <Box
                     sx={{
                       display: "flex",
@@ -360,7 +281,7 @@ export default function Home() {
                 }}
               >
                 <Box sx={{ position: "relative", width: 200, height: 200 }}>
-                  {loadingUsersData ? (
+                  {loading ? (
                     <Box
                       sx={{
                         display: "flex",
@@ -427,10 +348,10 @@ export default function Home() {
                     <Typography>User</Typography>
                   </Box>
                   <Typography sx={{ fontSize: "1.1rem", fontWeight: 600 }}>
-                    {loadingUsersData ? (
+                    {loading ? (
                       <CircularProgress size={20} sx={{ color: "#55db0d" }} />
                     ) : (
-                      usersData?.users.length
+                      (dashboardData?.users.user ?? 0)
                     )}
                   </Typography>
                 </Box>
@@ -455,10 +376,10 @@ export default function Home() {
                     <Typography sx={{ fontSize: "1.1rem" }}>Admin</Typography>
                   </Box>
                   <Typography sx={{ fontSize: "1.1rem", fontWeight: 600 }}>
-                    {loadingUsersData ? (
+                    {loading ? (
                       <CircularProgress size={20} sx={{ color: "#55db0d" }} />
                     ) : (
-                      usersData?.totalCount
+                      (dashboardData?.users.admin ?? 0)
                     )}
                   </Typography>
                 </Box>
