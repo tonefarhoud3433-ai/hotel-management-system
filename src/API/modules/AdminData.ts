@@ -1,23 +1,21 @@
 import axiosClient from "../axsiosClient";
 
-export const getAllFacilities = () => {
-    return axiosClient.get("/room-facilities");
+export const getAllAds = () => {
+    return axiosClient.get("/ads");
 };
 
-// تعديل: أضفنا باراميتر data عشان يستقبل { name: facilityName }
-export const addFacilities = (data: { name: string }) => {
-    return axiosClient.post("/room-facilities", data);
+export const addAds = (data: { name: string }) => {
+    return axiosClient.post("/ads", data);
 };
 
-export const viewFacilities = (id: number) => {
-    return axiosClient.get(`/room-facilities/${id}`);
+export const viewAds = (id: number) => {
+    return axiosClient.get(`/ads/${id}`);
 };
 
-export const deleteFacilities = (id:any) => {
-    return axiosClient.delete(`/room-facilities/${id}`);
+export const deleteAds = (id: number) => {
+    return axiosClient.delete(`/ads/${id}`);
 };
 
-// تعديل: أضفنا باراميتر data عشان يستقبل الاسم الجديد وقت التعديل
-export const updateFacilities = (id: number, data: { name: string }) => {
-    return axiosClient.put(`/room-facilities/${id}`, data);
+export const updateAds = (id: string, data: { discount: number; isActive: boolean }) => {
+    return axiosClient.put(`/ads/${id}`, data);
 };
