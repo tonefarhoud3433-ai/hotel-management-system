@@ -48,18 +48,19 @@ export default function Rooms() {
   const [openViewModal, setOpenViewModal] = React.useState(false);
   const [openModal, setOpenModal] = React.useState(false);
   const [roomNumberValue, setRoomNumberValue] = React.useState("");
-  const [rowsData, setRowsData] = React.useState([]);
   const [selectedRoom, setSelectedRoom] = React.useState<any>(null);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [viewRoomData, setViewRoomData] = React.useState<any>(null);
-
+  
   // Actions Menu State Management
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [activeRow, setActiveRow] = React.useState<any>(null);
   const openMenu = Boolean(anchorEl);
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
   const [selectedId, setSelectedId] = React.useState<any>(null);
-
+  // -----
+  const [rowsData, setRowsData] = React.useState([]);
+  
   const fetchData = async () => {
     try {
       const response = await getAllRooms();

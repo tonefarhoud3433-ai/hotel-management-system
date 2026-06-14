@@ -155,7 +155,7 @@ export default function Users() {
   return (
     <>
       <CustomHeader
-        title="Bookings Table Details"
+        title="Users Table Details"
         subTitle="You can check and monitor all global user bookings"
       />
 

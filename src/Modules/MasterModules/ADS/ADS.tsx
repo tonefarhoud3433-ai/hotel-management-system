@@ -11,7 +11,10 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  FormControl,
   IconButton,
+  InputLabel,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -28,6 +31,7 @@ import { getAllAds, addAds, deleteAds, updateAds, viewAds } from "../../../API/m
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
 import ViewADS from "../../Shared/ViewModals/viewADS";
+import { getAllRooms } from "../../../API/modules/AdminRooms";
 
 const paginationModel = { page: 0, pageSize: 5 };
 
@@ -48,12 +52,26 @@ export default function ADS() {
   const openMenu = Boolean(anchorEl);
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
   const [selectedId, setSelectedId] = React.useState<any>(null);
-  
+  const [adIsActive, setAdIsActive] = React.useState(true);
+
+  // git all rooms 
+  const [allRooms, setAllRooms] = React.useState([]);
+
+  const fetchRooms = async () => {
+    try {
+      const response = await getAllRooms();
+      setAllRooms(response?.data?.data?.rooms || []);
+    } catch (error) {
+      console.error("Error fetching rooms:", error);
+    }
+  };
+  // --------------------------
+
 
   const fetchData = async () => {
     try {
       const response = await getAllAds();
-      
+
       const adsList = response?.data?.data?.ads || [];
       setRowsData(adsList);
     } catch (error) {
@@ -93,17 +111,17 @@ export default function ADS() {
 
   const handleOpenEdit = (row: any) => {
     setSelectedAd(row);
-    // Support picking fallback IDs if structural parameters are flat vs nested
     setAdRoomId(row.room?._id || row.room || "");
     setAdDiscount(row.room?.discount ?? row.discount ?? "");
+    setAdIsActive(row.isActive ?? true); 
     setOpenModal(true);
-  };
+};
 
   const handleOpenView = async (row: any) => {
     try {
       const response = await viewAds(row._id);
       console.log(response);
-      
+
       setViewAd(response?.data?.data || row);
       setOpenViewModal(true);
     } catch (error) {
@@ -120,37 +138,38 @@ export default function ADS() {
   };
 
   const handleSaveAd = async () => {
-    if (!adRoomId.trim()) {
-      toast.error("Please enter a valid Room ID");
-      return;
-    }
+  if (!adRoomId) { // التأكد من اختيار غرفة
+    toast.error("Please select a room");
+    return;
+  }
 
-    const bodyData: any = {
-      room: adRoomId,
-      discount: Number(adDiscount) || 0,
-      isActive: true
-    };
-
-    const isEdit = !!selectedAd;
-    try {
-      if (isEdit) {
-        await updateAds(selectedAd._id, bodyData);
-        toast.success("Ad updated successfully!");
-      } else {
-        await addAds(bodyData);
-        toast.success("Ad created successfully!");
-      }
-      handleCloseModal();
-      fetchData();
-    } catch (error: any) {
-      console.error("Error saving ad:", error);
-      const errorMessage = error?.response?.data?.message || "An error occurred while saving the ad!";
-      toast.error(errorMessage);
-    }
+  const bodyData: any = {
+    discount: Number(adDiscount) || 0,
+    isActive: adIsActive
   };
+
+  try {
+    if (selectedAd) {
+      // --- التصحيح هنا: إضافة bodyData للدالة ---
+      await updateAds(selectedAd._id, bodyData); 
+      toast.success("Ad updated successfully!");
+    } else {
+      await addAds(bodyData);
+      toast.success("Ad created successfully!");
+    }
+    handleCloseModal();
+    fetchData();
+  } catch (error: any) {
+    console.error("Error saving ad:", error);
+    // إظهار رسالة الخطأ الحقيقية من الـ API
+    const errorMessage = error?.response?.data?.message || "An error occurred!";
+    toast.error(errorMessage);
+  }
+};
 
   React.useEffect(() => {
     fetchData();
+    fetchRooms();
   }, []);
 
   const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>, row: any) => {
@@ -324,7 +343,7 @@ export default function ADS() {
               const roomNumber = row.room?.roomNumber || row.roomNumber || "N/A";
               const price = row.room?.price ?? row.price;
               const discount = row.room?.discount ?? row.discount;
-              
+
               return (
                 <Card
                   key={row._id}
@@ -400,18 +419,25 @@ export default function ADS() {
           {selectedAd ? "Edit Ad" : "Add New Ad"}
         </DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Room ID"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={adRoomId}
-            onChange={(e) => setAdRoomId(e.target.value)}
-            sx={{ mt: 1 }}
-            disabled={!!selectedAd} // Disables room modification during edits to stay clean
-          />
+          {/* قائمة اختيار الغرفة */}
+          <FormControl fullWidth margin="dense" sx={{ mt: 1 }}>
+            <InputLabel id="room-select-label">Select Room</InputLabel>
+            <Select
+              labelId="room-select-label"
+              value={adRoomId}
+              label="Select Room"
+              onChange={(e) => setAdRoomId(e.target.value)}
+              disabled={!!selectedAd}
+            >
+              {allRooms.map((room: any) => (
+                <MenuItem key={room._id} value={room._id}>
+                  {room.roomNumber}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          {/* حقل الخصم */}
           <TextField
             margin="dense"
             label="Discount %"
@@ -422,7 +448,23 @@ export default function ADS() {
             onChange={(e) => setAdDiscount(e.target.value)}
             sx={{ mt: 2 }}
           />
+
+          {/* قائمة اختيار الحالة */}
+          <FormControl fullWidth margin="dense" sx={{ mt: 2 }}>
+            <InputLabel id="active-select-label">Active</InputLabel>
+            <Select
+              labelId="active-select-label"
+              value={adIsActive}
+              label="Active"
+              onChange={(e) => setAdIsActive(e.target.value === "true")}
+            >
+              <MenuItem value="true">Yes</MenuItem>
+              <MenuItem value="false">No</MenuItem>
+            </Select>
+          </FormControl>
         </DialogContent>
+
+
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={handleCloseModal} color="inherit">Cancel</Button>
           <Button onClick={handleSaveAd} variant="contained" color={selectedAd ? "warning" : "primary"}>
