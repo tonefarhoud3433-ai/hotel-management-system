@@ -10,25 +10,29 @@ export default function AuthLayout() {
   const { pathname } = useLocation();
 
   const getBgClass = () => {
-    if (pathname === "/register" || pathname === "/verify") return bgImg2;
-    if (pathname === "/forget-password" || pathname === "/reset-password")
+    if (pathname === "/auth/register" || pathname === "/auth/verify")
+      return bgImg2;
+    if (
+      pathname === "/auth/forget-password" ||
+      pathname === "/auth/reset-password"
+    )
       return bgImg1;
     if (
-      pathname === "/login" ||
-      pathname === "/" ||
-      pathname === "/change-password"
+      pathname === "/auth/login" ||
+      pathname === "/auth" ||
+      pathname === "/auth/change-password"
     )
       return bgImg3;
   };
 
   const getTitle = () => {
-    if (pathname === "/register") return "Sign up to Roamhome";
-    if (pathname === "/login") return "Sign in to Roamhome";
-    if (pathname === "/") return "Sign in to Roamhome";
-    if (pathname === "/forget-password") return "Forgot password";
-    if (pathname === "/reset-password") return "Reset Password";
-    if (pathname === "/verify") return "Verify your email";
-    if (pathname === "/change-password") return "Change your password";
+    if (pathname === "/auth/register") return "Sign up to Roamhome";
+    if (pathname === "/auth/login") return "Sign in to Roamhome";
+    if (pathname === "/auth") return "Sign in to Roamhome";
+    if (pathname === "/auth/forget-password") return "Forgot password";
+    if (pathname === "/auth/reset-password") return "Reset Password";
+    if (pathname === "/auth/verify") return "Verify your email";
+    if (pathname === "/auth/change-password") return "Change your password";
   };
 
   return (
