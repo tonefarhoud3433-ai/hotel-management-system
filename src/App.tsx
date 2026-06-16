@@ -18,11 +18,22 @@ import Users from "./Modules/MasterModules/Users/Users";
 import NotFound from "./Modules/Shared/NotFound/NotFound";
 import ProtecedRoute from "./Modules/Shared/ProtecedRoute/ProtecedRoute";
 import RoomData from "./Modules/MasterModules/Rooms/RoomData";
+import UserLayout from "./Layouts/UserLayout/UserLayout";
+import UsersHome from "./Modules/UsersModules/Home/UsersHome";
 
 function App() {
   const routes = createBrowserRouter([
     {
       path: "/",
+      element: <UserLayout />,
+      errorElement: <NotFound />,
+      children: [
+        { index: true, element: <UsersHome /> },
+        { path: "home", element: <UsersHome /> },
+      ],
+    },
+    {
+      path: "/auth",
       element: <AuthLayout />,
       errorElement: <NotFound />,
       children: [
