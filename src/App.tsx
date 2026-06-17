@@ -1,8 +1,11 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import 'swiper/css';
+import 'swiper/css/autoplay';
 import "./App.css";
 import AuthLayout from "./Layouts/AuthLayout/AuthLayout";
 import MasterLayout from "./Layouts/MasterLayout/MasterLayout";
+import UserLayout from "./Layouts/UserLayout/UserLayout";
 import ChangePassword from "./Modules/AuthModules/ChangePassword/ChangePassword";
 import ForgetPassword from "./Modules/AuthModules/ForgetPassword/ForgetPassword";
 import Login from "./Modules/AuthModules/Login/Login";
@@ -13,12 +16,11 @@ import ADS from "./Modules/MasterModules/ADS/ADS";
 import Booking from "./Modules/MasterModules/Booking/Booking";
 import Facilities from "./Modules/MasterModules/Facilities/Facilities";
 import Home from "./Modules/MasterModules/Home/Home";
+import RoomData from "./Modules/MasterModules/Rooms/RoomData";
 import Rooms from "./Modules/MasterModules/Rooms/Rooms";
 import Users from "./Modules/MasterModules/Users/Users";
 import NotFound from "./Modules/Shared/NotFound/NotFound";
 import ProtecedRoute from "./Modules/Shared/ProtecedRoute/ProtecedRoute";
-import RoomData from "./Modules/MasterModules/Rooms/RoomData";
-import UserLayout from "./Layouts/UserLayout/UserLayout";
 import UsersHome from "./Modules/UsersModules/Home/UsersHome";
 
 function App() {

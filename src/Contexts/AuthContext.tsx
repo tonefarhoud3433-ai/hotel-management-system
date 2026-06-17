@@ -38,7 +38,7 @@ export default function AuthContextProvider({ children }: AuthContextProvProp) {
       const response = await apiProfile(id);
       
       setProfile(response?.data?.data?.user);
-      console.log(response?.data?.data?.user);
+      // console.log(response?.data?.data?.user);
       
   }
       catch (error) {
@@ -56,12 +56,12 @@ export default function AuthContextProvider({ children }: AuthContextProvProp) {
   const saveUserData = () => {
     const encoded = localStorage.getItem("token");
     if (encoded) {
-      console.log(
-        encoded
-      );
+      // console.log(
+      //   encoded
+      // );
       
       const decoded = jwtDecode<User>(encoded);
-      console.log(decoded);
+      // console.log(decoded);
       
       if (+decoded.exp > Math.trunc(Date.now() / 1000)) {
         setUserData(decoded);
