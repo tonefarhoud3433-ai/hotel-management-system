@@ -16,3 +16,16 @@
     text-decoration: none;
     margin-left:5px;
 }
+.swiper-wrapper {
+  transition-timing-function: linear !important;
+}
+
+
+/* هذا الجزء يضمن التوقف الفوري عند التوقف بالماوس */
+.swiper:hover .swiper-wrapper {
+  animation-play-state: paused;
+}
+
+.mousePointer{
+    cursor: pointer;
+}
