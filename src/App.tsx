@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import 'swiper/css';
-import 'swiper/css/autoplay';
+import "swiper/css";
+import "swiper/css/autoplay";
 import "./App.css";
 import AuthLayout from "./Layouts/AuthLayout/AuthLayout";
 import MasterLayout from "./Layouts/MasterLayout/MasterLayout";
@@ -23,6 +23,7 @@ import NotFound from "./Modules/Shared/NotFound/NotFound";
 import ProtecedRoute from "./Modules/Shared/ProtecedRoute/ProtecedRoute";
 import UsersHome from "./Modules/UsersModules/Home/UsersHome";
 import FirstADS from "./Modules/UsersModules/Home/FirstADS";
+import ExploreRooms from "./Modules/UsersModules/ExploreRooms/ExploreRooms";
 
 function App() {
   const routes = createBrowserRouter([
@@ -34,6 +35,7 @@ function App() {
         { index: true, element: <UsersHome /> },
         { path: "home", element: <UsersHome /> },
         { path: "home/ads", element: <FirstADS /> },
+        { path: "home/explore", element: <ExploreRooms /> },
       ],
     },
     {
