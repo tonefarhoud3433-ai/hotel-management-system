@@ -23,7 +23,7 @@ interface Ads {
 
 export default function FirstADS() {
     const [roomData, setRoomData] = useState<Ads[]>([]);
-    const { getRoom } = useContext(RoomContext)!
+    const { getRoomFav ,getRoomDetail} = useContext(RoomContext)!
 
     const data = async () => {
         try {
@@ -97,10 +97,10 @@ export default function FirstADS() {
                                     transition: 'opacity 0.3s ease-in-out',
                                 }}
                             >
-                                <IconButton onClick={()=>getRoom(item._id)} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
+                                <IconButton onClick={()=>getRoomFav(item.room._id)} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
                                     <FavoriteIcon />
                                 </IconButton>
-                                <IconButton sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
+                                <IconButton onClick={()=>getRoomDetail(item._id)} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
                                     <VisibilityIcon />
                                 </IconButton>
                             </Box>

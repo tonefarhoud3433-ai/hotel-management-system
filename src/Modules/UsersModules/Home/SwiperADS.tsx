@@ -20,7 +20,9 @@ export default function SwiperADS() {
     const [adsData, setAdsData] = useState<any[]>([]);
 
 
-    const { getRoom } = useContext(RoomContext)!
+
+
+    const { getRoomFav,getRoomDetail } = useContext(RoomContext)!
 
     const fetchData = async () => {
         try {
@@ -37,6 +39,8 @@ export default function SwiperADS() {
 
     useEffect(() => {
         fetchData();
+        const token = localStorage.getItem("token");
+    console.log("Token Value:", token);
     }, []);
 
     return (
@@ -114,10 +118,10 @@ export default function SwiperADS() {
                                         transition: 'opacity 0.3s ease-in-out',
                                     }}
                                 >
-                                    <IconButton onClick={() => getRoom(ad._id)} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
+                                    <IconButton onClick={() => getRoomFav(ad.room._id)} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
                                         <FavoriteIcon />
                                     </IconButton>
-                                    <IconButton onClick={() => getRoom(ad._id)} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
+                                    <IconButton onClick={() => getRoomDetail(ad.room._id)} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
                                         <VisibilityIcon />
                                     </IconButton>
                                 </Box>
