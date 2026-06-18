@@ -18,6 +18,7 @@ import { format } from "date-fns";
 import axios from "axios";
 
 import mainImage from "../../../assets/Images/picture.png";
+import { useNavigate } from "react-router-dom";
 
 export default function ExploreSec() {
   const [dateRange, setDateRange] = useState<Range[]>([
@@ -28,6 +29,7 @@ export default function ExploreSec() {
     },
   ]);
 
+  const navigate = useNavigate();
   const [capacity, setCapacity] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -73,6 +75,7 @@ export default function ExploreSec() {
       console.error("Failed to fetch available rooms", error);
     } finally {
       setLoading(false);
+      navigate("/home/explore");
     }
   };
 
