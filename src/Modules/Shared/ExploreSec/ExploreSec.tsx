@@ -75,7 +75,7 @@ export default function ExploreSec() {
       console.error("Failed to fetch available rooms", error);
     } finally {
       setLoading(false);
-      navigate("home/explore");
+      navigate("/home/explore");
     }
   };
 

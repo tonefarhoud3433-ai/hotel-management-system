@@ -15,13 +15,14 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
 import { RoomContext } from "../../../Contexts/RoomContext";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Link from "@mui/material/Link";
-
+import { Link as RouterLink } from "react-router-dom";
+import { Link as MuiLink } from "@mui/material";
 interface RoomAPI {
   _id: string;
   roomNumber: string;
   price: number;
   images: string[];
+  capacity: number;
 }
 
 const DEFAULT_ROOM_IMAGE =
@@ -93,12 +94,17 @@ const ExploreRooms = () => {
 
         <div role="presentation" onClick={handleClick}>
           <Breadcrumbs
-            aria-label="breadcrumb "
+            aria-label="breadcrumb"
             sx={{ fontWeight: 600, mt: 4, mb: 2, fontSize: "1.2rem" }}
           >
-            <Link underline="hover" color="inherit" href="/home">
+            <MuiLink
+              underline="hover"
+              color="inherit"
+              component={RouterLink}
+              to="/home"
+            >
               Home
-            </Link>
+            </MuiLink>
 
             <Typography
               sx={{ color: "#2D3748", fontWeight: 700, fontSize: "1.2rem" }}
@@ -270,7 +276,7 @@ const ExploreRooms = () => {
                             mt: 0.5,
                           }}
                         >
-                          Bandung, Indonesia
+                          Capacity: {room.capacity} Persons
                         </Typography>
                       </Box>
                     </Box>
