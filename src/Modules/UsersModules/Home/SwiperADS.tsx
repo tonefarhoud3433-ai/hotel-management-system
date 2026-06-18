@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
@@ -14,36 +14,39 @@ import { Keyboard } from 'swiper/modules';
 import 'swiper/css/keyboard';
 
 import noImages from "../../../assets/Images/Signature-2-Queen_body.webp"
+import { RoomContext } from '../../../Contexts/RoomContext';
 
 export default function SwiperADS() {
     const [adsData, setAdsData] = useState<any[]>([]);
+
+
+    const { getRoom } = useContext(RoomContext)!
 
     const fetchData = async () => {
         try {
             const response = await axios("https://upskilling-egypt.com:3000/api/v0/portal/ads");
             const activeAds = response?.data?.data?.ads || [];
+
             setAdsData(activeAds);
         } catch (error: any) {
             toast.error("brooking data ");
         }
     };
 
-    const idRoom = (id: string) => {
-        toast.success(id);
-    }
+
 
     useEffect(() => {
         fetchData();
     }, []);
 
     return (
-        <Box sx={{ py: 5, px: 2, width: '100%', overflow: 'hidden' }}>
+        <Box sx={{ py: 5, px: 2, width: '90%',mx:'auto', overflow: 'hidden' }}>
             <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>Ads</Typography>
             <Swiper
                 modules={[Autoplay, Keyboard]}
                 keyboard={{
-                    enabled: true, 
-                    onlyInViewport: true, 
+                    enabled: true,
+                    onlyInViewport: true,
                 }}
                 spaceBetween={20}
                 loop={true}
@@ -56,10 +59,24 @@ export default function SwiperADS() {
 
                 grabCursor={true}
                 allowTouchMove={true}
-                slidesPerView={adsData.length <= 4 ? 2 : 4}
+                breakpoints={{
+                    0: {
+                        slidesPerView: 1,
+                    },
+                    640: {
+                        slidesPerView: 2,
+                    },
+                    768: {
+                        slidesPerView: 3,
+                    },
+                    1024: {
+                        slidesPerView: adsData.length > 4 ? 2 : 4,
+                    },
+                }}
                 speed={5000}
 
             >
+
                 {adsData.map((ad) => (
                     <SwiperSlide key={ad._id} >
                         <Box sx={{ borderRadius: '10px', bgcolor: 'whitesmoke' }}>
@@ -97,10 +114,10 @@ export default function SwiperADS() {
                                         transition: 'opacity 0.3s ease-in-out',
                                     }}
                                 >
-                                    <IconButton onClick={() => idRoom(ad.room._id)} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
+                                    <IconButton onClick={() => getRoom(ad._id)} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
                                         <FavoriteIcon />
                                     </IconButton>
-                                    <IconButton onClick={() => idRoom(ad.room._id)} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
+                                    <IconButton onClick={() => getRoom(ad._id)} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
                                         <VisibilityIcon />
                                     </IconButton>
                                 </Box>

@@ -1,13 +1,11 @@
-import React from "react";
-import UsersNavBar from "../UsersNavBar/UsersNavBar";
+import ExploreSec from "../../Shared/ExploreSec/ExploreSec";
 import FirstADS from "./FirstADS";
 import SwiperADS from "./SwiperADS";
-import ExploreSec from "../../Shared/ExploreSec/ExploreSec";
 
 export default function UsersHome() {
   return (
     <>
-      <UsersNavBar />
+      {/* <UsersNavBar /> */}
       <FirstADS/>
       <SwiperADS/>
       <ExploreSec />

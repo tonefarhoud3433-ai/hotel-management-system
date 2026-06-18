@@ -6,13 +6,16 @@ import CssBaseline from "@mui/material/CssBaseline";
 import AuthContextProvider from "./Contexts/AuthContext.tsx";
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css'; 
+import { RoomContext, RoomContextProvider } from "./Contexts/RoomContext.tsx";
 
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <CssBaseline />
     <AuthContextProvider>
+      <RoomContextProvider>
       <App />
+      </RoomContextProvider>
     </AuthContextProvider>
   </StrictMode>,
 );

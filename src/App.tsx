@@ -22,6 +22,7 @@ import Users from "./Modules/MasterModules/Users/Users";
 import NotFound from "./Modules/Shared/NotFound/NotFound";
 import ProtecedRoute from "./Modules/Shared/ProtecedRoute/ProtecedRoute";
 import UsersHome from "./Modules/UsersModules/Home/UsersHome";
+import FirstADS from "./Modules/UsersModules/Home/FirstADS";
 
 function App() {
   const routes = createBrowserRouter([
@@ -32,6 +33,7 @@ function App() {
       children: [
         { index: true, element: <UsersHome /> },
         { path: "home", element: <UsersHome /> },
+        { path: "home/ads", element: <FirstADS /> },
       ],
     },
     {
