@@ -6,9 +6,9 @@ export default function UsersHome() {
   return (
     <>
       {/* <UsersNavBar /> */}
-      <FirstADS/>
-      <SwiperADS/>
       <ExploreSec />
+      <FirstADS />
+      <SwiperADS />
     </>
   );
 }
