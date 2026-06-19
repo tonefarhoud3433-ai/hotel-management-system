@@ -15,7 +15,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
 import { RoomContext } from "../../../Contexts/RoomContext";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 import { Link as MuiLink } from "@mui/material";
 interface RoomAPI {
   _id: string;
@@ -37,7 +37,7 @@ const ExploreRooms = () => {
   const { getRoomFav, getRoomDetail } = useContext(RoomContext)!;
 
   const pageSize = 15;
-
+  const {capacity,start,end} = useLocation().state
   const fetchRooms = async (currentPage: number) => {
     setLoading(true);
     try {
@@ -48,8 +48,9 @@ const ExploreRooms = () => {
         params: {
           page: currentPage,
           size: pageSize,
-          startDate: "2023-01-20",
-          endDate: "2023-01-30",
+          startDate: start,
+          endDate: end,
+          capacity
         },
       });
 

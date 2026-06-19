@@ -13,7 +13,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { DateRange, Range } from "react-date-range";
+import { DateRange,type Range } from "react-date-range";
 import { format } from "date-fns";
 import axios from "axios";
 
@@ -46,8 +46,7 @@ export default function ExploreSec() {
   const openCalendar = Boolean(anchorEl);
 
   const handleIncrement = () => setCapacity((prev) => prev + 1);
-  const handleDecrement = () =>
-    setCapacity((prev) => (prev > 1 ? prev - 1 : 1));
+  const handleDecrement = () => setCapacity((prev) => (prev > 1 ? prev - 1 : 1));
 
   const handleExplore = async () => {
     const { startDate, endDate } = dateRange[0];
@@ -75,7 +74,7 @@ export default function ExploreSec() {
       console.error("Failed to fetch available rooms", error);
     } finally {
       setLoading(false);
-      navigate("/home/explore");
+      navigate("/home/explore",{state:{start:startDate,end:endDate,capacity:capacity}});
     }
   };
 
