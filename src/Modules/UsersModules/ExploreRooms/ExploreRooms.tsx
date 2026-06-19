@@ -37,7 +37,7 @@ const ExploreRooms = () => {
   const { getRoomFav, getRoomDetail } = useContext(RoomContext)!;
 
   const pageSize = 15;
-  const {capacity,start,end} = useLocation().state
+  const {capacity,start,end} = useLocation().state || {capacity:undefined,start:undefined,end:undefined}
   const fetchRooms = async (currentPage: number) => {
     setLoading(true);
     try {

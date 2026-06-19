@@ -17,8 +17,10 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function UsersNavBar() {
+  const navigate = useNavigate()
   // ستيت بسيطة جداً فقط لفتح وقفل قائمة الموبايل الجانبية (Drawer)
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -49,7 +51,7 @@ export default function UsersNavBar() {
             <ListItemButton sx={{ borderRadius: 1 }}>
               <ListItemText
                 primary={text}
-                primaryTypographyProps={{
+                sx={{
                   color: index === 0 ? "#3252DF" : "#152C5B",
                   fontWeight: index === 0 ? 600 : 400,
                 }}
@@ -149,11 +151,13 @@ export default function UsersNavBar() {
                 Home
               </Button>
               <Button
+              
                 sx={{
                   color: "#152C5B",
                   textTransform: "none",
                   fontWeight: 400,
                 }}
+                onClick={()=>navigate('home/explore')}
               >
                 Explore
               </Button>
