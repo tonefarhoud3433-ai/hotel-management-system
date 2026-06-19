@@ -24,6 +24,7 @@ import ProtecedRoute from "./Modules/Shared/ProtecedRoute/ProtecedRoute";
 import UsersHome from "./Modules/UsersModules/Home/UsersHome";
 import FirstADS from "./Modules/UsersModules/Home/FirstADS";
 import ExploreRooms from "./Modules/UsersModules/ExploreRooms/ExploreRooms";
+import FavList from "./Modules/UsersModules/Favorite/FavList";
 
 function App() {
   const routes = createBrowserRouter([
@@ -36,6 +37,7 @@ function App() {
         { path: "home", element: <UsersHome /> },
         { path: "home/ads", element: <FirstADS /> },
         { path: "home/explore", element: <ExploreRooms /> },
+        { path: "home/favorites", element: <FavList /> },
       ],
     },
     {
