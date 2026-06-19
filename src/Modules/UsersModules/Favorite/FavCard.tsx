@@ -1,20 +1,31 @@
-import { Card, CardMedia, CardContent, Typography, Box } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Box, IconButton } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { useEffect } from 'react';
 import type { FavItem } from './FavList';
 import { Visibility } from '@mui/icons-material';
+import { toast } from 'react-toastify';
+import axiosClient, { API_BASE_URL } from '../../../API/axsiosClient';
 
 interface CardProps{
   item:FavItem
+  refresh:()=>void
 }
-const FavCard = ({item}:CardProps) => {
-  useEffect(()=>{console.log(item.images[0])},[])
+const FavCard = ({item,refresh}:CardProps) => {
+  const removeFromFavorite = async()=>{
+    try{
+      const res = await axiosClient.delete(`${API_BASE_URL}/api/v0/portal/favorite-rooms/${item._id}`,{data:{roomId:item._id}})
+      toast.success(res?.data?.message)
+      refresh()
+    }
+    catch(error){
+      toast.error(error?.response?.data?.message)
+    }
+  }
   return (
-    /* Container to handle overall width and layout centering */
-    <Box sx={{ maxWidth: 800, margin: '20px auto' }} >
+    <Box>
       <Card 
       
         sx={{ 
+          height: '300px',
           borderRadius: '24px', 
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)', 
           overflow: 'hidden', 
@@ -32,7 +43,7 @@ const FavCard = ({item}:CardProps) => {
         onClick={()=>console.log(item)}
           component="img"
           sx={{
-            height: '300px',
+            height: '100%',
 
             // paddingTop: '56.25%',
             //  // Maintains a perfect 16:9 aspect ratio
@@ -60,21 +71,27 @@ const FavCard = ({item}:CardProps) => {
             zIndex: 1,
           }}
         >
+          <IconButton onClick={removeFromFavorite}>
+
           <FavoriteIcon 
-            sx={{ 
-              color: '#FFFFFF', 
-              fontSize: '2rem', // Scaled up to match the sample design
-              filter: 'drop-shadow(0px 4px 10px rgba(0,0,0,0.3))', 
-              marginRight:2
-            }} 
+          
+          sx={{ 
+            color: '#FFFFFF', 
+            fontSize: '2rem', // Scaled up to match the sample design
+            filter: 'drop-shadow(0px 4px 10px rgba(0,0,0,0.3))', 
+            marginRight:2
+          }} 
           />
+          </IconButton>
+          <IconButton>
           <Visibility
             sx={{ 
               color: '#FFFFFF', 
               fontSize: '2rem', // Scaled up to match the sample design
               filter: 'drop-shadow(0px 4px 10px rgba(0,0,0,0.3))' 
             }} 
-          />
+            />
+            </IconButton>
         </Box>
         
         {/* Absolute-positioned overlay container for the typography */}

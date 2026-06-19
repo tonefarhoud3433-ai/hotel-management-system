@@ -18,20 +18,21 @@ export interface FavItem{
 
 export default function FavList() {
     const [favorites,setFavorites] = useState<FavItem[]>([]);
+    const getFavorites = async ()=>{
+      const res = await axiosClient.get(`/api/v0/portal/favorite-rooms`)
+      setFavorites(res?.data?.data?.favoriteRooms[0].rooms);
+    }
     useEffect(()=>{
-      (async()=>{
-
-        const res = await axiosClient.get(`/api/v0/portal/favorite-rooms`)
-        setFavorites(res?.data?.data?.favoriteRooms[0].rooms);
+      (()=>{
+        getFavorites()
       })()
-        
     },[])
   return (
     <>
     <Typography variant="h3" sx={{textAlign:'center'}}>Your Favorites</Typography>
-    <Grid sx={{px:{xs:2,md:4,xl:6}}} container spacing={6}>
+    <Grid sx={{px:{xs:2,md:4,xl:6}}} container  spacing={2}>
       
-      {favorites.map((item)=><Grid size={{xs:12,sm:6,lg:4,xl:3,}}><FavCard item={item}/></Grid>)}
+      {favorites.map((item)=><Grid size={{xs:12,sm:6,lg:4,xl:3,}}><FavCard item={item} refresh={getFavorites}/></Grid>)}
 
 
     </Grid>
