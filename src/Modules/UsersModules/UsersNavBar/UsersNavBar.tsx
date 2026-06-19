@@ -73,7 +73,7 @@ export default function UsersNavBar() {
         <Typography variant="body2" sx={{ color: "#152C5B", fontWeight: 500 }}>
           Upskilling
         </Typography>
-        <KeyboardArrowDownIcon size="small" sx={{ color: "#152C5B" }} />
+        <KeyboardArrowDownIcon sx={{ color: "#152C5B" }} />
       </Box>
 
       {/* زراير الموبايل */}
@@ -171,6 +171,7 @@ export default function UsersNavBar() {
                 Reviews
               </Button>
               <Button
+              onClick={()=>navigate('home/favorites')}
                 sx={{
                   color: "#152C5B",
                   textTransform: "none",

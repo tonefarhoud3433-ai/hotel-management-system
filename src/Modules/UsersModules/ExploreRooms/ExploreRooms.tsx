@@ -17,6 +17,8 @@ import { RoomContext } from "../../../Contexts/RoomContext";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { Link as MuiLink } from "@mui/material";
+import axiosClient from "../../../API/axsiosClient";
+import { toast } from "react-toastify";
 interface RoomAPI {
   _id: string;
   roomNumber: string;
@@ -33,8 +35,8 @@ const ExploreRooms = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-
-  const { getRoomFav, getRoomDetail } = useContext(RoomContext)!;
+  
+  const {  getRoomDetail } = useContext(RoomContext)!;
 
   const pageSize = 15;
   const {capacity,start,end} = useLocation().state || {capacity:undefined,start:undefined,end:undefined}
@@ -70,9 +72,22 @@ const ExploreRooms = () => {
     event.preventDefault();
     console.info("You clicked a breadcrumb.");
   }
+const AddToFavorites = async (id:string)=>{
+  try{
+    const res = await axiosClient.post('/api/v0/portal/favorite-rooms',{roomId:id})
+    toast.success(res?.data?.message||'success!');
 
+  }
+  catch(error){
+
+    toast.error(error?.response?.data?.message ||'wrong ')
+  }
+} 
   useEffect(() => {
-    fetchRooms(page);
+    (()=>{
+
+      fetchRooms(page);
+    })()
   }, [page]);
 
   const handlePageChange = (
@@ -190,7 +205,7 @@ const ExploreRooms = () => {
                         }}
                       >
                         <IconButton
-                          onClick={() => getRoomFav(room._id)}
+                          onClick={() => AddToFavorites(room._id)}
                           sx={{
                             color: "white",
                             bgcolor: "rgba(255,255,255,0.2)",

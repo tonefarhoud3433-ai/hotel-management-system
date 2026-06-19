@@ -19,4 +19,4 @@ export interface DashboardDataResponse {
 }
 
 export const getDashboardCharts = () => {
-return axiosClient.get<DashboardDataResponse>("/dashboard")};
+return axiosClient.get<DashboardDataResponse>("/api/v0/admin/dashboard")};
