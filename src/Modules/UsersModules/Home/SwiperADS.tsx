@@ -98,6 +98,9 @@ export default function SwiperADS() {
                                     backgroundPosition: 'center',
                                     '&:hover .hover-actions': {
                                         opacity: 1,
+                                    },
+                                    '&:hover .hover-price': {
+                                        top: 0,
                                     }
                                 }}
                             >
@@ -113,7 +116,7 @@ export default function SwiperADS() {
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                         gap: 2,
-                                        bgcolor: 'rgba(0,0,0,0.3)',
+                                        bgcolor: 'rgba(0,0,0,0.5)',
                                         opacity: 0,
                                         transition: 'opacity 0.3s ease-in-out',
                                     }}
@@ -125,7 +128,7 @@ export default function SwiperADS() {
                                         <VisibilityIcon />
                                     </IconButton>
                                 </Box>
-                                <Box sx={{ p: 1, position: 'absolute', top: 0, right: 0, borderRadius: '0 0 0 10px', width: '50%', bgcolor: 'rgba(255, 73, 139, 1)' }}>
+                                <Box className="hover-price" sx={{transition: 'all 0.3s ease-in-out', p: 1, position: 'absolute', top: -45, right: 0, borderRadius: '0 0 0 10px', width: '50%', bgcolor: 'rgba(255, 73, 139, 1)' }}>
                                     <Typography sx={{ color: 'white', textAlign: 'center' }}>
                                         <Typography component="span" sx={{ fontWeight: "800" }} >
                                             {ad.room.discount}% Off
@@ -139,7 +142,7 @@ export default function SwiperADS() {
                                         top: 10,
                                         left: 10,
                                         borderRadius: 2,
-                                        // الألوان:
+                                        
                                         bgcolor: ad.isActive ? 'rgba(46, 204, 113, 0.9)' : 'rgba(231, 76, 60, 0.9)',
                                         boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
                                         backdropFilter: 'blur(4px)',

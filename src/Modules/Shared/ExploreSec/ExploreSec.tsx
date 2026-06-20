@@ -21,6 +21,7 @@ import mainImage from "../../../assets/Images/picture.png";
 import { useNavigate } from "react-router-dom";
 
 export default function ExploreSec() {
+  
   const [dateRange, setDateRange] = useState<Range[]>([
     {
       startDate: new Date(),
