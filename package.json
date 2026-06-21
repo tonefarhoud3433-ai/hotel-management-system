@@ -17,6 +17,8 @@
     "@mui/material": "^9.1.0",
     "@mui/x-charts": "^9.4.0",
     "@mui/x-data-grid": "^9.4.0",
+    "@stripe/react-stripe-js": "^6.6.0",
+    "@stripe/stripe-js": "^9.8.0",
     "axios": "^1.17.0",
     "chart.js": "^4.5.1",
     "date-fns": "^4.4.0",
@@ -29,6 +31,7 @@
     "react-pro-sidebar": "^1.1.0",
     "react-router-dom": "^7.16.0",
     "react-toastify": "^11.1.0",
+    "stripe.js": "^0.0.1",
     "swiper": "^12.2.0",
     "yup": "^1.7.1"
   },
