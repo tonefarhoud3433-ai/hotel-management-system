@@ -26,6 +26,13 @@ import FirstADS from "./Modules/UsersModules/Home/FirstADS";
 import ExploreRooms from "./Modules/UsersModules/ExploreRooms/ExploreRooms";
 import FavList from "./Modules/UsersModules/Favorite/FavList";
 import RoomDetails from "./Modules/UsersModules/Home/RoomDetails";
+import BookingConfirm from "./Modules/UsersModules/BookingConfirm/BookingConfirm";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import PaySuccess from "./Modules/UsersModules/BookingConfirm/PaySuccess";
+const stripePromise = loadStripe(
+  "pk_test_51OTjURBQWp069pqTmqhKZHNNd3kMf9TTynJtLJQIJDOSYcGM7xz3DabzCzE7bTxvuYMY0IX96OHBjsysHEKIrwCK006Mu7mKw8",
+);
 
 function App() {
   const routes = createBrowserRouter([
@@ -40,6 +47,15 @@ function App() {
         { path: "home/explore", element: <ExploreRooms /> },
         { path: "home/favorites", element: <FavList /> },
         { path: "home/roomdetails", element: <RoomDetails /> },
+        { path: "home/pay-success", element: <PaySuccess /> },
+        {
+          path: "/booking-confirmation",
+          element: (
+            <Elements stripe={stripePromise}>
+              <BookingConfirm />{" "}
+            </Elements>
+          ),
+        },
       ],
     },
     {
