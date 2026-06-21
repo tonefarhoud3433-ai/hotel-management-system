@@ -29,3 +29,28 @@
 .mousePointer{
     cursor: pointer;
 }
+
+
+.swiper-button-next,
+.swiper-button-prev {
+  background-color: #3252DF !important;
+  color: white !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important; 
+  top: auto !important; 
+  bottom: 60px !important; 
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 20px !important;
+  font-weight: bold;
+}
+
+.swiper-button-next {
+  right: 50% !important;
+}
+.swiper-button-prev {
+  left: 40% !important; 
+}

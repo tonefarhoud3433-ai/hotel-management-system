@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { DateRange, type Range } from "react-date-range";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import PostReviews from "./PostReviews";
 
 interface Facility {
     _id: string;
@@ -121,180 +122,185 @@ export default function RoomDetails() {
     }
 
     return (
-        <Box sx={{ py: 3, px: 10 }}>
-            {/* Header */}
-            <Box sx={{ textAlign: 'center' }}>
-                <Typography sx={{ color: 'rgba(21, 44, 91, 1)', fontWeight: '600', fontSize: '36px' }}>Village Angga</Typography>
-                <Typography sx={{ color: 'rgba(176, 176, 176, 1)', fontWeight: '300', fontSize: '18px' }}>Bogor, Indonesia</Typography>
-            </Box>
 
-            <Breadcrumbs sx={{ my: 2 }}>
-                <Link to="/home" style={{ color: 'inherit' }}>Home</Link>
-                <Typography sx={{ color: 'rgba(21, 44, 91, 1)', fontWeight: '700' }}>Room Details</Typography>
-            </Breadcrumbs>
+        <>
 
-            {/* Images */}
-
-            <Paper sx={{ p: 3, borderRadius: 3, my: 5, mx: 'auto' }}>
-
-                <Box sx={{
-                    display: 'grid', mx: 'auto',
-                    gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-                    gap: 2,
-
-                }}>
-                    {roomData.images?.map((imgSrc, index) => (
-                        <Box key={index} component="img" src={imgSrc}
-                            sx={{
-                                width: '100%', height: '200px',
-                                objectFit: 'cover', borderRadius: 2,
-                                mx: 'auto',
-                                transition: 'all 0.3s ease-in-out',
-                                cursor: 'pointer',
-                                "&:hover": {
-                                    transform: "scale(1.05)"
-                                }
-                            }} />
-                    ))}
-                </Box>
-            </Paper>
-
-            <Grid container spacing={4}>
-                <Grid size={{ xs: 9, md: 6 }}>
-                    <Box sx={{
-                        px: 3,
-                        py: 2,
-                        color: 'rgba(176, 176, 176, 1)',
-                        fontWeight: '300',
-                        fontSize: '16px',
-                        lineHeight: '170%',
-                        letterSpacing: 0,
-
-                    }}>
-                        <Typography >
-                            Minimal techno is a minimalist subgenre of techno music.
-                            It is characterized by a stripped-down aesthetic that exploits the use of repetition and understated development.
-                            Minimal techno is thought to have been originally developed in the early 1990s by Detroit-based producers Robert Hood and Daniel Bell.
-                        </Typography>
-                        <Typography sx={{ my: 1 }} >
-                            Such trends saw the demise of the soul-infused techno that typified the original Detroit sound.
-                            Robert Hood has noted that he and Daniel Bell both realized something was missing from techno in the post-rave era.
-                        </Typography>
-                        <Typography >
-                            Design is a plan or specification for the construction of an object or system or for the implementation of an activity or process,
-                            or the result of that plan or specification in the form of a prototype, product or process.
-                            The national agency for design: enabling Singapore to use design for economic growth and to make lives better.
-                        </Typography>
+            <Box sx={{ py: 3, px: 10 }}>
+                <Box>
+                    {/* Header */}
+                    <Box sx={{ textAlign: 'center' }}>
+                        <Typography sx={{ color: 'rgba(21, 44, 91, 1)', fontWeight: '600', fontSize: '36px' }}>Village Angga</Typography>
+                        <Typography sx={{ color: 'rgba(176, 176, 176, 1)', fontWeight: '300', fontSize: '18px' }}>Bogor, Indonesia</Typography>
                     </Box>
-                    <Box sx={{ px: 3, display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
-                        <Typography variant="subtitle1" sx={{ fontWeight: '600', fontSize: '22px', mr: 2 }}>Facilities:</Typography>
-                        {roomData.facilities?.map((facility: Facility) => (
-                            <Chip
-                                sx={{
-                                    cursor: 'pointer',
-                                    color: '#152C5B',
-                                    borderColor: '#152C5B',
-                                    borderWidth: 2,
 
-                                    fontSize: '16px',
-                                    '&:hover ': {
-                                        backgroundColor: "#152C5B",
-                                        color: 'white'
-                                    },
-                                }}
-                                key={facility._id}
-                                label={facility.name}
-                                variant="outlined"
+                    <Breadcrumbs sx={{ my: 2 }}>
+                        <Link to="/home" style={{ color: 'inherit' }}>Home</Link>
+                        <Typography sx={{ color: 'rgba(21, 44, 91, 1)', fontWeight: '700' }}>Room Details</Typography>
+                    </Breadcrumbs>
 
-                            />
-                        ))}
-                    </Box>
-                </Grid>
+                    {/* Images */}
 
-                {/* Booking Section */}
-                <Grid size={{ xs: 9, md: 6 }}>
-                    <Box sx={{ p: 5, boxShadow: 3, borderRadius: 5, maxWidth: '80%', mx: 'auto' }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Paper sx={{ p: 3, borderRadius: 3, my: 5, mx: 'auto' }}>
 
-                            <Typography sx={{
-                                color: 'rgba(21, 44, 91, 1)',
-                                fontWeight: '700',
-                                fontSize: '20px'
-                            }}>Start Booking</Typography>
-                            <Typography sx={{
-                                color: 'rgba(21, 44, 91, 1)',
-                                fontWeight: '700',
-                                fontSize: '20px'
-                            }} >
-                                Room : {roomData.roomNumber}
-                            </Typography>
+                        <Box sx={{
+                            display: 'grid', mx: 'auto',
+                            gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+                            gap: 2,
+
+                        }}>
+                            {roomData.images?.map((imgSrc, index) => (
+                                <Box key={index} component="img" src={imgSrc}
+                                    sx={{
+                                        width: '100%', height: '200px',
+                                        objectFit: 'cover', borderRadius: 2,
+                                        mx: 'auto',
+                                        transition: 'all 0.3s ease-in-out',
+                                        cursor: 'pointer',
+                                        "&:hover": {
+                                            transform: "scale(1.05)"
+                                        }
+                                    }} />
+                            ))}
                         </Box>
-                        <Typography sx={{ color: 'rgba(26, 188, 156, 1)', fontSize: '36px', fontWeight: '600' }}>
-                            ${roomData.price} <Typography component={'span'} sx={{ color: 'gray', fontSize: '20px' }}>per night</Typography>
-                        </Typography>
-                        <Typography
-                            sx={{
-                                color: 'rgba(255, 22, 18, 1)',
+                    </Paper>
+
+                    <Grid container spacing={4}>
+                        <Grid sx={{ mx: { md: 'auto', xs: 'auto' } }} size={{ xs: 9, md: 6 }}>
+                            <Box sx={{
+                                px: 3,
+                                py: 2,
+                                color: 'rgba(176, 176, 176, 1)',
+                                fontWeight: '300',
                                 fontSize: '16px',
-                                fontWeight: '400',
-                                my: 1,
-                                pt: 0
+                                lineHeight: '170%',
+                                letterSpacing: 0,
+
                             }}>
-                            Discount {roomData?.discount}% Off
-                        </Typography>
-                        <Typography
-                            sx={{
-                                color: 'rgba(21, 44, 91, 1)',
-                                fontWeight: '700',
-                                fontSize: '20px',
-                                mt: 0,
-                                pt: 0
-                            }}>
-                            Capacity : {roomData?.capacity} Person
-                        </Typography>
+                                <Typography >
+                                    Minimal techno is a minimalist subgenre of techno music.
+                                    It is characterized by a stripped-down aesthetic that exploits the use of repetition and understated development.
+                                    Minimal techno is thought to have been originally developed in the early 1990s by Detroit-based producers Robert Hood and Daniel Bell.
+                                </Typography>
+                                <Typography sx={{ my: 1 }} >
+                                    Such trends saw the demise of the soul-infused techno that typified the original Detroit sound.
+                                    Robert Hood has noted that he and Daniel Bell both realized something was missing from techno in the post-rave era.
+                                </Typography>
+                                <Typography >
+                                    Design is a plan or specification for the construction of an object or system or for the implementation of an activity or process,
+                                    or the result of that plan or specification in the form of a prototype, product or process.
+                                    The national agency for design: enabling Singapore to use design for economic growth and to make lives better.
+                                </Typography>
+                            </Box>
+                            <Box sx={{ px: 3, display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
+                                <Typography variant="subtitle1" sx={{ fontWeight: '600', fontSize: '22px', mr: 2 }}>Facilities:</Typography>
+                                {roomData.facilities?.map((facility: Facility) => (
+                                    <Chip
+                                        sx={{
+                                            cursor: 'pointer',
+                                            color: '#152C5B',
+                                            borderColor: '#152C5B',
+                                            borderWidth: 2,
 
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 3 }}>
-                            <Button
-                                onClick={handleOpenCalendar}
-                                fullWidth
-                                variant="text"
-                                startIcon={<CalendarMonthIcon sx={{ color: "#152C5B" }} />}
-                                sx={{
-                                    justifyContent: "flex-start",
-                                    bgcolor: "#F5F6F8",
-                                    color: "#152C5B",
-                                    fontWeight: 500,
-                                    py: 1.5,
-                                    px: 2,
-                                    textTransform: "none",
-                                    borderRadius: "4px",
-                                    "&:hover": { bgcolor: "#EAEAEA" },
-                                }}
-                            >
-                                {dateRange[0].startDate && dateRange[0].endDate
-                                    ? `${format(dateRange[0].startDate, "MMM dd")} - ${format(
-                                        dateRange[0].endDate,
-                                        "MMM dd",
-                                    )}`
-                                    : "Pick a Date"}
-                            </Button>
+                                            fontSize: '16px',
+                                            '&:hover ': {
+                                                backgroundColor: "#152C5B",
+                                                color: 'white'
+                                            },
+                                        }}
+                                        key={facility._id}
+                                        label={facility.name}
+                                        variant="outlined"
 
+                                    />
+                                ))}
+                            </Box>
+                        </Grid>
 
-                            <Popover open={openCalendar} anchorEl={anchorEl} onClose={handleCloseCalendar} anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>
-                                <DateRange editableDateInputs={true} onChange={(item) => setDateRange([item.selection])} ranges={dateRange} />
-                            </Popover>
+                        {/* Booking Section */}
+                        <Grid sx={{ mx: { md: 'auto', xs: 'auto' } }} size={{ xs: 9, md: 6 }}>
+                            <Box sx={{ p: 5, boxShadow: 3, borderRadius: 5, maxWidth: '80%', mx: 'auto' }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 
-                            <Typography sx={{ fontWeight: 'bold', fontSize: '19px', color: '#152C5B', textAlign: 'center', my: 1 }}>
-                                Total Price for {days} night(s): ${totalPrice.toFixed(2)}
-                            </Typography>
+                                    <Typography sx={{
+                                        color: 'rgba(21, 44, 91, 1)',
+                                        fontWeight: '700',
+                                        fontSize: '20px'
+                                    }}>Start Booking</Typography>
+                                    <Typography sx={{
+                                        color: 'rgba(21, 44, 91, 1)',
+                                        fontWeight: '700',
+                                        fontSize: '20px'
+                                    }} >
+                                        Room : {roomData.roomNumber}
+                                    </Typography>
+                                </Box>
+                                <Typography sx={{ color: 'rgba(26, 188, 156, 1)', fontSize: '36px', fontWeight: '600' }}>
+                                    ${roomData.price} <Typography component={'span'} sx={{ color: 'gray', fontSize: '20px' }}>per night</Typography>
+                                </Typography>
+                                <Typography
+                                    sx={{
+                                        color: 'rgba(255, 22, 18, 1)',
+                                        fontSize: '16px',
+                                        fontWeight: '400',
+                                        my: 1,
+                                        pt: 0
+                                    }}>
+                                    Discount {roomData?.discount}% Off
+                                </Typography>
+                                <Typography
+                                    sx={{
+                                        color: 'rgba(21, 44, 91, 1)',
+                                        fontWeight: '700',
+                                        fontSize: '20px',
+                                        mt: 0,
+                                        pt: 0
+                                    }}>
+                                    Capacity : {roomData?.capacity} Person
+                                </Typography>
 
-                            <Button onClick={handleBooking} disabled={loading} fullWidth variant="contained" sx={{ bgcolor: "#1ABC9C", py: 1.5 }}>
-                                {loading ? "Processing..." : "Continue to Book"}
-                            </Button>
-                        </Box>
-                    </Box>
-                </Grid>
-            </Grid>
-        </Box>
+                                <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 3 }}>
+                                    <Button
+                                        onClick={handleOpenCalendar}
+                                        fullWidth
+                                        variant="text"
+                                        startIcon={<CalendarMonthIcon sx={{ color: "#152C5B" }} />}
+                                        sx={{
+                                            justifyContent: "flex-start",
+                                            bgcolor: "#F5F6F8",
+                                            color: "#152C5B",
+                                            fontWeight: 500,
+                                            py: 1.5,
+                                            px: 2,
+                                            textTransform: "none",
+                                            borderRadius: "4px",
+                                            "&:hover": { bgcolor: "#EAEAEA" },
+                                        }}
+                                    >
+                                        {dateRange[0].startDate && dateRange[0].endDate
+                                            ? `${format(dateRange[0].startDate, "MMM dd")} - ${format(
+                                                dateRange[0].endDate,
+                                                "MMM dd",
+                                            )}`
+                                            : "Pick a Date"}
+                                    </Button>
+                                    <Popover open={openCalendar} anchorEl={anchorEl} onClose={handleCloseCalendar} anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>
+                                        <DateRange editableDateInputs={true} onChange={(item) => setDateRange([item.selection])} ranges={dateRange} />
+                                    </Popover>
+
+                                    <Typography sx={{ fontWeight: 'bold', fontSize: '19px', color: '#152C5B', textAlign: 'center', my: 1 }}>
+                                        Total Price for {days} night(s): ${totalPrice.toFixed(2)}
+                                    </Typography>
+
+                                    <Button onClick={handleBooking} disabled={loading} fullWidth variant="contained" sx={{ bgcolor: "#1ABC9C", py: 1.5 }}>
+                                        {loading ? "Processing..." : "Continue to Book"}
+                                    </Button>
+                                </Box>
+                            </Box>
+                        </Grid>
+                    </Grid>
+                </Box>
+                <PostReviews roomId={adsData} />
+            </Box>
+        </>
     );
 }
