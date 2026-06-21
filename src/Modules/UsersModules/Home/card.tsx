@@ -16,7 +16,6 @@ const PropertyCard = ({ card }: { card: CardData }) => {
         // Selecting the sticker class when the entire card is hovered
         '&:hover .hover-sticker': {
           top: 0,
-
         }
       }}
     >
