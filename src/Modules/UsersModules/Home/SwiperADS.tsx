@@ -16,6 +16,7 @@ import 'swiper/css/keyboard';
 import noImages from "../../../assets/Images/Signature-2-Queen_body.webp"
 import { RoomContext } from '../../../Contexts/RoomContext';
 import { useNavigate } from 'react-router-dom';
+import { OnlyLoggedIn } from '../../Shared/ProtecedRoute/OnlyLoggedIn';
 
 export default function SwiperADS() {
     const [adsData, setAdsData] = useState<any[]>([]);
@@ -117,9 +118,12 @@ export default function SwiperADS() {
                                         transition: 'opacity 0.3s ease-in-out',
                                     }}
                                 >
+                                    <OnlyLoggedIn>
+
                                     <IconButton onClick={() => getRoomFav(ad.room._id)} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
                                         <FavoriteIcon />
                                     </IconButton>
+                                    </OnlyLoggedIn>
                                     <IconButton onClick={() => {
                                         navigate('/home/roomdetails', {
                                             state: { adsData: ad.room._id}

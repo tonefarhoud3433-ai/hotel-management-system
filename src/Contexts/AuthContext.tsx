@@ -56,20 +56,17 @@ export default function AuthContextProvider({ children }: AuthContextProvProp) {
   const saveUserData = () => {
     const encoded = localStorage.getItem("token");
     if (encoded) {
-      // console.log(
-      //   encoded
-      // );
-      
-      const decoded = jwtDecode<User>(encoded);
-      // console.log(decoded);
-      
-      if (+decoded.exp > Math.trunc(Date.now() / 1000)) {
+      try{
+
+        const decoded = jwtDecode<User>(encoded);
+        if (+decoded.exp > Math.trunc(Date.now() / 1000)) {
         setUserData(decoded);
         getProfile(decoded._id);
       } else {
-        // logOut();
         toast.info("token expired! please login again");
       }
+    }
+    catch{return}
     }
   };
   useEffect(() => {

@@ -50,7 +50,7 @@ export default function FavList() {
                     <CircularProgress />
                 </Box>
             ) : (
-                <Grid sx={{ px: { xs: 2, md: 4, xl: 6 }, mt: 2 }} container spacing={2}>
+                <Grid sx={{ px: { xs: 2, md: 4, xl: 6 }, mt: 2 , justifyContent:'center'} } container spacing={2}>
                     {favorites.length > 0 ? (
                         favorites.map((item) => (
                             <Grid size={{ xs:12, sm:6, lg:4, xl:3}}  key={item._id}>

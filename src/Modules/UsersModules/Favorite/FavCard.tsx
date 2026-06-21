@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 import axiosClient, { API_BASE_URL } from '../../../API/axsiosClient';
 import type { FavItem } from './FavList';
 import { useNavigate } from 'react-router-dom';
+import DeleteConfirmations from '../../Shared/DeleteConfirmations/DeleteConfirmations';
+import { useState } from 'react';
 
 interface CardProps {
   item: FavItem
@@ -12,6 +14,7 @@ interface CardProps {
 }
 const FavCard = ({ item, refresh }: CardProps) => {
   const navigate = useNavigate();
+  const [openConfirm,setOpenConfirm] = useState<boolean>(false)
 
   const removeFromFavorite = async () => {
     try {
@@ -76,7 +79,7 @@ const FavCard = ({ item, refresh }: CardProps) => {
           }}
         >
           <IconButton
-            onClick={removeFromFavorite}
+            onClick={()=>setOpenConfirm(true)}
             sx={{
               color: "white",
               bgcolor: "rgba(255,255,255,0.2)",
@@ -147,6 +150,7 @@ const FavCard = ({ item, refresh }: CardProps) => {
           </Typography>
         </CardContent>
       </Card>
+      <DeleteConfirmations onClose={()=>setOpenConfirm(false)} open={openConfirm} onDelete={removeFromFavorite}/>
     </Box>
   );
 };

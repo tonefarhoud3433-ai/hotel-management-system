@@ -18,6 +18,7 @@ import React, { useEffect, useState } from "react";
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axiosClient from "../../../API/axsiosClient";
+import { OnlyLoggedIn } from "../../Shared/ProtecedRoute/OnlyLoggedIn";
 interface RoomAPI {
   _id: string;
   roomNumber: string;
@@ -202,6 +203,8 @@ const ExploreRooms = () => {
                           zIndex: 2,
                         }}
                       >
+                        <OnlyLoggedIn>
+
                         <IconButton
                           onClick={() => AddToFavorites(room._id)}
                           sx={{
@@ -209,9 +212,10 @@ const ExploreRooms = () => {
                             bgcolor: "rgba(255,255,255,0.2)",
                             "&:hover": { bgcolor: "rgba(255,255,255,0.4)" },
                           }}
-                        >
+                          >
                           <FavoriteIcon />
                         </IconButton>
+                          </OnlyLoggedIn>
 
                         <IconButton
                           onClick={() => {

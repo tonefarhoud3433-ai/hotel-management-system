@@ -50,12 +50,12 @@ export default function SwiperReviews() {
         getComments();
         getReviews();
 
-    },);
+    },[]);
 
     return (
         <Box sx={{ width: '80%', mx: 'auto', py: 5 }}>
             <Swiper navigation={true} modules={[Navigation]} className="mySwiper">
-                {reviews.map((item, index) => (
+                {reviews.map((item) => (
                     <SwiperSlide key={item._id}>
                         <Paper
                             elevation={0}

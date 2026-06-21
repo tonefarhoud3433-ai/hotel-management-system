@@ -7,6 +7,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { RoomContext } from '../../../Contexts/RoomContext';
 import { useNavigate } from 'react-router-dom';
+import { OnlyLoggedIn } from '../../Shared/ProtecedRoute/OnlyLoggedIn';
 
 interface room {
     _id: string,
@@ -118,11 +119,13 @@ export default function FirstADS() {
                                         transition: 'opacity 0.3s ease-in-out',
                                     }}
                                 >
-                                    <IconButton onClick={() => {
-                                        getRoomFav(item.room._id);
-                                    }} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
+                                    <OnlyLoggedIn>
+                                        <IconButton onClick={() => {
+                                            getRoomFav(item.room._id);
+                                        }} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
                                         <FavoriteIcon />
                                     </IconButton>
+                                        </OnlyLoggedIn>
                                     <IconButton onClick={() => {
                                         navigate('/home/roomdetails', {
                                             state: { adsData: item.room._id } 

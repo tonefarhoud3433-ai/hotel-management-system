@@ -7,6 +7,7 @@ import { DateRange, type Range } from "react-date-range";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import PostReviews from "./PostReviews";
+import { OnlyLoggedIn } from "../../Shared/ProtecedRoute/OnlyLoggedIn";
 
 interface Facility {
     _id: string;
@@ -299,7 +300,9 @@ export default function RoomDetails() {
                         </Grid>
                     </Grid>
                 </Box>
+                <OnlyLoggedIn>
                 <PostReviews roomId={adsData} />
+                </OnlyLoggedIn>
             </Box>
         </>
     );
