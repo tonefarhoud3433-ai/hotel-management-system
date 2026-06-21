@@ -1,13 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Breadcrumbs, Paper, Box, Typography, Button, Grid, Popover, Chip } from '@mui/material';
-import { toast } from 'react-toastify';
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { DateRange, type Range } from "react-date-range";
-import { format } from "date-fns";
+import { Box, Breadcrumbs, Button, Chip, Grid, Paper, Popover, Typography } from '@mui/material';
 import axios from "axios";
+import { format } from "date-fns";
+import { useEffect, useState } from 'react';
+import { DateRange, type Range } from "react-date-range";
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 interface Facility {
     _id: string;
@@ -28,6 +26,7 @@ interface Room {
 export default function RoomDetails() {
     const location = useLocation();
     const { adsData } = location.state || {};
+    const navigate = useNavigate();
 
     const [dateRange, setDateRange] = useState<Range[]>([
         {
@@ -71,28 +70,33 @@ export default function RoomDetails() {
 
     const handleBooking = async () => {
         if (!dateRange[0].startDate || !dateRange[0].endDate) return;
-
+        const roomId = roomData?._id;
+        if (!roomId) {
+            console.error("Error: Room ID is missing!");
+            toast.error("Sorry, the room data is incomplete!");
+            return;
+        }
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
             let response = await axios.post('https://upskilling-egypt.com:3000/api/v0/portal/booking', {
                 startDate: format(dateRange[0].startDate, "yyyy-MM-dd"),
                 endDate: format(dateRange[0].endDate, "yyyy-MM-dd"),
-                room: adsData?.room?._id,
+                room: roomId,
                 totalPrice: totalPrice
             },
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `${token}`
                     }
                 }
-
             );
-            console.log(response);
+            toast.success(response?.data?.message);
 
-            toast.success("Booking successful!");
+            const id = response?.data?.data?.booking?._id;
+            navigate('/booking-confirmation', { state: { bookingId: id } });
+
         } catch (error) {
-            console.error("Failed to book room", error);
             toast.error("Booking failed");
         } finally {
             setLoading(false);
@@ -145,8 +149,8 @@ export default function RoomDetails() {
                                 width: '100%', height: '200px',
                                 objectFit: 'cover', borderRadius: 2,
                                 mx: 'auto',
-                                transition:'all 0.3s ease-in-out',
-                                cursor:'pointer',
+                                transition: 'all 0.3s ease-in-out',
+                                cursor: 'pointer',
                                 "&:hover": {
                                     transform: "scale(1.05)"
                                 }
@@ -182,7 +186,7 @@ export default function RoomDetails() {
                             The national agency for design: enabling Singapore to use design for economic growth and to make lives better.
                         </Typography>
                     </Box>
-                    <Box sx={{ px: 3, display: 'flex', gap: 1, flexWrap: 'wrap',mt:2 }}>
+                    <Box sx={{ px: 3, display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
                         <Typography variant="subtitle1" sx={{ fontWeight: '600', fontSize: '22px', mr: 2 }}>Facilities:</Typography>
                         {roomData.facilities?.map((facility: Facility) => (
                             <Chip
@@ -280,7 +284,7 @@ export default function RoomDetails() {
                                 <DateRange editableDateInputs={true} onChange={(item) => setDateRange([item.selection])} ranges={dateRange} />
                             </Popover>
 
-                            <Typography sx={{ fontWeight: 'bold',fontSize:'19px', color: '#152C5B', textAlign: 'center', my: 1 }}>
+                            <Typography sx={{ fontWeight: 'bold', fontSize: '19px', color: '#152C5B', textAlign: 'center', my: 1 }}>
                                 Total Price for {days} night(s): ${totalPrice.toFixed(2)}
                             </Typography>
 
