@@ -75,21 +75,21 @@ export default function RoomDetails() {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-          let response=  await axios.post('https://upskilling-egypt.com:3000/api/v0/portal/booking', {
+            let response = await axios.post('https://upskilling-egypt.com:3000/api/v0/portal/booking', {
                 startDate: format(dateRange[0].startDate, "yyyy-MM-dd"),
                 endDate: format(dateRange[0].endDate, "yyyy-MM-dd"),
-                room: adsData._id,
+                room: adsData?.room?._id,
                 totalPrice: totalPrice
             },
-            {
+                {
                     headers: {
-                        Authorization: `Bearer ${token}` 
+                        Authorization: `Bearer ${token}`
                     }
                 }
-        
-        );
-        console.log(response);
-        
+
+            );
+            console.log(response);
+
             toast.success("Booking successful!");
         } catch (error) {
             console.error("Failed to book room", error);
@@ -101,7 +101,7 @@ export default function RoomDetails() {
 
     const getRoomDetail = async () => {
         try {
-            const response = await axios(`https://upskilling-egypt.com:3000/api/v0/portal/rooms/${adsData.room._id}`);
+            const response = await axios(`https://upskilling-egypt.com:3000/api/v0/portal/rooms/${adsData}`);
             setRoomData(response?.data?.data?.room || null);
         } catch (error: any) {
             toast.error("Failed to load room data");
@@ -130,10 +130,27 @@ export default function RoomDetails() {
             </Breadcrumbs>
 
             {/* Images */}
-            <Paper sx={{ p: 3, borderRadius: 3, my: 5 }}>
-                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2 }}>
+
+            <Paper sx={{ p: 3, borderRadius: 3, my: 5, mx: 'auto' }}>
+
+                <Box sx={{
+                    display: 'grid', mx: 'auto',
+                    gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+                    gap: 2,
+
+                }}>
                     {roomData.images?.map((imgSrc, index) => (
-                        <Box key={index} component="img" src={imgSrc} sx={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: 2 }} />
+                        <Box key={index} component="img" src={imgSrc}
+                            sx={{
+                                width: '100%', height: '200px',
+                                objectFit: 'cover', borderRadius: 2,
+                                mx: 'auto',
+                                transition:'all 0.3s ease-in-out',
+                                cursor:'pointer',
+                                "&:hover": {
+                                    transform: "scale(1.05)"
+                                }
+                            }} />
                     ))}
                 </Box>
             </Paper>
@@ -165,8 +182,8 @@ export default function RoomDetails() {
                             The national agency for design: enabling Singapore to use design for economic growth and to make lives better.
                         </Typography>
                     </Box>
-                    <Box sx={{ px: 3, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                        <Typography variant="subtitle1" sx={{ fontWeight: '600', fontSize: '20px', mr: 2 }}>Facilities:</Typography>
+                    <Box sx={{ px: 3, display: 'flex', gap: 1, flexWrap: 'wrap',mt:2 }}>
+                        <Typography variant="subtitle1" sx={{ fontWeight: '600', fontSize: '22px', mr: 2 }}>Facilities:</Typography>
                         {roomData.facilities?.map((facility: Facility) => (
                             <Chip
                                 sx={{
@@ -216,44 +233,54 @@ export default function RoomDetails() {
                                 color: 'rgba(255, 22, 18, 1)',
                                 fontSize: '16px',
                                 fontWeight: '400',
+                                my: 1,
+                                pt: 0
+                            }}>
+                            Discount {roomData?.discount}% Off
+                        </Typography>
+                        <Typography
+                            sx={{
+                                color: 'rgba(21, 44, 91, 1)',
+                                fontWeight: '700',
+                                fontSize: '20px',
                                 mt: 0,
                                 pt: 0
                             }}>
-                            Discount {roomData.discount}% Off
+                            Capacity : {roomData?.capacity} Person
                         </Typography>
 
                         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 3 }}>
                             <Button
-                                    onClick={handleOpenCalendar}
-                                    fullWidth
-                                    variant="text"
-                                    startIcon={<CalendarMonthIcon sx={{ color: "#152C5B" }} />}
-                                    sx={{
-                                        justifyContent: "flex-start",
-                                        bgcolor: "#F5F6F8",
-                                        color: "#152C5B",
-                                        fontWeight: 500,
-                                        py: 1.5,
-                                        px: 2,
-                                        textTransform: "none",
-                                        borderRadius: "4px",
-                                        "&:hover": { bgcolor: "#EAEAEA" },
-                                    }}
-                                >
-                                    {dateRange[0].startDate && dateRange[0].endDate
-                                        ? `${format(dateRange[0].startDate, "MMM dd")} - ${format(
-                                            dateRange[0].endDate,
-                                            "MMM dd",
-                                        )}`
-                                        : "Pick a Date"}
-                                </Button>
+                                onClick={handleOpenCalendar}
+                                fullWidth
+                                variant="text"
+                                startIcon={<CalendarMonthIcon sx={{ color: "#152C5B" }} />}
+                                sx={{
+                                    justifyContent: "flex-start",
+                                    bgcolor: "#F5F6F8",
+                                    color: "#152C5B",
+                                    fontWeight: 500,
+                                    py: 1.5,
+                                    px: 2,
+                                    textTransform: "none",
+                                    borderRadius: "4px",
+                                    "&:hover": { bgcolor: "#EAEAEA" },
+                                }}
+                            >
+                                {dateRange[0].startDate && dateRange[0].endDate
+                                    ? `${format(dateRange[0].startDate, "MMM dd")} - ${format(
+                                        dateRange[0].endDate,
+                                        "MMM dd",
+                                    )}`
+                                    : "Pick a Date"}
+                            </Button>
 
 
                             <Popover open={openCalendar} anchorEl={anchorEl} onClose={handleCloseCalendar} anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>
                                 <DateRange editableDateInputs={true} onChange={(item) => setDateRange([item.selection])} ranges={dateRange} />
                             </Popover>
 
-                            <Typography sx={{ fontWeight: 'bold', color: '#152C5B', textAlign: 'center', my: 1 }}>
+                            <Typography sx={{ fontWeight: 'bold',fontSize:'19px', color: '#152C5B', textAlign: 'center', my: 1 }}>
                                 Total Price for {days} night(s): ${totalPrice.toFixed(2)}
                             </Typography>
 

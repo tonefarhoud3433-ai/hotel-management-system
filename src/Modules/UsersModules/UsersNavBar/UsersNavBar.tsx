@@ -21,14 +21,13 @@ import { useNavigate } from "react-router-dom";
 
 export default function UsersNavBar() {
   const navigate = useNavigate()
-  // ستيت بسيطة جداً فقط لفتح وقفل قائمة الموبايل الجانبية (Drawer)
+  
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  // محتويات القائمة الجانبية اللي هتظهر في الموبايل
   const drawerContent = (
     <Box sx={{ width: 260, p: 2 }} onClick={handleDrawerToggle}>
       <Typography
@@ -44,7 +43,6 @@ export default function UsersNavBar() {
       </Typography>
       <Divider sx={{ mb: 2 }} />
 
-      {/* لينكات الموبايل */}
       <List>
         {["Home", "Explore", "Reviews", "Favorites"].map((text, index) => (
           <ListItem key={text} disablePadding>
@@ -63,7 +61,6 @@ export default function UsersNavBar() {
 
       <Divider sx={{ my: 2 }} />
 
-      {/* بروفايل الموبايل */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 1, p: 1, mb: 2 }}>
         <Avatar
           alt="Upskilling"
@@ -76,7 +73,6 @@ export default function UsersNavBar() {
         <KeyboardArrowDownIcon sx={{ color: "#152C5B" }} />
       </Box>
 
-      {/* زراير الموبايل */}
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
         <Button
           fullWidth
@@ -87,6 +83,7 @@ export default function UsersNavBar() {
             color: "#3252DF",
             textTransform: "none",
           }}
+          onClick={()=>navigate('/auth/register')}
         >
           Register
         </Button>
@@ -99,6 +96,7 @@ export default function UsersNavBar() {
             color: "#fff",
             textTransform: "none",
           }}
+          onClick={()=>navigate('/auth/login')}
         >
           Login Now
         </Button>
@@ -147,6 +145,7 @@ export default function UsersNavBar() {
                   textTransform: "none",
                   fontWeight: 500,
                 }}
+                onClick={()=>navigate('home')}
               >
                 Home
               </Button>
@@ -192,6 +191,7 @@ export default function UsersNavBar() {
                     px: 3,
                     "&:hover": { backgroundColor: "#d0def0" },
                   }}
+                  onClick={()=>navigate('/auth/register')}
                 >
                   Register
                 </Button>
@@ -205,6 +205,7 @@ export default function UsersNavBar() {
                     px: 3,
                     "&:hover": { backgroundColor: "#2945c5" },
                   }}
+                  onClick={()=>navigate('/auth/login')}
                 >
                   Login Now
                 </Button>

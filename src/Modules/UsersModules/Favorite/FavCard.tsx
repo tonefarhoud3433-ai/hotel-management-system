@@ -1,34 +1,38 @@
-import { Card, CardMedia, CardContent, Typography, Box, IconButton } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import type { FavItem } from './FavList';
-import { Visibility } from '@mui/icons-material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Box, Card, CardContent, CardMedia, IconButton, Typography } from '@mui/material';
 import { toast } from 'react-toastify';
 import axiosClient, { API_BASE_URL } from '../../../API/axsiosClient';
+import type { FavItem } from './FavList';
+import { useNavigate } from 'react-router-dom';
 
-interface CardProps{
-  item:FavItem
-  refresh:()=>void
+interface CardProps {
+  item: FavItem
+  refresh: () => void
 }
-const FavCard = ({item,refresh}:CardProps) => {
-  const removeFromFavorite = async()=>{
-    try{
-      const res = await axiosClient.delete(`${API_BASE_URL}/api/v0/portal/favorite-rooms/${item._id}`,{data:{roomId:item._id}})
+const FavCard = ({ item, refresh }: CardProps) => {
+  const navigate = useNavigate();
+
+  const removeFromFavorite = async () => {
+    try {
+      const res = await axiosClient.delete(`${API_BASE_URL}/api/v0/portal/favorite-rooms/${item._id}`, { data: { roomId: item._id } })
       toast.success(res?.data?.message)
       refresh()
     }
-    catch(error){
+    catch (error) {
       toast.error(error?.response?.data?.message)
     }
   }
   return (
     <Box>
-      <Card 
-      
-        sx={{ 
+      <Card
+
+        sx={{
+          my:3,
           height: '300px',
-          borderRadius: '24px', 
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)', 
-          overflow: 'hidden', 
+          borderRadius: '24px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          overflow: 'hidden',
           position: 'relative',
           cursor: 'pointer',
           // When the Card component is hovered, reveal the elements inside the overlay class
@@ -40,7 +44,7 @@ const FavCard = ({item,refresh}:CardProps) => {
       >
         {/* Main background image layer */}
         <CardMedia
-        onClick={()=>console.log(item)}
+          onClick={() => console.log(item)}
           component="img"
           sx={{
             height: '100%',
@@ -71,29 +75,32 @@ const FavCard = ({item,refresh}:CardProps) => {
             zIndex: 1,
           }}
         >
-          <IconButton onClick={removeFromFavorite}>
+          <IconButton
+            onClick={removeFromFavorite}
+            sx={{
+              color: "white",
+              bgcolor: "rgba(255,255,255,0.2)",
+              "&:hover": { bgcolor: "rgba(255,255,255,0.4)" },
+              mx:2
+            }}
+            >
 
-          <FavoriteIcon 
-          
-          sx={{ 
-            color: '#FFFFFF', 
-            fontSize: '2rem', // Scaled up to match the sample design
-            filter: 'drop-shadow(0px 4px 10px rgba(0,0,0,0.3))', 
-            marginRight:2
-          }} 
-          />
+            <FavoriteIcon />
           </IconButton>
-          <IconButton>
-          <Visibility
-            sx={{ 
-              color: '#FFFFFF', 
-              fontSize: '2rem', // Scaled up to match the sample design
-              filter: 'drop-shadow(0px 4px 10px rgba(0,0,0,0.3))' 
-            }} 
-            />
-            </IconButton>
+          <IconButton
+            onClick={() => {
+              navigate('/home/roomdetails', {
+                state: { adsData: item?._id }
+              });
+            }} sx={{
+              color: "white",
+              bgcolor: "rgba(255,255,255,0.2)",
+              "&:hover": { bgcolor: "rgba(255,255,255,0.4)" },
+            }}>
+            <VisibilityIcon />
+          </IconButton>
         </Box>
-        
+
         {/* Absolute-positioned overlay container for the typography */}
         <CardContent
           sx={{
@@ -101,38 +108,38 @@ const FavCard = ({item,refresh}:CardProps) => {
             bottom: 0,
             left: 0,
             width: '100%',
-            padding: { xs: '20px 24px', sm: '30px 40px' }, 
+            padding: { xs: '20px 24px', sm: '30px 40px' },
             boxSizing: 'border-box',
-            background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 100%)', 
+            background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 100%)',
             zIndex: 2, // Layered cleanly above the image and background overlays
           }}
         >
           {/* Main Title Text */}
-          <Typography 
-            variant="h3" 
-            component="div" 
-            sx={{ 
+          <Typography
+            variant="h3"
+            component="div"
+            sx={{
               color: '#FFFFFF',
               fontFamily: '"Inter", "Heebo", "Helvetica Neue", sans-serif',
-              fontWeight: 500, 
-              fontSize: { xs: '2rem', sm: '3rem' }, 
-              letterSpacing: '-0.02em', 
+              fontWeight: 500,
+              fontSize: { xs: '2rem', sm: '3rem' },
+              letterSpacing: '-0.02em',
               lineHeight: 1.2,
-              mb: 0.5, 
+              mb: 0.5,
             }}
           >
             {item?.roomNumber}
           </Typography>
-          
+
           {/* Subtitle / Location Text */}
-          <Typography 
-            variant="subtitle1" 
-            sx={{ 
+          <Typography
+            variant="subtitle1"
+            sx={{
               color: '#FFFFFF',
               fontFamily: '"Inter", "Heebo", "Helvetica Neue", sans-serif',
-              fontWeight: 300, 
+              fontWeight: 300,
               fontSize: { xs: '1rem', sm: '1.25rem' },
-              opacity: 0.9, 
+              opacity: 0.9,
               letterSpacing: '0.01em',
             }}
           >
