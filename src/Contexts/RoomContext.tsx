@@ -40,12 +40,13 @@ export function RoomContextProvider({ children }: RoomContextProviderProps) {
                     },
                 }
             );
-            const activeAds = response?.data?.data?.ads || [];
-            setAdsDataFav(activeAds);
-            console.log(activeAds);
+
+            toast.success(response?.data?.message)
+
+            console.log(response);
 
         } catch (error: any) {
-            toast.error("brooking data ");
+            toast.error(error?.response?.data?.message);
         }
     }
 

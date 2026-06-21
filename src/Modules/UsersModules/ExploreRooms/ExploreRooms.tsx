@@ -15,7 +15,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
 import { RoomContext } from "../../../Contexts/RoomContext";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
-import { Link as RouterLink, useLocation } from "react-router-dom";
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import { Link as MuiLink } from "@mui/material";
 import axiosClient from "../../../API/axsiosClient";
 import { toast } from "react-toastify";
@@ -35,11 +35,10 @@ const ExploreRooms = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  
-  const {  getRoomDetail } = useContext(RoomContext)!;
+  const navigate = useNavigate();
 
   const pageSize = 15;
-  const {capacity,start,end} = useLocation().state || {capacity:undefined,start:undefined,end:undefined}
+  const { capacity, start, end } = useLocation().state || { capacity: undefined, start: undefined, end: undefined }
   const fetchRooms = async (currentPage: number) => {
     setLoading(true);
     try {
@@ -72,19 +71,19 @@ const ExploreRooms = () => {
     event.preventDefault();
     console.info("You clicked a breadcrumb.");
   }
-const AddToFavorites = async (id:string)=>{
-  try{
-    const res = await axiosClient.post('/api/v0/portal/favorite-rooms',{roomId:id})
-    toast.success(res?.data?.message||'success!');
+  const AddToFavorites = async (id: string) => {
+    try {
+      const res = await axiosClient.post('/api/v0/portal/favorite-rooms', { roomId: id })
+      toast.success(res?.data?.message || 'success!');
 
-  }
-  catch(error){
+    }
+    catch (error) {
 
-    toast.error(error?.response?.data?.message ||'wrong ')
+      toast.error(error?.response?.data?.message || 'wrong ')
+    }
   }
-} 
   useEffect(() => {
-    (()=>{
+    (() => {
 
       fetchRooms(page);
     })()
@@ -216,7 +215,11 @@ const AddToFavorites = async (id:string)=>{
                         </IconButton>
 
                         <IconButton
-                          onClick={() => getRoomDetail(room._id)}
+                          onClick={() => {
+                            navigate('/home/roomdetails', {
+                              state: { adsData: room?._id }
+                            });
+                          }}
                           sx={{
                             color: "white",
                             bgcolor: "rgba(255,255,255,0.2)",

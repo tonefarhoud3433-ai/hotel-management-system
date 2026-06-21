@@ -15,14 +15,12 @@ import 'swiper/css/keyboard';
 
 import noImages from "../../../assets/Images/Signature-2-Queen_body.webp"
 import { RoomContext } from '../../../Contexts/RoomContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function SwiperADS() {
     const [adsData, setAdsData] = useState<any[]>([]);
-
-
-
-
-    const { getRoomFav,getRoomDetail } = useContext(RoomContext)!
+    const navigate = useNavigate();
+    const { getRoomFav, getRoomDetail } = useContext(RoomContext)!
 
     const fetchData = async () => {
         try {
@@ -35,16 +33,14 @@ export default function SwiperADS() {
         }
     };
 
-
-
     useEffect(() => {
         fetchData();
-        const token = localStorage.getItem("token");
-    console.log("Token Value:", token);
+        // const token = localStorage.getItem("token");
+        // console.log("Token Value:", token);
     }, []);
 
     return (
-        <Box sx={{ py: 5, px: 2, width: '90%',mx:'auto', overflow: 'hidden' }}>
+        <Box sx={{ py: 5, px: 2, width: '90%', mx: 'auto', overflow: 'hidden' }}>
             <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>Ads</Typography>
             <Swiper
                 modules={[Autoplay, Keyboard]}
@@ -124,11 +120,15 @@ export default function SwiperADS() {
                                     <IconButton onClick={() => getRoomFav(ad.room._id)} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
                                         <FavoriteIcon />
                                     </IconButton>
-                                    <IconButton onClick={() => getRoomDetail(ad.room._id)} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
+                                    <IconButton onClick={() => {
+                                        navigate('/home/roomdetails', {
+                                            state: { adsData: ad.room._id}
+                                        });
+                                    }} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
                                         <VisibilityIcon />
                                     </IconButton>
                                 </Box>
-                                <Box className="hover-price" sx={{transition: 'all 0.3s ease-in-out', p: 1, position: 'absolute', top: -45, right: 0, borderRadius: '0 0 0 10px', width: '50%', bgcolor: 'rgba(255, 73, 139, 1)' }}>
+                                <Box className="hover-price" sx={{ transition: 'all 0.3s ease-in-out', p: 1, position: 'absolute', top: -45, right: 0, borderRadius: '0 0 0 10px', width: '50%', bgcolor: 'rgba(255, 73, 139, 1)' }}>
                                     <Typography sx={{ color: 'white', textAlign: 'center' }}>
                                         <Typography component="span" sx={{ fontWeight: "800" }} >
                                             {ad.room.discount}% Off
@@ -142,7 +142,7 @@ export default function SwiperADS() {
                                         top: 10,
                                         left: 10,
                                         borderRadius: 2,
-                                        
+
                                         bgcolor: ad.isActive ? 'rgba(46, 204, 113, 0.9)' : 'rgba(231, 76, 60, 0.9)',
                                         boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
                                         backdropFilter: 'blur(4px)',

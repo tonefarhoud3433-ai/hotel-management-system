@@ -120,19 +120,18 @@ export default function FirstADS() {
                                 >
                                     <IconButton onClick={() => {
                                         getRoomFav(item.room._id);
-                                        navigate('/roomdetails');
                                     }} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
                                         <FavoriteIcon />
                                     </IconButton>
                                     <IconButton onClick={() => {
                                         navigate('/home/roomdetails', {
-                                            state: { adsData: item } 
+                                            state: { adsData: item.room._id } 
                                         });
                                     }} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
                                         <VisibilityIcon />
                                     </IconButton>
                                 </Box>
-                                <Box className="hover-price" sx={{ transition: 'all 0.3s ease-in-out', p: 1, position: 'absolute', top: -45, right: 0, borderRadius: '0 0 0 10px', width: '50%', bgcolor: 'rgba(255, 73, 139, 1)' }}>
+                                <Box className="hover-price" sx={{ transition: 'all 0.3s ease-in-out', p: 1, position: 'absolute', top: -100, right: 0, borderRadius: '0 0 0 10px', width: '50%', bgcolor: 'rgba(255, 73, 139, 1)' }}>
                                     <Typography sx={{ color: 'white', textAlign: 'center' }}>
                                         <Typography component="span" sx={{ fontWeight: "800" }} >
                                             ${item.room.price}

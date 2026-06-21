@@ -10,6 +10,7 @@ import SwiperADS from "./SwiperADS";
  import image6  from '../../../assets/Images/secondStaticSwiper/35ce45f22e9a0bb98d868c162430f2e632d2f1b4.png'
  import image7  from '../../../assets/Images/secondStaticSwiper/94cd2d2f7b06cad61b48a1af81bb06e5361246aa.png'
  import image8  from '../../../assets/Images/secondStaticSwiper/bd30d8322872e7054a54aac3fd00a38d5f5f0742.png'
+import { Box } from "@mui/material";
 
 export default function UsersHome() {
   const firstSaticSwiper:CardData[] = [
@@ -27,11 +28,14 @@ export default function UsersHome() {
   return (
     <>
       {/* <UsersNavBar /> */}
+      <Box sx={{p:4}}>
+
       <ExploreSec />
       <FirstADS />
       <StaticSwiper title="main title" cards={firstSaticSwiper}/>
       <StaticSwiper title="main title22" cards={secondSaticSwiper}/>
       <SwiperADS />
+      </Box>
     </>
   );
 }

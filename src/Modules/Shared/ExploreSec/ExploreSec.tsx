@@ -80,15 +80,15 @@ export default function ExploreSec() {
   };
 
   return (
-    <Box sx={{ py: { xs: 6, md: 10 }, bgcolor: "#fff" }}>
-      <Container maxWidth="xl">
+    <Box >
+      <Container  maxWidth="xl">
         <Grid
           container
-          spacing={{ xs: 6, md: 4 }}
-          sx={{ alignItems: "center" }}
+          spacing={{ xs: 6, md: 6 }}
+          sx={{ alignItems: "center",pl:{md:10} }}
         >
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Box sx={{ maxWidth: 520, mx: { xs: "auto", md: 0 } }}>
+          <Grid size={{ xs: 12, md: 6 }} >
+            <Box sx={{  mx: { xs: "auto", md: 0 } }}>
               <Typography
                 variant="h1"
                 sx={{
@@ -242,6 +242,7 @@ export default function ExploreSec() {
           <Grid size={{ xs: 12, md: 6 }}>
             <Box
               sx={{
+                
                 position: "relative",
                 width: "100%",
                 maxWidth: { xs: 400, sm: 500 },
