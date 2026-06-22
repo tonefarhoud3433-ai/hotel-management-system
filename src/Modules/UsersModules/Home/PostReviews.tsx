@@ -4,7 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 interface idRoom {
-  roomId: string
+  roomId: string | undefined
 }
 export default function PostReviews({ roomId }: idRoom) {
   const [rating, setRating] = useState(3);

@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Box, IconButton, Paper, Typography, Skeleton } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import noImages from "../../../assets/Images/Signature-2-Queen_body.webp"
+import { Box, IconButton, Paper, Skeleton, Typography } from '@mui/material';
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import { RoomContext } from '../../../Contexts/RoomContext';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import noImages from "../../../assets/Images/Signature-2-Queen_body.webp";
+import { RoomContext } from '../../../Contexts/RoomContext';
 import { OnlyLoggedIn } from '../../Shared/ProtecedRoute/OnlyLoggedIn';
 
 interface room {
@@ -149,6 +149,8 @@ export default function FirstADS() {
                 )}
 
             </Box >
+
+            
         </>
     )
 }

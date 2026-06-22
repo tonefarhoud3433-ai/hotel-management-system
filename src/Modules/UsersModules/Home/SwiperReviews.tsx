@@ -18,7 +18,7 @@ export interface Review {
     };
 }
 export interface RoomID {
-    idRoom: string
+    idRoom: string |undefined
 }
 
 export default function SwiperReviews({idRoom}:RoomID) {

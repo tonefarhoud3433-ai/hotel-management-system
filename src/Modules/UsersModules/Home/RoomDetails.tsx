@@ -332,9 +332,9 @@ export default function RoomDetails() {
                         
                     </Grid>
                 </Box>
-                <PostReviews roomId={adsData} />
+                <PostReviews roomId={id} />
                 
-                <SwiperReviews idRoom={adsData} />
+                <SwiperReviews idRoom={id} />
             </Box>
         </>
     );
