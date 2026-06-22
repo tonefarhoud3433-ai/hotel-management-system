@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Box,
   Typography,
@@ -8,12 +8,13 @@ import {
   IconButton,
   Stack,
   Popover,
-  InputBase,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { DateRange,type Range } from "react-date-range";
+import { DateRange, type Range } from "react-date-range";
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
 import { format } from "date-fns";
 import axios from "axios";
 
@@ -22,19 +23,25 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function ExploreSec() {
-  
+  const navigate = useNavigate();
+
+  // ضبط تاريخ اليوم لبداية اليوم لمنع اختيار التواريخ الماضية
+  const today = useMemo(() => {
+    const date = new Date();
+    date.setHours(0, 0, 0, 0);
+    return date;
+  }, []);
+
   const [dateRange, setDateRange] = useState<Range[]>([
     {
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: today,
+      endDate: today,
       key: "selection",
     },
   ]);
 
-  const navigate = useNavigate();
   const [capacity, setCapacity] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
-
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleOpenCalendar = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -48,7 +55,8 @@ export default function ExploreSec() {
   const openCalendar = Boolean(anchorEl);
 
   const handleIncrement = () => setCapacity((prev) => prev + 1);
-  const handleDecrement = () => setCapacity((prev) => (prev > 1 ? prev - 1 : 1));
+  const handleDecrement = () =>
+    setCapacity((prev) => (prev > 1 ? prev - 1 : 1));
 
   const handleExplore = async () => {
     const { startDate, endDate } = dateRange[0];
@@ -74,20 +82,27 @@ export default function ExploreSec() {
     } catch (error) {
 toast.error(error?.response?.data?.message)    } finally {
       setLoading(false);
-      navigate("/home/explore",{state:{start:startDate,end:endDate,capacity:capacity}});
+      navigate("/home/explore", {
+        state: {
+          start: dateRange[0].startDate,
+          end: dateRange[0].endDate,
+          capacity: capacity,
+        },
+      });
     }
   };
 
   return (
-    <Box >
-      <Container  maxWidth="xl">
+    <Box>
+      <Container maxWidth="xl">
         <Grid
           container
           spacing={{ xs: 6, md: 6 }}
-          sx={{ alignItems: "center",pl:{md:10} }}
+          sx={{ alignItems: "center", pl: { md: 10 } }}
         >
-          <Grid size={{ xs: 12, md: 6 }} >
-            <Box sx={{  mx: { xs: "auto", md: 0 } }}>
+          {/* الجزء الخاص بالنصوص والمدخلات */}
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Box sx={{ mx: { xs: "auto", md: 0 } }}>
               <Typography
                 variant="h1"
                 sx={{
@@ -157,6 +172,7 @@ toast.error(error?.response?.data?.message)    } finally {
                       moveRangeOnFirstSelection={false}
                       ranges={dateRange}
                       rangeColors={["#3252DF"]}
+                      minDate={today} // هذا يمنع اختيار التواريخ القديمة
                     />
                   </Popover>
                 </Box>
@@ -172,7 +188,6 @@ toast.error(error?.response?.data?.message)    } finally {
                   >
                     Capacity
                   </Typography>
-
                   <Stack
                     direction="row"
                     sx={{
@@ -193,14 +208,12 @@ toast.error(error?.response?.data?.message)    } finally {
                     >
                       <RemoveIcon fontSize="small" />
                     </IconButton>
-
                     <Typography
                       align="center"
                       sx={{ flexGrow: 1, color: "#152C5B", fontWeight: 500 }}
                     >
                       {capacity} person{capacity > 1 ? "s" : ""}
                     </Typography>
-
                     <IconButton
                       onClick={handleIncrement}
                       disabled={loading}
@@ -238,10 +251,10 @@ toast.error(error?.response?.data?.message)    } finally {
             </Box>
           </Grid>
 
+          {/* الجزء الخاص بالصورة */}
           <Grid size={{ xs: 12, md: 6 }}>
             <Box
               sx={{
-                
                 position: "relative",
                 width: "100%",
                 maxWidth: { xs: 400, sm: 500 },
@@ -261,7 +274,6 @@ toast.error(error?.response?.data?.message)    } finally {
                   zIndex: 1,
                 }}
               />
-
               <Box
                 component="img"
                 src={mainImage}
