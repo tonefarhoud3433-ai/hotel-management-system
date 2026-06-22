@@ -14,11 +14,12 @@ import {
 } from "@mui/material";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axiosClient from "../../../API/axsiosClient";
 import { OnlyLoggedIn } from "../../Shared/ProtecedRoute/OnlyLoggedIn";
+import { RoomContext } from "../../../Contexts/RoomContext";
 interface RoomAPI {
   _id: string;
   roomNumber: string;
@@ -36,6 +37,7 @@ const ExploreRooms = () => {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const navigate = useNavigate();
+  const {handleCountChange} = useContext(RoomContext)
 
   const pageSize = 15;
   const { capacity, start, end } = useLocation().state || { capacity: undefined, start: undefined, end: undefined }
@@ -75,7 +77,7 @@ const ExploreRooms = () => {
     try {
       const res = await axiosClient.post('/api/v0/portal/favorite-rooms', { roomId: id })
       toast.success(res?.data?.message || 'success!');
-
+      handleCountChange()
     }
     catch (error) {
 

@@ -36,8 +36,6 @@ export default function SwiperADS() {
 
     useEffect(() => {
         fetchData();
-        // const token = localStorage.getItem("token");
-        // console.log("Token Value:", token);
     }, []);
 
     return (

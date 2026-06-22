@@ -50,7 +50,9 @@ export default function BookingConfirm() {
       const cardElement = elements.getElement(CardElement);
       const { token, error } = await stripe.createToken(cardElement!);
 
-      if (error) throw new Error(error.message);
+      if (!token) {
+        console.error("Failed to create token");
+      }
 
       await axios.post(
         `https://upskilling-egypt.com:3000/api/v0/portal/booking/${bookingId}/pay`,

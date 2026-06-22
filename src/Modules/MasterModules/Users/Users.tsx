@@ -46,7 +46,6 @@ export default function Users() {
   const fetchData = async () => {
     try {
       const response = await getAllUsers();
-      console.log(response);
       
       // سحب المصفوفة الصحيحة بناءً على الـ JSON الخاص بك (booking)
       const bookingList = response?.data?.data?.users || [];

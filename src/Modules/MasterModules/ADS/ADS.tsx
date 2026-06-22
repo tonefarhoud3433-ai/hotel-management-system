@@ -120,7 +120,6 @@ export default function ADS() {
   const handleOpenView = async (row: any) => {
     try {
       const response = await viewAds(row._id);
-      console.log(response);
 
       setViewAd(response?.data?.data || row);
       setOpenViewModal(true);
@@ -166,7 +165,6 @@ export default function ADS() {
     fetchData();
   } catch (error: any) {
     // هذه الخطوة ضرورية جداً لمعرفة سبب الرفض من الـ Backend
-    console.log("Error details:", error.response?.data); 
     toast.error(error?.response?.data?.message || "Failed to save!");
   }
 };

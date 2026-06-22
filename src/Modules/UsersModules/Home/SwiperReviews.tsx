@@ -5,6 +5,7 @@ import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import axios from 'axios';
 import { Box, Typography, Rating, Avatar, Paper } from '@mui/material';
+import { toast } from 'react-toastify';
 
 
 export interface Review {
@@ -30,9 +31,8 @@ export default function SwiperReviews() {
                 { headers: { Authorization: `${localStorage.getItem('token')}` } }
             );
             setReviews(response.data.data.roomReviews)
-            console.log(response)
         } catch (error) {
-
+            toast.error(error?.response?.data?.message)
         }
     }
     const getComments = async () => {
@@ -41,7 +41,7 @@ export default function SwiperReviews() {
                 { headers: { Authorization: `${localStorage.getItem('token')}` } }
             );
             setComments(response.data.data.roomComments)
-            console.log(response)
+            (response)
         } catch (error) {
 
         }

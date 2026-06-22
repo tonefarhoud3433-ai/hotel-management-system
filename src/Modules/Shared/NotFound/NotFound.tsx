@@ -114,7 +114,7 @@ export default function NotFound() {
             variant="contained"
             size="large"
             startIcon={<ArrowBackIcon />}
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate(-1)}
             sx={{
               px: 4,
               py: 1.8,
@@ -132,7 +132,7 @@ export default function NotFound() {
               },
             }}
           >
-            Back to Dashboard
+            go Back
           </Button>
         </Box>
       </Container>

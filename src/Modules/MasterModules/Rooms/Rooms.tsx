@@ -67,7 +67,6 @@ export default function Rooms() {
     try {
       const response = await getAllRooms();
       const { rooms = [] } = response?.data?.data || {};
-      console.log("Successfully extracted rooms:", rooms);
       setRowsData(rooms);
     } catch (error) {
       console.error("Error fetching rooms data:", error);
@@ -109,7 +108,6 @@ export default function Rooms() {
   const handleOpenView = async (row: any) => {
     try {
       const response = await viewRoom(row._id);
-      console.log(response);
 
       setViewRoomData(response?.data?.data || row);
       setOpenViewModal(true);

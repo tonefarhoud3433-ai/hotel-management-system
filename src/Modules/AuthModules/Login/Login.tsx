@@ -14,6 +14,7 @@ import { loginSchema } from "../YupValidation/YupValidation";
 import { apiLogin } from "../../../API/modules/Auth";
 import { AuthContext } from "../../../Contexts/AuthContext";
 import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
 interface IFormInput {
   email: string;
   password: string;
@@ -62,7 +63,13 @@ const textFieldStyle = {
       saveUserData(); 
       
       toast.success(response?.data?.message || "Login successful!");
-      navigate("/dashboard");
+     const decoded = jwtDecode(token)
+     
+     if(decoded.role == "user"){
+      navigate('/home')
+     }
+     
+      else{navigate("/dashboard");}
     } else {
       toast.error("Invalid token received from server.");
     }

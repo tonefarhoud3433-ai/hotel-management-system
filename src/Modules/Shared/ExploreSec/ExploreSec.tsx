@@ -20,6 +20,7 @@ import axios from "axios";
 
 import mainImage from "../../../assets/Images/picture.png";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function ExploreSec() {
   const navigate = useNavigate();
@@ -78,10 +79,8 @@ export default function ExploreSec() {
         "https://upskilling-egypt.com:3000/api/v0/portal/rooms/available",
         { params },
       );
-      console.log("Available Rooms Data: ", response.data);
     } catch (error) {
-      console.error("Failed to fetch available rooms", error);
-    } finally {
+toast.error(error?.response?.data?.message)    } finally {
       setLoading(false);
       navigate("/home/explore", {
         state: {

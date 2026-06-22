@@ -81,7 +81,6 @@ export default function Register() {
 
     try {
       const response = await apiRegister(formData);
-      console.log(response?.data?.message);
       toast.success(response?.data?.message || "registration is successfully")
       setPreviewImage(undefined);
       if (fileInputRef.current) fileInputRef.current.value = '';
