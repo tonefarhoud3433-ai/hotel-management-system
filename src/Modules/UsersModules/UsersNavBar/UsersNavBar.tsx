@@ -3,6 +3,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
   Avatar,
+  Badge,
   Box,
   Button,
   Container,
@@ -18,15 +19,19 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { OnlyLoggedIn } from "../../Shared/ProtecedRoute/OnlyLoggedIn";
 import { AuthContext } from "../../../Contexts/AuthContext";
+import axiosClient from "../../../API/axsiosClient";
+import { RoomContext } from "../../../Contexts/RoomContext";
 
 export default function UsersNavBar() {
   const navigate = useNavigate()
   const location = useLocation()
   const {profile,logOut} = useContext(AuthContext)
+  const {favoritesCount,handleCountChange} = useContext(RoomContext)
+
   
   
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -147,6 +152,10 @@ export default function UsersNavBar() {
     </Box>
   );
 
+  useEffect(()=>{
+    handleCountChange();
+  },[])
+
   return (
     <>
       <AppBar
@@ -207,6 +216,7 @@ export default function UsersNavBar() {
               
               <OnlyLoggedIn>
 
+                <Badge badgeContent={favoritesCount} color="error">
               <Button
               onClick={()=>navigate('home/favorites')}
               sx={{
@@ -217,6 +227,7 @@ export default function UsersNavBar() {
               >
                 Favorites
               </Button>
+                </Badge>
                 </OnlyLoggedIn>
               {localStorage.getItem('token')? <></> :
               <Box sx={{ display: "flex", gap: 1.5, ml: 2 }}>

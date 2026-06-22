@@ -38,7 +38,6 @@ export default function FirstADS() {
 
             const sortedRooms = ADS.slice(0, 5);
             setRoomData(sortedRooms)
-            console.log(roomData);
         } catch (error: any) {
             toast.error(error.response.message)
         } finally {

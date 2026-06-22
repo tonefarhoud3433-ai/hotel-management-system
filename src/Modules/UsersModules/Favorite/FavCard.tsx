@@ -6,13 +6,16 @@ import axiosClient, { API_BASE_URL } from '../../../API/axsiosClient';
 import type { FavItem } from './FavList';
 import { useNavigate } from 'react-router-dom';
 import DeleteConfirmations from '../../Shared/DeleteConfirmations/DeleteConfirmations';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { RoomContext } from '../../../Contexts/RoomContext';
 
 interface CardProps {
   item: FavItem
   refresh: () => void
 }
 const FavCard = ({ item, refresh }: CardProps) => {
+    const {handleCountChange} = useContext(RoomContext)
+
   const navigate = useNavigate();
   const [openConfirm,setOpenConfirm] = useState<boolean>(false)
 
@@ -21,6 +24,9 @@ const FavCard = ({ item, refresh }: CardProps) => {
       const res = await axiosClient.delete(`${API_BASE_URL}/api/v0/portal/favorite-rooms/${item._id}`, { data: { roomId: item._id } })
       toast.success(res?.data?.message)
       refresh()
+      handleCountChange()
+      
+      
     }
     catch (error) {
       toast.error(error?.response?.data?.message)
@@ -47,7 +53,6 @@ const FavCard = ({ item, refresh }: CardProps) => {
       >
         {/* Main background image layer */}
         <CardMedia
-          onClick={() => console.log(item)}
           component="img"
           sx={{
             height: '100%',

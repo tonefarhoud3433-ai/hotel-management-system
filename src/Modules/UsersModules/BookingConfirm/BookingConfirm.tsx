@@ -72,7 +72,6 @@ export default function BookingConfirm() {
       if (!token) {
         console.error("Failed to create token");
       }
-      console.log("Generated Stripe token:", token);
 
       const response = await axios.post(
         `https://upskilling-egypt.com:3000/api/v0/portal/booking/${bookingId}/pay`,

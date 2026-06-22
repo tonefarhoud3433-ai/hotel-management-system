@@ -38,7 +38,6 @@ export default function AuthContextProvider({ children }: AuthContextProvProp) {
       const response = await apiProfile(id);
       
       setProfile(response?.data?.data?.user);
-      // console.log(response?.data?.data?.user);
       
   }
       catch (error) {
@@ -47,7 +46,6 @@ export default function AuthContextProvider({ children }: AuthContextProvProp) {
     };
 
   const logOut = () => {
-    console.log("logging out...");
     localStorage.removeItem("token");
     setUserData(null);
     setProfile(null);
