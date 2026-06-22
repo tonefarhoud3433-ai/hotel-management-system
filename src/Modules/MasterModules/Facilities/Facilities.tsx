@@ -59,7 +59,7 @@ export default function Facilities() {
       const response = await getAllFacilities();
       setRowsData(response?.data?.data?.facilities || []);
     } catch (error) {
-      console.log(error);
+      toast.error(error?.response?.data?.message)
     }
   };
 

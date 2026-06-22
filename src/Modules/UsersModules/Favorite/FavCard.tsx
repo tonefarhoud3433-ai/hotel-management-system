@@ -5,19 +5,28 @@ import { toast } from 'react-toastify';
 import axiosClient, { API_BASE_URL } from '../../../API/axsiosClient';
 import type { FavItem } from './FavList';
 import { useNavigate } from 'react-router-dom';
+import DeleteConfirmations from '../../Shared/DeleteConfirmations/DeleteConfirmations';
+import { useContext, useState } from 'react';
+import { RoomContext } from '../../../Contexts/RoomContext';
 
 interface CardProps {
   item: FavItem
   refresh: () => void
 }
 const FavCard = ({ item, refresh }: CardProps) => {
+    const {handleCountChange} = useContext(RoomContext)
+
   const navigate = useNavigate();
+  const [openConfirm,setOpenConfirm] = useState<boolean>(false)
 
   const removeFromFavorite = async () => {
     try {
       const res = await axiosClient.delete(`${API_BASE_URL}/api/v0/portal/favorite-rooms/${item._id}`, { data: { roomId: item._id } })
       toast.success(res?.data?.message)
       refresh()
+      handleCountChange()
+      
+      
     }
     catch (error) {
       toast.error(error?.response?.data?.message)
@@ -44,7 +53,6 @@ const FavCard = ({ item, refresh }: CardProps) => {
       >
         {/* Main background image layer */}
         <CardMedia
-          onClick={() => console.log(item)}
           component="img"
           sx={{
             height: '100%',
@@ -76,7 +84,7 @@ const FavCard = ({ item, refresh }: CardProps) => {
           }}
         >
           <IconButton
-            onClick={removeFromFavorite}
+            onClick={()=>setOpenConfirm(true)}
             sx={{
               color: "#C0392B",
               bgcolor: "rgba(255,255,255,0.2)",
@@ -147,6 +155,7 @@ const FavCard = ({ item, refresh }: CardProps) => {
           </Typography>
         </CardContent>
       </Card>
+      <DeleteConfirmations onClose={()=>setOpenConfirm(false)} open={openConfirm} onDelete={removeFromFavorite}/>
     </Box>
   );
 };

@@ -1,7 +1,6 @@
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { Box, Breadcrumbs, Button, Chip, Grid, Paper, Popover, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import Stack from '@mui/material/Stack';
 import axios from "axios";
 import { format } from "date-fns";
 import * as React from 'react';
@@ -9,9 +8,9 @@ import { useEffect, useState } from 'react';
 import { DateRange, type Range } from "react-date-range";
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import noImage from "../../../assets/Images/no image.jpg";
 import PostReviews from "./PostReviews";
 import SwiperReviews from "./SwiperReviews";
-import noImage from "../../../assets/Images/no image.jpg"
 interface Facility {
     _id: string;
     name: string;
@@ -334,6 +333,7 @@ export default function RoomDetails() {
                     </Grid>
                 </Box>
                 <PostReviews roomId={adsData} />
+                
                 <SwiperReviews idRoom={adsData} />
             </Box>
         </>

@@ -24,7 +24,6 @@ export default function Verify() {
   
     const onSubmit: SubmitHandler<VerifySchema> = (data,e) => {
       e?.preventDefault();
-      console.log("Valid Form Data:", data);
       reset();
   
     };

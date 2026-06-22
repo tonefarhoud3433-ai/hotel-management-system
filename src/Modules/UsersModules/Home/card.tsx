@@ -1,5 +1,7 @@
 import { Card, CardMedia, CardContent, Typography, Box } from '@mui/material';
 import type { CardData } from './StaticSwiper';
+import { useContext } from 'react';
+import { RoomContext } from '../../../Contexts/RoomContext';
 
 const PropertyCard = ({ card }: { card: CardData }) => {
   // Reference image from image_291e44.jpg pathing placeholder

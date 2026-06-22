@@ -12,6 +12,7 @@ import SwiperADS from "./SwiperADS";
  import image8  from '../../../assets/Images/secondStaticSwiper/bd30d8322872e7054a54aac3fd00a38d5f5f0742.png'
 import { Box } from "@mui/material";
 import SwiperReviews from "./SwiperReviews";
+import { OnlyLoggedIn } from "../../Shared/ProtecedRoute/OnlyLoggedIn";
 
 export default function UsersHome() {
   const firstSaticSwiper:CardData[] = [

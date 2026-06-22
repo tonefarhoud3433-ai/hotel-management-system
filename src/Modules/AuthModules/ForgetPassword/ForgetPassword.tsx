@@ -40,7 +40,6 @@ export default function ForgetPassword() {
         "https://upskilling-egypt.com:3000/api/v0/portal/users/forgot-password",
         data,
       );
-      console.log(response?.data?.message);
       toast.success(
         response?.data?.message || "Password reset link sent successfully",
       );

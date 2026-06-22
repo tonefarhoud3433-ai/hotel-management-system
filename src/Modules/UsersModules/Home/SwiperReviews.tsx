@@ -31,9 +31,8 @@ export default function SwiperReviews({idRoom}:RoomID) {
                 { headers: { Authorization: `${localStorage.getItem('token')}` } }
             );
             setReviews(response.data.data.roomReviews)
-            console.log(response)
         } catch (error) {
-
+            toast.error(error?.response?.data?.message)
         }
     }
     
@@ -45,7 +44,7 @@ export default function SwiperReviews({idRoom}:RoomID) {
     return (
         <Box sx={{ width: { sx: '100%', md: '80%' }, mx: 'auto', py: 5 }}>
             <Swiper navigation={true} modules={[Navigation]} className="mySwiper">
-                {reviews.map((item, index) => (
+                {reviews.map((item) => (
                     <SwiperSlide key={item._id}>
                         <Paper
                             elevation={0}
@@ -54,8 +53,7 @@ export default function SwiperReviews({idRoom}:RoomID) {
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: 4,
-                                m: 2,
-                                
+                                m: 2, 
                             }}
                         >
                             <Grid container spacing={2} sx={{ mx: 'auto', my: 6 }}>
@@ -92,13 +90,7 @@ export default function SwiperReviews({idRoom}:RoomID) {
                                         </Typography>
                                     </Box>
                                 </Grid>
-
                             </Grid>
-
-
-
-
-
                         </Paper>
                     </SwiperSlide>
                 ))}
