@@ -23,26 +23,34 @@ import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { OnlyLoggedIn } from "../../Shared/ProtecedRoute/OnlyLoggedIn";
 import { AuthContext } from "../../../Contexts/AuthContext";
-import axiosClient from "../../../API/axsiosClient";
 import { RoomContext } from "../../../Contexts/RoomContext";
+import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
+import ViewUser from "../../Shared/ViewModals/ViewUser";
+import noImageProfile from "../../../assets/Images/noPersoneEmage.avif"
+
 
 export default function UsersNavBar() {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const {profile,logOut} = useContext(AuthContext)
-  const {favoritesCount,handleCountChange} = useContext(RoomContext)
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { profile, logOut } = useContext(AuthContext);
+  const { favoritesCount, handleCountChange } = useContext(RoomContext);
+  const [viewProfile, setViewProfile] = useState(false);
 
-  
-  
+  const [openConfirm, setOpenConfirm] = useState<boolean>(false)
+
+
+
+
+
   const [mobileOpen, setMobileOpen] = useState(false);
-    const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-  
-  
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  
-  const activeLink =location.pathname
+
+  const activeLink = location.pathname
   const drawerContent = (
     <Box sx={{ width: 260, p: 2 }} onClick={handleDrawerToggle}>
       <Typography
@@ -59,102 +67,102 @@ export default function UsersNavBar() {
       <Divider sx={{ mb: 2 }} />
 
       <List>
-        
+
+        <ListItem disablePadding>
+          <ListItemButton sx={{ borderRadius: 1 }}>
+            <ListItemText
+              onClick={() => navigate('/home')}
+
+              primary={'Home'}
+              sx={{
+                color: (activeLink == "/home" || activeLink == '/') ? "#3252DF" : "black",
+                fontWeight: 600,
+              }}
+            />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton sx={{ borderRadius: 1 }}>
+            <ListItemText
+
+              onClick={() => navigate('/home/explore')}
+              primary={'Explore'}
+              sx={{
+                color: activeLink == "/explore" ? "#3252DF" : "black",
+                fontWeight: 600,
+              }}
+            />
+          </ListItemButton>
+        </ListItem>
+        <OnlyLoggedIn>
+
           <ListItem disablePadding>
             <ListItemButton sx={{ borderRadius: 1 }}>
               <ListItemText
-                            onClick={()=>navigate('/home')}
-
-                primary={'Home'}
-                sx={{
-                  color: (activeLink == "/home" || activeLink == '/')? "#3252DF" : "black",
-                  fontWeight:  600 ,
-                }}
-              />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton sx={{ borderRadius: 1 }}>
-              <ListItemText
-
-                onClick={()=>navigate('/home/explore')}
-                primary={'Explore'}
-                sx={{
-                  color: activeLink == "/explore"? "#3252DF" : "black",
-                  fontWeight:  600 ,
-                }}
-              />
-            </ListItemButton>
-          </ListItem>
-          <OnlyLoggedIn>
-
-          <ListItem disablePadding>
-            <ListItemButton sx={{ borderRadius: 1 }}>
-              <ListItemText
-              onClick={()=>navigate('favorites')}
+                onClick={() => navigate('favorites')}
                 primary={'Favorites'}
                 sx={{
-                  color: activeLink == "/favorites"? "#3252DF" : "black",
-                  fontWeight:  600 ,
+                  color: activeLink == "/favorites" ? "#3252DF" : "black",
+                  fontWeight: 600,
                 }}
               />
             </ListItemButton>
           </ListItem>
-          </OnlyLoggedIn>
-        
+        </OnlyLoggedIn>
+
       </List>
 
       <Divider sx={{ my: 2 }} />
-        <OnlyLoggedIn>
+      <OnlyLoggedIn>
 
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1, p: 1, mb: 2 }}>
-        <Avatar
-          alt="Upskilling"
-          src="https://mui.com/static/images/avatar/1.jpg"
-          sx={{ width: 35, height: 35 }}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, p: 1, mb: 2 }}>
+          <Avatar
+            alt="Upskilling"
+            src="https://mui.com/static/images/avatar/1.jpg"
+            sx={{ width: 35, height: 35 }}
           />
-        <Typography variant="body2" sx={{ color: "#152C5B", fontWeight: 500 }}>
-          Upskilling
-        </Typography>
-        <KeyboardArrowDownIcon sx={{ color: "#152C5B" }} />
-      </Box>
-          </OnlyLoggedIn>
-          {!localStorage.getItem('token')? 
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-        <Button
-          fullWidth
-          variant="contained"
-          disableElevation
-          sx={{
-            backgroundColor: "#E4EBF4",
-            color: "#3252DF",
-            textTransform: "none",
-          }}
-          onClick={()=>navigate('/auth/register')}
-        >
-          Register
-        </Button>
-        <Button
-          fullWidth
-          variant="contained"
-          disableElevation
-          sx={{
-            backgroundColor: "#3252DF",
-            color: "#fff",
-            textTransform: "none",
-          }}
-          onClick={()=>navigate('/auth/login')}
+          <Typography variant="body2" sx={{ color: "#152C5B", fontWeight: 500 }}>
+            Upskilling
+          </Typography>
+          <KeyboardArrowDownIcon sx={{ color: "#152C5B" }} />
+        </Box>
+      </OnlyLoggedIn>
+      {!localStorage.getItem('token') ?
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+          <Button
+            fullWidth
+            variant="contained"
+            disableElevation
+            sx={{
+              backgroundColor: "#E4EBF4",
+              color: "#3252DF",
+              textTransform: "none",
+            }}
+            onClick={() => navigate('/auth/register')}
           >
-          Login Now
-        </Button>
-      </Box>
-          :<></> }
+            Register
+          </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            disableElevation
+            sx={{
+              backgroundColor: "#3252DF",
+              color: "#fff",
+              textTransform: "none",
+            }}
+            onClick={() => navigate('/auth/login')}
+          >
+            Login Now
+          </Button>
+        </Box>
+        : <></>}
     </Box>
   );
 
-  useEffect(()=>{
+  useEffect(() => {
     handleCountChange();
-  },[])
+  }, [])
 
   return (
     <>
@@ -162,7 +170,7 @@ export default function UsersNavBar() {
         position="sticky"
         elevation={1}
         sx={{
-          
+
           backgroundColor: "#fff",
           borderBottom: "1px solid #E5E5E5",
           py: 1,
@@ -198,112 +206,112 @@ export default function UsersNavBar() {
                   textTransform: "none",
                   fontWeight: 500,
                 }}
-                onClick={()=>navigate('home')}
+                onClick={() => navigate('home')}
               >
                 Home
               </Button>
               <Button
-              
+
                 sx={{
                   color: location.pathname == '/home/explore' ? "#3252DF" : "#152C5B",
                   textTransform: "none",
                   fontWeight: 400,
                 }}
-                onClick={()=>navigate('home/explore')}
+                onClick={() => navigate('home/explore')}
               >
                 Explore
               </Button>
-              
+
               <OnlyLoggedIn>
 
                 <Badge badgeContent={favoritesCount} color="error">
-              <Button
-              onClick={()=>navigate('home/favorites')}
-              sx={{
-                color: "#152C5B",
-                textTransform: "none",
-                fontWeight: 400,
-              }}
-              >
-                Favorites
-              </Button>
+                  <Button
+                    onClick={() => navigate('home/favorites')}
+                    sx={{
+                      color: "#152C5B",
+                      textTransform: "none",
+                      fontWeight: 400,
+                    }}
+                  >
+                    Favorites
+                  </Button>
                 </Badge>
-                </OnlyLoggedIn>
-              {localStorage.getItem('token')? <></> :
-              <Box sx={{ display: "flex", gap: 1.5, ml: 2 }}>
-                <Button
-                  variant="contained"
-                  disableElevation
-                  sx={{
-                    backgroundColor: "#E4EBF4",
-                    color: "#3252DF",
-                    textTransform: "none",
-                    px: 3,
-                    "&:hover": { backgroundColor: "#d0def0" },
-                  }}
-                  onClick={()=>navigate('/auth/register')}
+              </OnlyLoggedIn>
+              {localStorage.getItem('token') ? <></> :
+                <Box sx={{ display: "flex", gap: 1.5, ml: 2 }}>
+                  <Button
+                    variant="contained"
+                    disableElevation
+                    sx={{
+                      backgroundColor: "#E4EBF4",
+                      color: "#3252DF",
+                      textTransform: "none",
+                      px: 3,
+                      "&:hover": { backgroundColor: "#d0def0" },
+                    }}
+                    onClick={() => navigate('/auth/register')}
                   >
-                  Register
-                </Button>
-                <Button
-                  variant="contained"
-                  disableElevation
-                  sx={{
-                    backgroundColor: "#3252DF",
-                    color: "#fff",
-                    textTransform: "none",
-                    px: 3,
-                    "&:hover": { backgroundColor: "#2945c5" },
-                  }}
-                  onClick={()=>navigate('/auth/login')}
+                    Register
+                  </Button>
+                  <Button
+                    variant="contained"
+                    disableElevation
+                    sx={{
+                      backgroundColor: "#3252DF",
+                      color: "#fff",
+                      textTransform: "none",
+                      px: 3,
+                      "&:hover": { backgroundColor: "#2945c5" },
+                    }}
+                    onClick={() => navigate('/auth/login')}
                   >
-                  Login Now
-                </Button>
-              </Box>
-                }
-<OnlyLoggedIn>
-              <Box
-                sx={{ display: "flex", alignItems: "center", gap: 0.5, ml: 1 }}
-              >
-                <Avatar
-                  alt="user Profile image"
-                  src={profile?.profileImage}
-                  sx={{ width: 35, height: 35 }}
-                />
-                <Typography
-                  variant="body2"
-                  sx={{ color: "#152C5B", fontWeight: 500, ml: 1 }}
+                    Login Now
+                  </Button>
+                </Box>
+              }
+              <OnlyLoggedIn>
+                <Box
+                  sx={{ display: "flex", alignItems: "center", gap: 0.5, ml: 1 }}
                 >
-                  {profile?.userName}
-                </Typography>
-                <IconButton size="small" sx={{ color: "#152C5B" }} onClick={(e)=>setAnchorElUser(e.currentTarget)}>
-                  <KeyboardArrowDownIcon scale={1} />
-                </IconButton>
-              </Box>
-              <Menu
-                            sx={{ mt: '45px' }}
-                            id="menu-appbar"
-                            anchorEl={anchorElUser}
-                            anchorOrigin={{
-                              vertical: 'top',
-                              horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                              vertical: 'top',
-                              horizontal: 'right',
-                            }}
-                            open={Boolean(anchorElUser)}
-                            onClose={()=>setAnchorElUser(null)}
-                          >
-                              <MenuItem  onClick={()=>{setAnchorElUser(null)}}>
-                                <Typography sx={{ textAlign: 'center' }}>profile</Typography>
-                              </MenuItem>
-                              <MenuItem  onClick={()=>{setAnchorElUser(null);logOut()}}>
-                                <Typography sx={{ textAlign: 'center' }}>logout</Typography>
-                              </MenuItem>
-                          </Menu>
-</OnlyLoggedIn>
+                  <Avatar
+                    alt="user Profile image"
+                    src={profile?.profileImage?profile?.profileImage :noImageProfile}
+                    sx={{ width: 35, height: 35 }}
+                  />
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "#152C5B", fontWeight: 500, ml: 1 }}
+                  >
+                    {profile?.userName}
+                  </Typography>
+                  <IconButton size="small" sx={{ color: "#152C5B" }} onClick={(e) => setAnchorElUser(e.currentTarget)}>
+                    <KeyboardArrowDownIcon scale={1} />
+                  </IconButton>
+                </Box>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={() => setAnchorElUser(null)}
+                >
+                  <MenuItem onClick={() => { setAnchorElUser(null); setViewProfile(true) }}>
+                    <Typography sx={{ textAlign: 'center' }}>profile</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={() => { setAnchorElUser(null); setOpenConfirm(true) }}>
+                    <Typography sx={{ textAlign: 'center' }}>logout</Typography>
+                  </MenuItem>
+                </Menu>
+              </OnlyLoggedIn>
             </Box>
 
             {/* 2. زرار الهامبرجر منيو للموبايل -> بيظهر فقط في الشاشات الصغيرة باستخدام `display: { xs: "block", md: "none" }` */}
@@ -335,6 +343,14 @@ export default function UsersNavBar() {
       >
         {drawerContent}
       </Drawer>
+      <ViewUser facility={profile} onClose={() => setViewProfile(false)} open={viewProfile} />
+      <DeleteConfirmations onClose={() => setOpenConfirm(false)}
+        open={openConfirm}
+        onDelete={logOut}
+        title="Confirm Logout"
+        description="Are you sure you want to log out? You will need to sign in again to access your account."
+        btnText="Log out"
+      />
     </>
   );
 }

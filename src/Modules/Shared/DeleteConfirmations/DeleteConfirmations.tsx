@@ -8,6 +8,8 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteFormIcon from "../../../assets/Images/trash.png";
+import logout from "../../../assets/Images/logout.png";
+
 interface DeleteModalProps {
   open: boolean;
   onClose: () => void;
@@ -79,7 +81,7 @@ export default function DeleteConfirmations({
           }}
         >
           <Box sx={{ position: "relative" }}>
-            <img src={DeleteFormIcon} alt="delete" style={{ width: "100%" }} />
+            <img src={title=='Confirm Logout'? logout:  DeleteFormIcon} alt="delete" style={{ width: "100%" }} />
           </Box>
         </Box>
 

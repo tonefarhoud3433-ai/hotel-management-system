@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import noImage from "../../../assets/Images/no image.jpg";
 import PostReviews from "./PostReviews";
 import SwiperReviews from "./SwiperReviews";
+import { OnlyLoggedIn } from "../../Shared/ProtecedRoute/OnlyLoggedIn";
 interface Facility {
     _id: string;
     name: string;
@@ -91,6 +92,7 @@ export default function RoomDetails() {
     };
 
     const { days, totalPrice } = calculateBookingDetails();
+    const token = localStorage.getItem('token');
 
     const handleBooking = async () => {
         if (!dateRange[0].startDate || !dateRange[0].endDate) return;
@@ -102,7 +104,7 @@ export default function RoomDetails() {
         }
         setLoading(true);
         try {
-            const token = localStorage.getItem('token');
+            
             let response = await axios.post('https://upskilling-egypt.com:3000/api/v0/portal/booking', {
                 startDate: format(dateRange[0].startDate, "yyyy-MM-dd"),
                 endDate: format(dateRange[0].endDate, "yyyy-MM-dd"),
@@ -323,8 +325,8 @@ export default function RoomDetails() {
                                         Total Price for {days} night(s): ${totalPrice.toFixed(2)}
                                     </Typography>
 
-                                    <Button onClick={handleBooking} disabled={loading} fullWidth variant="contained" sx={{ bgcolor: "#1ABC9C", py: 1.5 }}>
-                                        {loading ? "Processing..." : "Continue to Book"}
+                                    <Button onClick={token? handleBooking: ()=>navigate('/auth/login',{state:{curunteLocation:`/roomdetails/${id}`}})} disabled={loading} fullWidth variant="contained" sx={{ bgcolor: "#1ABC9C", py: 1.5,cursor:'pointer' }}>
+                                            {token? loading ? "Processing..." : "Continue to Book":" Login To Booking"}
                                     </Button>
                                 </Box>
                             </Box>
@@ -332,9 +334,12 @@ export default function RoomDetails() {
                         
                     </Grid>
                 </Box>
+
+                <OnlyLoggedIn>
                 <PostReviews roomId={id} />
-                
                 <SwiperReviews idRoom={id} />
+                </OnlyLoggedIn>
+                
             </Box>
         </>
     );

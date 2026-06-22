@@ -18,6 +18,8 @@ import {
     Stack,
     Typography,
 } from "@mui/material";
+import noImageProfile from "../../../assets/Images/fack_profile.png"
+
 
 // تعريف الـ Interface الخاص بالمستخدم
 export interface UserData {
