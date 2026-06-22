@@ -124,9 +124,7 @@ export default function FirstADS() {
                                         <FavoriteIcon />
                                     </IconButton>
                                     <IconButton onClick={() => {
-                                        navigate('/home/roomdetails', {
-                                            state: { adsData: item.room._id } 
-                                        });
+                                        navigate(`/home/roomdetails/${item.room._id}`);
                                     }} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
                                         <VisibilityIcon />
                                     </IconButton>

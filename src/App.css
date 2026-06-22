@@ -39,7 +39,7 @@
   height: 30px !important;
   border-radius: 50% !important; 
   top: auto !important; 
-  bottom: 60px !important; 
+  bottom: 55px !important; 
 }
 
 .swiper-button-next::after,
@@ -52,5 +52,5 @@
   right: 50% !important;
 }
 .swiper-button-prev {
-  left: 40% !important; 
+  left: 60% !important; 
 }

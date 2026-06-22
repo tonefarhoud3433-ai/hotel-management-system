@@ -46,7 +46,7 @@ function App() {
         { path: "home/ads", element: <FirstADS /> },
         { path: "home/explore", element: <ExploreRooms /> },
         { path: "home/favorites", element: <FavList /> },
-        { path: "home/roomdetails", element: <RoomDetails /> },
+        { path: "home/roomdetails/:id", element: <RoomDetails /> },
         { path: "home/pay-success", element: <PaySuccess /> },
         {
           path: "/booking-confirmation",
@@ -95,7 +95,7 @@ function App() {
   ]);
   return (
     <>
-      <ToastContainer position="top-right" autoClose={5000} theme="colored" />
+      <ToastContainer position="top-center" autoClose={5000} theme="colored" />
       <RouterProvider router={routes}></RouterProvider>
     </>
   );

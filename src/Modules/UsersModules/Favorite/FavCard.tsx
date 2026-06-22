@@ -28,7 +28,7 @@ const FavCard = ({ item, refresh }: CardProps) => {
       <Card
 
         sx={{
-          my:3,
+          my: 3,
           height: '300px',
           borderRadius: '24px',
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
@@ -78,21 +78,21 @@ const FavCard = ({ item, refresh }: CardProps) => {
           <IconButton
             onClick={removeFromFavorite}
             sx={{
-              color: "white",
+              color: "#C0392B",
               bgcolor: "rgba(255,255,255,0.2)",
-              "&:hover": { bgcolor: "rgba(255,255,255,0.4)" },
-              mx:2
+              transition:'all 0.3s ease-in-out',
+              "&:hover": { bgcolor: "rgba(255,255,255,0.5)",color: "#8d1f13", },
+              mx: 2
             }}
-            >
+          >
 
             <FavoriteIcon />
           </IconButton>
           <IconButton
             onClick={() => {
-              navigate('/home/roomdetails', {
-                state: { adsData: item?._id }
-              });
-            }} sx={{
+              navigate(`/home/roomdetails/${item?._id}`);
+            }}
+            sx={{
               color: "white",
               bgcolor: "rgba(255,255,255,0.2)",
               "&:hover": { bgcolor: "rgba(255,255,255,0.4)" },

@@ -35,8 +35,7 @@ export default function SwiperADS() {
 
     useEffect(() => {
         fetchData();
-        // const token = localStorage.getItem("token");
-        // console.log("Token Value:", token);
+        
     }, []);
 
     return (
@@ -121,9 +120,7 @@ export default function SwiperADS() {
                                         <FavoriteIcon />
                                     </IconButton>
                                     <IconButton onClick={() => {
-                                        navigate('/home/roomdetails', {
-                                            state: { adsData: ad.room._id}
-                                        });
+                                        navigate(`/home/roomdetails/${ad.room._id}`);
                                     }} sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.2)' }}>
                                         <VisibilityIcon />
                                     </IconButton>

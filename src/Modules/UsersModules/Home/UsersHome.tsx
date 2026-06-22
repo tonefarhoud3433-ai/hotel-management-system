@@ -29,14 +29,14 @@ export default function UsersHome() {
   return (
     <>
       {/* <UsersNavBar /> */}
-      <Box sx={{p:4}}>
+      <Box sx={{p:{xs:1,md:4}}}>
 
       <ExploreSec />
       <FirstADS />
       <StaticSwiper title="main title" cards={firstSaticSwiper}/>
       <StaticSwiper title="main title22" cards={secondSaticSwiper}/>
       <SwiperADS />
-      <SwiperReviews />
+      <SwiperReviews idRoom={'6a33ae2ce7cc1f5aed4d3595'} />
       </Box>
     </>
   );

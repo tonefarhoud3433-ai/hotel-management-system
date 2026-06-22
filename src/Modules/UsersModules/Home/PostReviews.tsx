@@ -7,7 +7,7 @@ interface idRoom {
   roomId: string
 }
 export default function PostReviews({ roomId }: idRoom) {
-  const [rating, setRating] = useState(2);
+  const [rating, setRating] = useState(3);
   const [review, setReview] = useState('');
   const [comment, setComment] = useState('');
 
@@ -49,8 +49,8 @@ export default function PostReviews({ roomId }: idRoom) {
 
   return (
 
-    <Grid container spacing={2} sx={{ mx: 'auto', my: 6 }}>
-      <Grid size={{ xs: 9, md: 6 }}>
+    <Grid container spacing={2} sx={{ mx: 'auto', my: 6}}>
+      <Grid size={{ xs: 12, md: 6 }}>
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Typography variant="h6"
             sx={{ color: 'rgba(21, 44, 91, 1)', fontWeight: '500', fontSize: '20px' }}
@@ -64,14 +64,14 @@ export default function PostReviews({ roomId }: idRoom) {
             value={review}
             onChange={(e) => setReview(e.target.value)}
           />
-          <Button variant="contained" sx={{ width: 'fit-content', px: 10, mr: 'auto' }} onClick={handleRate}>Rate</Button>
+          <Button variant="contained" sx={{ width:{md:'fit-content',xs:'100%'} , px: 10,  mr:{md:'auto'}  }} onClick={handleRate}>Rate</Button>
         </Box>
 
       </Grid>
 
       <Divider orientation="vertical" flexItem />
 
-      <Grid size={{ xs: 9, md: 6 }} sx={{ width: { md: '45%' } }}>
+      <Grid size={{ xs: 12, md: 6 }} sx={{ width: { md: '45%' } }}>
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
 
           <Typography variant="h6" sx={{
@@ -88,7 +88,7 @@ export default function PostReviews({ roomId }: idRoom) {
             value={comment}
             onChange={(e) => setComment(e.target.value)}
           />
-          <Button variant="contained" sx={{ width: 'fit-content', px: 10, ml: 'auto' }} onClick={handlComment}>Send</Button>
+          <Button variant="contained" sx={{ width:{md:'fit-content',xs:'100%'}, px: 10, ml:{md:'auto'} }} onClick={handlComment}>Send</Button>
         </Box>
       </Grid>
     </Grid>

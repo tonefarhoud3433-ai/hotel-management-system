@@ -1,13 +1,17 @@
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { Box, Breadcrumbs, Button, Chip, Grid, Paper, Popover, Typography } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+import Stack from '@mui/material/Stack';
 import axios from "axios";
 import { format } from "date-fns";
+import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { DateRange, type Range } from "react-date-range";
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import PostReviews from "./PostReviews";
-
+import SwiperReviews from "./SwiperReviews";
+import noImage from "../../../assets/Images/no image.jpg"
 interface Facility {
     _id: string;
     name: string;
@@ -24,7 +28,27 @@ interface Room {
     facilities: Facility[];
 }
 
+function GradientCircularProgress() {
+  return (
+    <React.Fragment>
+      <svg width={0} height={0}>
+        <defs>
+          <linearGradient id="my_gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#e01cd5" />
+            <stop offset="100%" stopColor="#1CB5E0" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <CircularProgress
+        aria-label="Loading…"
+        sx={{ 'svg circle': { stroke: 'url(#my_gradient)' } }}
+      />
+    </React.Fragment>
+  );
+}
+
 export default function RoomDetails() {
+    const { id } = useParams();
     const location = useLocation();
     const { adsData } = location.state || {};
     const navigate = useNavigate();
@@ -106,7 +130,7 @@ export default function RoomDetails() {
 
     const getRoomDetail = async () => {
         try {
-            const response = await axios(`https://upskilling-egypt.com:3000/api/v0/portal/rooms/${adsData}`);
+            const response = await axios(`https://upskilling-egypt.com:3000/api/v0/portal/rooms/${id}`);
             setRoomData(response?.data?.data?.room || null);
         } catch (error: any) {
             toast.error("Failed to load room data");
@@ -118,14 +142,14 @@ export default function RoomDetails() {
     }, []);
 
     if (!roomData) {
-        return <Typography sx={{ p: 10 }}>Loading Room Data...</Typography>;
+        return <Typography sx={{ p: 20,mx:'auto' }}>Loading Room Data...  <GradientCircularProgress  />
+        </Typography>;
     }
 
     return (
 
         <>
-
-            <Box sx={{ py: 3, px: 10 }}>
+            <Box sx={{ py: 3, px: { xs: 4, md: 10 } }}>
                 <Box>
                     {/* Header */}
                     <Box sx={{ textAlign: 'center' }}>
@@ -140,18 +164,21 @@ export default function RoomDetails() {
 
                     {/* Images */}
 
-                    <Paper sx={{ p: 3, borderRadius: 3, my: 5, mx: 'auto' }}>
+                    <Paper sx={{
+                        display: 'flex',gap: 2,
+                        flexWrap:'wrap',
+                        p: 3, borderRadius: 3, my: 5, mx: 'auto', width: 'fit-content'
+                    }}>
+                        {roomData.images?.map((imgSrc, index) => (
 
-                        <Box sx={{
-                            display: 'grid', mx: 'auto',
-                            gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-                            gap: 2,
+                            <Box sx={{
+                                mx: 'auto',
+                                minWidth:'320px'
 
-                        }}>
-                            {roomData.images?.map((imgSrc, index) => (
-                                <Box key={index} component="img" src={imgSrc}
+                            }}>
+                                <Box key={index} component="img" src={imgSrc?imgSrc:noImage}
                                     sx={{
-                                        width: '100%', height: '200px',
+                                        width: '100%', height: roomData.images.length == 1 ? '400px' : '200px',
                                         objectFit: 'cover', borderRadius: 2,
                                         mx: 'auto',
                                         transition: 'all 0.3s ease-in-out',
@@ -160,14 +187,14 @@ export default function RoomDetails() {
                                             transform: "scale(1.05)"
                                         }
                                     }} />
-                            ))}
-                        </Box>
+                            </Box>
+                        ))}
                     </Paper>
 
                     <Grid container spacing={4}>
-                        <Grid sx={{ mx: { md: 'auto', xs: 'auto' } }} size={{ xs: 9, md: 6 }}>
+                        <Grid sx={{ mx: { md: 'auto', xs: 'auto' } }} size={{ xs: 12, md: 6 }}>
                             <Box sx={{
-                                px: 3,
+                                px: { xs: 0, md: 3 },
                                 py: 2,
                                 color: 'rgba(176, 176, 176, 1)',
                                 fontWeight: '300',
@@ -191,7 +218,7 @@ export default function RoomDetails() {
                                     The national agency for design: enabling Singapore to use design for economic growth and to make lives better.
                                 </Typography>
                             </Box>
-                            <Box sx={{ px: 3, display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
+                            <Box sx={{ px: { xs: 0, md: 3 }, display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
                                 <Typography variant="subtitle1" sx={{ fontWeight: '600', fontSize: '22px', mr: 2 }}>Facilities:</Typography>
                                 {roomData.facilities?.map((facility: Facility) => (
                                     <Chip
@@ -217,23 +244,29 @@ export default function RoomDetails() {
                         </Grid>
 
                         {/* Booking Section */}
-                        <Grid sx={{ mx: { md: 'auto', xs: 'auto' } }} size={{ xs: 9, md: 6 }}>
-                            <Box sx={{ p: 5, boxShadow: 3, borderRadius: 5, maxWidth: '80%', mx: 'auto' }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Grid sx={{ mx: { md: 'auto', xs: 'auto' } }} size={{ xs: 12, md: 6 }}>
+                            <Box sx={{ p: { xs: 3, md: 5 }, boxShadow: 3, borderRadius: 5, maxWidth: '80%', mx: 'auto' }}>
+                                <Grid container sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <Grid size={{ xs: 12, md: 6 }}>
 
-                                    <Typography sx={{
-                                        color: 'rgba(21, 44, 91, 1)',
-                                        fontWeight: '700',
-                                        fontSize: '20px'
-                                    }}>Start Booking</Typography>
-                                    <Typography sx={{
-                                        color: 'rgba(21, 44, 91, 1)',
-                                        fontWeight: '700',
-                                        fontSize: '20px'
-                                    }} >
-                                        Room : {roomData.roomNumber}
-                                    </Typography>
-                                </Box>
+                                        <Typography sx={{
+                                            color: 'rgba(21, 44, 91, 1)',
+                                            fontWeight: '700',
+                                            fontSize: '20px'
+
+                                        }}>Start Booking</Typography>
+                                    </Grid>
+                                    <Grid size={{ xs: 12, md: 6 }}>
+
+                                        <Typography sx={{
+                                            color: 'rgba(21, 44, 91, 1)',
+                                            fontWeight: '700',
+                                            fontSize: '20px'
+                                        }} >
+                                            Room : {roomData.roomNumber}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
                                 <Typography sx={{ color: 'rgba(26, 188, 156, 1)', fontSize: '36px', fontWeight: '600' }}>
                                     ${roomData.price} <Typography component={'span'} sx={{ color: 'gray', fontSize: '20px' }}>per night</Typography>
                                 </Typography>
@@ -297,9 +330,11 @@ export default function RoomDetails() {
                                 </Box>
                             </Box>
                         </Grid>
+                        
                     </Grid>
                 </Box>
                 <PostReviews roomId={adsData} />
+                <SwiperReviews idRoom={adsData} />
             </Box>
         </>
     );

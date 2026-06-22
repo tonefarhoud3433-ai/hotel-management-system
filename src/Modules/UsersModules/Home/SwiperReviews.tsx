@@ -4,7 +4,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import axios from 'axios';
-import { Box, Typography, Rating, Avatar, Paper } from '@mui/material';
+import { Box, Typography, Rating, Avatar, Paper, Grid } from '@mui/material';
+import noImage from "../../../assets/Images/noPersoneEmage.avif"
 
 
 export interface Review {
@@ -16,17 +17,17 @@ export interface Review {
         profileImage: string;
     };
 }
-export interface Comment {
-    comment: string
+export interface RoomID {
+    idRoom: string
 }
-export default function SwiperReviews() {
+
+export default function SwiperReviews({idRoom}:RoomID) {
     const [reviews, setReviews] = useState<Review[]>([]);
-    const [comments, setComments] = useState<Review[]>([]);
 
 
     const getReviews = async () => {
         try {
-            let response = await axios(`https://upskilling-egypt.com:3000/api/v0/portal/room-reviews/6a33ae2ce7cc1f5aed4d3595`,
+            let response = await axios(`https://upskilling-egypt.com:3000/api/v0/portal/room-reviews/${idRoom}`,
                 { headers: { Authorization: `${localStorage.getItem('token')}` } }
             );
             setReviews(response.data.data.roomReviews)
@@ -35,74 +36,69 @@ export default function SwiperReviews() {
 
         }
     }
-    const getComments = async () => {
-        try {
-            let response = await axios(`https://upskilling-egypt.com:3000/api/v0/portal/room-comments/6a33ae2ce7cc1f5aed4d3595`,
-                { headers: { Authorization: `${localStorage.getItem('token')}` } }
-            );
-            setComments(response.data.data.roomComments)
-            console.log(response)
-        } catch (error) {
-
-        }
-    }
+    
     useEffect(() => {
-        getComments();
         getReviews();
 
-    },);
+    }, []);
 
     return (
-        <Box sx={{ width: '80%', mx: 'auto', py: 5 }}>
+        <Box sx={{ width: { sx: '100%', md: '80%' }, mx: 'auto', py: 5 }}>
             <Swiper navigation={true} modules={[Navigation]} className="mySwiper">
                 {reviews.map((item, index) => (
                     <SwiperSlide key={item._id}>
                         <Paper
                             elevation={0}
                             sx={{
-                                p: 4,
+                                px:4,
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: 4,
                                 m: 2,
-
-
-
+                                
                             }}
                         >
-                            
-                                <Box sx={{
-                                    position: "relative", mx: 4, border: 'solid 2px rgba(229, 229, 229, 1)', borderRadius: '20px',
-                                    borderBottomRightRadius: '100px'
-                                }}>
+                            <Grid container spacing={2} sx={{ mx: 'auto', my: 6 }}>
+                                <Grid size={{ xs: 12, md: 6 }}>
+                                    <Box sx={{
+                                        position: "relative",  border: 'solid 3px rgba(229, 229, 229, 1)', borderRadius: '20px',
+                                        borderBottomRightRadius: '100px',
+                                        width:'fit-content'
+                                    }}>
+                                        <Avatar
+                                            src={item.user.profileImage ? item.user.profileImage  : noImage}
+                                            sx={{
+                                                width:{xs:280,md:400} , height: {xs:280,md:400}, borderRadius: '20px',
+                                                borderBottomRightRadius: '100px',
+                                                top: 30,
+                                                left: 20
+                                            }}
+                                            variant="rounded"
+                                        />
+                                    </Box>
+                                </Grid>
+                                <Grid  size={{ xs: 12, md: 6 }}>
+                                    <Box sx={{p:{xs:3}}}>
+                                        <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#152C5B' }}>
+                                            {item.user.userName}
+                                        </Typography>
+                                        <Rating value={item.rating} readOnly sx={{ my: 1 }} />
+                                        <Typography variant="body1" sx={{ mt: 1, color: 'rgba(176, 176, 176, 1)', fontSize: { sx: '22px', md: '28px' } }}>
+                                            What a great trip with my family and
+                                            I should try again next time soon ...
+                                        </Typography>
+                                        <Typography variant="body1" sx={{ mt: 1, color: '#152C5B', fontSize: '30px' }}>
+                                            {item.review}
+                                        </Typography>
+                                    </Box>
+                                </Grid>
 
-                                    <Avatar
-                                        src={item.user.profileImage}
-                                        sx={{
-                                            width: 300, height: 300, borderRadius: '20px',
-                                            borderBottomRightRadius: '100px',
-                                            // position:'absolute',
-                                            top: 25,
-                                            left: 25
-                                        }} // حجم الصورة وتدوير الزوايا
-                                        variant="rounded"
-                                    />
-                                </Box>
-
-                                <Box>
-                                    <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#152C5B' }}>
-                                        {item.user.userName}
-                                    </Typography>
-
-                                    <Rating value={item.rating} readOnly sx={{ my: 1 }} />
-
-                                    <Typography variant="body1" sx={{ mt: 1, color: '#152C5B', fontSize: '1.2rem' }}>
-                                        "{item.review}"
-                                    </Typography>
+                            </Grid>
 
 
-                                </Box>
-                            
+
+
+
                         </Paper>
                     </SwiperSlide>
                 ))}
