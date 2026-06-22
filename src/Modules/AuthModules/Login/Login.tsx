@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../YupValidation/YupValidation";
 import { apiLogin } from "../../../API/modules/Auth";
@@ -27,6 +27,7 @@ export default function Login() {
   const {register, handleSubmit, formState: {errors}} = useForm<IFormInput>({resolver: yupResolver(loginSchema)});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  let {curunteLocation}=useLocation().state;
 
 const textFieldStyle = {
     '& .css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input': {
@@ -66,7 +67,13 @@ const textFieldStyle = {
      const decoded = jwtDecode(token)
      
      if(decoded.role == "user"){
-      navigate('/home')
+      
+      if(curunteLocation){
+        navigate(`/home/${curunteLocation}`)
+      }else{
+
+        navigate('/home')
+      }
      }
      
       else{navigate("/dashboard");}

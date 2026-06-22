@@ -221,9 +221,9 @@ const ExploreRooms = () => {
 
                         <IconButton
                           onClick={() => {
-                            navigate('/home/roomdetails', {
-                              state: { adsData: room?._id }
-                            });
+
+                            navigate(`/home/roomdetails/${room?._id}`);
+                            
                           }}
                           sx={{
                             color: "white",

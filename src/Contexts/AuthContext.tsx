@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
 import { apiProfile } from "../API/modules/Auth";
 import type { UserData } from "../Modules/Shared/ViewModals/ViewUser";
+import { useNavigate } from "react-router-dom";
 
 export interface User {
   _id: string;
@@ -49,8 +50,11 @@ export default function AuthContextProvider({ children }: AuthContextProvProp) {
     localStorage.removeItem("token");
     setUserData(null);
     setProfile(null);
+    window.location.href = '/home';
     
   };
+
+
   const saveUserData = () => {
     const encoded = localStorage.getItem("token");
     if (encoded) {
