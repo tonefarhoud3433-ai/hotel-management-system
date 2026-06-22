@@ -27,7 +27,7 @@ export default function Login() {
   const {register, handleSubmit, formState: {errors}} = useForm<IFormInput>({resolver: yupResolver(loginSchema)});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  let {curunteLocation}=useLocation().state;
+  const {state}=useLocation();
 
 const textFieldStyle = {
     '& .css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input': {
@@ -68,8 +68,8 @@ const textFieldStyle = {
      
      if(decoded.role == "user"){
       
-      if(curunteLocation){
-        navigate(`/home/${curunteLocation}`)
+      if(state?.curunteLocation){
+        navigate(`/home/${state?.curunteLocation}`)
       }else{
 
         navigate('/home')
