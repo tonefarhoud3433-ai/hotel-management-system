@@ -13,7 +13,7 @@ import logout from "../../../assets/Images/logout.png";
 interface DeleteModalProps {
   open: boolean;
   onClose: () => void;
-  onDelete: () => void;
+  onDelete: (() => void) | undefined;
   title?: string;
   description?: string;
   btnText?:string

@@ -19,6 +19,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import KeyIcon from '@mui/icons-material/Key';
 import StarIcon from '@mui/icons-material/Star';
+import type { Facility } from "./FacilityViewModal";
 
 export interface RoomDetailData {
   _id: string;
@@ -27,7 +28,7 @@ export interface RoomDetailData {
   discount: number;
   capacity: number;
   images: string[];
-  facilities: any[];
+  facilities: Facility[];
   createdAt: string;
   updatedAt: string;
   createdBy: {
@@ -39,7 +40,7 @@ export interface RoomDetailData {
 interface ModalProps {
   open: boolean;
   onClose: () => void;
-  room: Room | null;
+  facility: RoomDetailData | null;
 }
 
 const formatDate = (dateString: string | undefined) => {
@@ -53,9 +54,7 @@ const formatDate = (dateString: string | undefined) => {
 };
 
 export default function ViewRooms({ open, onClose, facility }: ModalProps) {
-  const roomData: RoomDetailData | null = facility?.room
-    ? facility.room
-    : facility;
+  const roomData: RoomDetailData | null =  facility;
 
   const roomNumber = roomData?.roomNumber || "N/A";
   const price = roomData?.price;
@@ -174,7 +173,7 @@ export default function ViewRooms({ open, onClose, facility }: ModalProps) {
         {/* Info Grid Cards - مدمج بها الـ Stack الأفقي للأيقونات مثل الـ Ads تماماً */}
         <Grid container spacing={1.5} sx={{ mb: 1.5 }}>
           {/* Base Price Card */}
-          <Grid item xs={4}>
+          <Grid size = {{xs:4}}>
             <Card
               variant="outlined"
               sx={{
@@ -199,8 +198,8 @@ export default function ViewRooms({ open, onClose, facility }: ModalProps) {
                 />
                 <Typography
                   variant="caption"
-                  display="block"
                   sx={{
+                    display:'block',
                     fontWeight: 600,
                     color: "#6b7280",
                     fontSize: "0.65rem",
@@ -219,7 +218,7 @@ export default function ViewRooms({ open, onClose, facility }: ModalProps) {
           </Grid>
 
           {/* Discount Card */}
-          <Grid item xs={4}>
+          <Grid size={{xs:4}}>
             <Card
               variant="outlined"
               sx={{
@@ -242,8 +241,8 @@ export default function ViewRooms({ open, onClose, facility }: ModalProps) {
                 <PercentIcon sx={{ color: "#d97706", fontSize: "1rem" }} />
                 <Typography
                   variant="caption"
-                  display="block"
                   sx={{
+                    display:'block',
                     fontWeight: 600,
                     color: "#6b7280",
                     fontSize: "0.65rem",
@@ -262,7 +261,7 @@ export default function ViewRooms({ open, onClose, facility }: ModalProps) {
           </Grid>
 
           {/* Capacity Card */}
-          <Grid item xs={4}>
+          <Grid size={{xs:4}}>
             <Card
               variant="outlined"
               sx={{
@@ -285,8 +284,8 @@ export default function ViewRooms({ open, onClose, facility }: ModalProps) {
                 <PeopleIcon sx={{ color: "#2563eb", fontSize: "1.1rem" }} />
                 <Typography
                   variant="caption"
-                  display="block"
                   sx={{
+                    display:'block',
                     fontWeight: 600,
                     color: "#6b7280",
                     fontSize: "0.65rem",
@@ -309,10 +308,10 @@ export default function ViewRooms({ open, onClose, facility }: ModalProps) {
         {facilities.length > 0 && (
           <Box sx={{ mb: 1.5 }}>
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-              {facilities.map((fac: any, index: number) => (
+              {facilities.map((fac: {_id:string,name:string}, index: number) => (
                 <Chip
                   key={fac._id || index}
-                  label={fac.name || fac}
+                  label={fac.name }
                   icon={
                     <StarIcon
                       style={{ color: "#d97706", fontSize: "0.8rem" }}
@@ -351,8 +350,8 @@ export default function ViewRooms({ open, onClose, facility }: ModalProps) {
           <Box>
             <Typography
               variant="caption"
-              display="block"
               sx={{
+                display:'block',
                 fontWeight: 700,
                 color: "#64748b",
                 fontSize: "0.65rem",
@@ -393,8 +392,7 @@ export default function ViewRooms({ open, onClose, facility }: ModalProps) {
             <Box>
               <Typography
                 variant="caption"
-                display="block"
-                sx={{ color: "#64748b", fontWeight: 500, fontSize: "0.65rem" }}
+              sx={{ color: "#64748b", fontWeight: 500, fontSize: "0.65rem", display:'block' }}
               >
                 Created At
               </Typography>
@@ -412,8 +410,7 @@ export default function ViewRooms({ open, onClose, facility }: ModalProps) {
             <Box>
               <Typography
                 variant="caption"
-                display="block"
-                sx={{ color: "#64748b", fontWeight: 500, fontSize: "0.65rem" }}
+                sx={{ color: "#64748b", fontWeight: 500, fontSize: "0.65rem",display:'block' }}
               >
                 Last Modified
               </Typography>

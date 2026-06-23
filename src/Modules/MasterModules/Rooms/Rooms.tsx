@@ -42,24 +42,27 @@ import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
 import ViewRooms from "../../Shared/ViewModals/viewRooms";
 import { useNavigate } from "react-router-dom";
+import { type RoomDetailData as room } from "../../Shared/ViewModals/viewRooms";
+import axios from "axios";
 
 const paginationModel = { page: 0, pageSize: 5 };
+
 
 export default function Rooms() {
   const navigate = useNavigate();
   const [openViewModal, setOpenViewModal] = React.useState(false);
   const [openModal, setOpenModal] = React.useState(false);
   const [roomNumberValue, setRoomNumberValue] = React.useState("");
-  const [selectedRoom, setSelectedRoom] = React.useState<any>(null);
+  const [selectedRoom, setSelectedRoom] = React.useState<room | null>(null);
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [viewRoomData, setViewRoomData] = React.useState<any>(null);
+  const [viewRoomData, setViewRoomData] = React.useState<room | null>(null);
 
   // Actions Menu State Management
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [activeRow, setActiveRow] = React.useState<any>(null);
+  const [activeRow, setActiveRow] = React.useState<room|null>(null);
   const openMenu = Boolean(anchorEl);
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
-  const [selectedId, setSelectedId] = React.useState<any>(null);
+  const [selectedId, setSelectedId] = React.useState<string|null>(null);
   // -----
   const [rowsData, setRowsData] = React.useState([]);
 
@@ -73,7 +76,7 @@ export default function Rooms() {
     }
   };
 
-  const handleOpenDelete = (id: any) => {
+  const handleOpenDelete = (id: string) => {
     setSelectedId(id);
     setIsDeleteOpen(true);
   };
@@ -86,14 +89,17 @@ export default function Rooms() {
   const handleConfirmDelete = async () => {
     if (!selectedId) return;
     try {
-      await deleteRoom(selectedId);
+      await deleteRoom(+selectedId);
       toast.success("Room deleted successfully!");
       handleCloseDelete();
       fetchData();
-    } catch (err: any) {
-      const errorMessage =
+    } catch (err) {
+      if(axios.isAxiosError(err)){
+
+        const errorMessage =
         err?.response?.data?.message || "Failed to delete this room!";
-      toast.error(errorMessage);
+        toast.error(errorMessage);
+      }
     }
   };
 
@@ -101,17 +107,17 @@ export default function Rooms() {
     navigate("/dashboard/room-add");
   };
 
-  const handleOpenEdit = (row: any) => {
+  const handleOpenEdit = (row: room) => {
     navigate(`/dashboard/room-edit/${row._id}`);
   };
 
-  const handleOpenView = async (row: any) => {
+  const handleOpenView = async (row: room) => {
     try {
-      const response = await viewRoom(row._id);
+      const response = await viewRoom(+row._id);
 
       setViewRoomData(response?.data?.data || row);
       setOpenViewModal(true);
-    } catch (error) {
+    } catch {
       setViewRoomData(row);
       setOpenViewModal(true);
     }
@@ -129,15 +135,17 @@ export default function Rooms() {
       return;
     }
 
-    // Maps the payload body object wrapper
-    const bodyData: any = {
-      roomNumber: roomNumberValue,
-    };
+    const bodyData: FormData = new FormData();
+    bodyData.append('roomNumber',roomNumberValue)
+
+    // {roomNumber:string} = {
+      // roomNumber: roomNumberValue,
+    // }
 
     const isEdit = !!selectedRoom;
     try {
       if (isEdit) {
-        await updateRoom(selectedRoom._id, bodyData);
+        await updateRoom(+selectedRoom._id, bodyData);
         toast.success("Room updated successfully!");
       } else {
         await addRoom(bodyData);
@@ -145,22 +153,27 @@ export default function Rooms() {
       }
       handleCloseModal();
       fetchData();
-    } catch (error: any) {
-      console.error("Error saving room:", error);
-      const errorMessage =
+    } catch (error) {
+      if(axios.isAxiosError(error)){
+
+        const errorMessage =
         error?.response?.data?.message ||
         "An error occurred while saving the room!";
-      toast.error(errorMessage);
+        toast.error(errorMessage);
+      }
     }
   };
 
   React.useEffect(() => {
-    fetchData();
+    (()=>{
+
+      fetchData();
+    })()
   }, []);
 
   const handleClickMenu = (
     event: React.MouseEvent<HTMLButtonElement>,
-    row: any,
+    row: room,
   ) => {
     setAnchorEl(event.currentTarget);
     setActiveRow(row);
@@ -171,7 +184,7 @@ export default function Rooms() {
     setActiveRow(null);
   };
 
-  const filteredRows = rowsData.filter((row: any) =>
+  const filteredRows = rowsData.filter((row: room) =>
     row.roomNumber?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
@@ -290,13 +303,16 @@ export default function Rooms() {
             variant="outlined"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
+            slotProps={{
+              input:{
+
+                startAdornment: (
+                  <InputAdornment position="start">
                   <SearchIcon sx={{ color: "#9CA3AF", fontSize: "1.2rem" }} />
                 </InputAdornment>
               ),
             }}
+          }
             sx={{
               width: { xs: "100%", sm: "320px",md:'100%' },
               backgroundColor: "#fff",
@@ -360,7 +376,7 @@ export default function Rooms() {
           }}
         >
           {filteredRows.length > 0 ? (
-            filteredRows.map((row: any) => (
+            filteredRows.map((row: room) => (
               <Card
                 key={row._id}
                 sx={{
@@ -586,7 +602,7 @@ export default function Rooms() {
                 {viewRoomData.images
                   .slice(1)
                   .map((imgUrl: string, idx: number) => (
-                    <Grid item xs={4} key={idx}>
+                    <Grid  size={{xs:4}} key={idx}>
                       <Box
                         component="img"
                         src={imgUrl}
@@ -622,7 +638,7 @@ export default function Rooms() {
           </Box>
 
           <Grid container spacing={2} sx={{ mb: 2 }}>
-            <Grid item xs={4}>
+            <Grid size={{xs:4}}>
               <Card
                 variant="outlined"
                 sx={{
@@ -635,8 +651,8 @@ export default function Rooms() {
                 <AttachMoneyIcon sx={{ color: "#059669", mb: 0.5 }} />
                 <Typography
                   variant="caption"
-                  display="block"
-                  sx={{ color: "#6b7280", fontWeight: 600 }}
+                  
+                  sx={{ color: "#6b7280", fontWeight: 600,display:'block' }}
                 >
                   Price
                 </Typography>
@@ -645,7 +661,7 @@ export default function Rooms() {
                 </Typography>
               </Card>
             </Grid>
-            <Grid item xs={4}>
+            <Grid  size={{xs:4}}>
               <Card
                 variant="outlined"
                 sx={{
@@ -660,8 +676,7 @@ export default function Rooms() {
                 />
                 <Typography
                   variant="caption"
-                  display="block"
-                  sx={{ color: "#6b7280", fontWeight: 600 }}
+                  sx={{ color: "#6b7280", fontWeight: 600,display:'block' }}
                 >
                   Discount
                 </Typography>
@@ -670,7 +685,7 @@ export default function Rooms() {
                 </Typography>
               </Card>
             </Grid>
-            <Grid item xs={4}>
+            <Grid  size={{xs:4}}>
               <Card
                 variant="outlined"
                 sx={{
@@ -683,8 +698,7 @@ export default function Rooms() {
                 <PeopleIcon sx={{ color: "#2563eb", mb: 0.5 }} />
                 <Typography
                   variant="caption"
-                  display="block"
-                  sx={{ color: "#6b7280", fontWeight: 600 }}
+                  sx={{ color: "#6b7280", fontWeight: 600 ,display:'block'}}
                 >
                   Capacity
                 </Typography>

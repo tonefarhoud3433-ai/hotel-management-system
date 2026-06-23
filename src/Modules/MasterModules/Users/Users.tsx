@@ -22,6 +22,18 @@ import ViewUser from "../../Shared/ViewModals/ViewUser";
 
 const paginationModel = { page: 0, pageSize: 5 };
 
+interface Row{
+userName:string,
+room:{roomNumber:string},
+status:string,
+_id:string,
+user:{userName:string},
+totalPrice:number,
+startDate:string,
+endDate:string
+
+}
+
 const formatDate = (dateString: string) => {
   if (!dateString) return "N/A";
   return new Date(dateString).toLocaleDateString("en-US", {
@@ -33,21 +45,18 @@ const formatDate = (dateString: string) => {
 
 export default function Users() {
   const [openViewModal, setOpenViewModal] = React.useState(false);
-  const [rowsData, setRowsData] = React.useState([]);
+  const [rowsData, setRowsData] = React.useState<Row[]>([]);
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [viewBooking, setViewBooking] = React.useState<any>(null);
+  const [viewBooking, setViewBooking] = React.useState<Row | null>(null);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [activeRow, setActiveRow] = React.useState<any>(null);
+  const [activeRow, setActiveRow] = React.useState<Row | null>(null);
   const openMenu = Boolean(anchorEl);
-  const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
-  const [selectedId, setSelectedId] = React.useState<any>(null);
 
   const fetchData = async () => {
     try {
       const response = await getAllUsers();
       
-      // سحب المصفوفة الصحيحة بناءً على الـ JSON الخاص بك (booking)
       const bookingList = response?.data?.data?.users || [];
       setRowsData(bookingList);
     } catch (error) {
@@ -55,16 +64,19 @@ export default function Users() {
     }
   };
 
-  const handleOpenView = (row: any) => {
+  const handleOpenView = (row: Row) => {
     setViewBooking(row);
     setOpenViewModal(true);
   };
 
   React.useEffect(() => {
-    fetchData();
+    (()=>{
+
+      fetchData();
+    })()
   }, []);
 
-  const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>, row: any) => {
+  const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>, row: Row) => {
     setAnchorEl(event.currentTarget);
     setActiveRow(row);
   };
@@ -74,7 +86,7 @@ export default function Users() {
     setActiveRow(null);
   };
 
-  const filteredRows = rowsData.filter((row: any) => {
+  const filteredRows = rowsData.filter((row: Row) => {
     const user = row?.userName || "";
     return (
       user.toLowerCase().includes(searchTerm.toLowerCase())
@@ -96,7 +108,7 @@ export default function Users() {
       minWidth: 140,
       headerClassName: "custom-id-header",
       // نصل للـ userName مباشرة من الـ row
-      valueGetter: (value, row) => row.userName || "N/A",
+      valueGetter: (row:{userName:string}) => row.userName || "N/A",
     },
     {
       field: "email",
@@ -216,7 +228,7 @@ export default function Users() {
         {/* Mobile Responsive Cards View */}
         <Box sx={{ display: { xs: "flex", sm: "none" }, flexDirection: "column", gap: 2, mb: 3 }}>
           {filteredRows.length > 0 ? (
-            filteredRows.map((row: any) => {
+            filteredRows.map((row: Row) => {
               const roomNumber = row.room?.roomNumber || "Deleted Room";
               const clientName = row.user?.userName || "N/A";
               const isCompleted = row.status === "completed";
@@ -307,7 +319,7 @@ export default function Users() {
       </Menu>
 
       {/* Linked Modals */}
-<ViewUser 
+<ViewUser
   open={openViewModal} 
   onClose={() => setOpenViewModal(false)} 
   facility={viewBooking} // تأكد أن هذه هي الحالة التي تحتوي على بيانات المستخدم المختار

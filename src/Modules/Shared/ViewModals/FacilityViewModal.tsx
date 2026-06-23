@@ -2,7 +2,6 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogTitle,
   Typography,
   IconButton,
   Box,
@@ -78,12 +77,12 @@ export default function FacilityViewModal({
       <DialogContent sx={{ mt: 1 }}>
         {/* قسم اسم المنشأة وتاريخ الإنشاء الخام */}
         <Grid container spacing={2} sx={{ mb: 3 }}>
-          <Grid item xs={12}>
+          <Grid size={{xs:12}}>
             <Typography variant="h4" sx={{ fontWeight: 700, color: '#1A2530', mb: 2 }}>
               {facility?.name || "No Name"}
             </Typography>
             
-            <Typography variant="caption" display="block" sx={{ fontWeight: 700, color: 'text.secondary', mb: 0.5 }}>
+            <Typography variant="caption"  sx={{ fontWeight: 700, color: 'text.secondary', mb: 0.5,display:'block' }}>
               Created At
             </Typography>
             <Typography variant="body2" sx={{ color: '#1A2530', fontWeight: 500 }}>
@@ -95,15 +94,14 @@ export default function FacilityViewModal({
         {/* قسم الجدول الزمني TIMELINE */}
         <Typography 
           variant="caption" 
-          display="block" 
-          sx={{ fontWeight: 800, color: 'text.secondary', textTransform: 'uppercase', mb: 1, letterSpacing: '0.05rem' }}
+          sx={{ fontWeight: 800, color: 'text.secondary', textTransform: 'uppercase', mb: 1, letterSpacing: '0.05rem' ,display:'block'}}
         >
           Timeline
         </Typography>
         
         <Box 
           sx={{ 
-            bgcolor: '#F8F9FA', // خلفية رمادية فاتحة جداً
+            bgcolor: '#F8F9FA', 
             p: 2, 
             borderRadius: 2, 
             display: 'flex', 
@@ -129,11 +127,9 @@ export default function FacilityViewModal({
           </Box>
         </Box>
 
-        {/* قسم الوصف (تم وضع اسم الشخص الذي أنشأ المنشأة هنا ليعطي شكل خانة الوصف في الصورة) */}
         <Typography 
           variant="caption" 
-          display="block" 
-          sx={{ fontWeight: 800, color: 'text.secondary', textTransform: 'uppercase', mb: 1, letterSpacing: '0.05rem' }}
+          sx={{ fontWeight: 800, color: 'text.secondary', textTransform: 'uppercase', mb: 1, letterSpacing: '0.05rem',display:'block' }}
         >
           Created By
         </Typography>

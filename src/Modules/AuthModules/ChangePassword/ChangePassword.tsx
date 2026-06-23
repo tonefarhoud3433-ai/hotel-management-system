@@ -18,12 +18,14 @@ import {
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import type { User } from "../../../Contexts/AuthContext";
+import axios from "axios";
 
 export default function ChangePassword() {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  let navegate = useNavigate();
+  const navegate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -65,15 +67,18 @@ export default function ChangePassword() {
       const response = await apichangePassword(data);
       toast.success(response?.data?.message || " Change Password is Updated ");
       if (token) {
-        const decoded: any = jwtDecode(token);
+        const decoded:User = jwtDecode(token);
         if (decoded.role == "admin") {
           navegate("/dashboard");
         } else {
           navegate("/home");
         }
       }
-    } catch (error: any) {
-      toast.error(error.response?.data?.message);
+    } catch (error) {
+      if(axios.isAxiosError(error)){
+
+        toast.error(error.response?.data?.message);
+      }
     } finally {
       setLoading(false);
     }

@@ -31,8 +31,14 @@ import noImageProfile from "../../../assets/Images/noPersoneEmage.avif";
 export default function UsersNavBar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { profile, logOut } = useContext(AuthContext);
-  const { favoritesCount, handleCountChange } = useContext(RoomContext);
+  const auth = useContext(AuthContext);
+  const profile = auth?.profile
+  const logOut = auth?.logOut
+  // { profile, logOut }
+  const room = useContext(RoomContext);
+  const favoritesCount = room?.favoritesCount;
+  const  handleCountChange= room?.handleCountChange;
+  // { favoritesCount, handleCountChange }
   const [viewProfile, setViewProfile] = useState(false);
 
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
@@ -159,7 +165,12 @@ export default function UsersNavBar() {
   );
 
   useEffect(() => {
-    handleCountChange();
+    (()=>{
+
+      if(handleCountChange){
+        handleCountChange()
+      }
+    })()
   }, []);
 
   return (

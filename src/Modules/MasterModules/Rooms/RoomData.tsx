@@ -16,6 +16,7 @@ import {
   OutlinedInput,
   Chip,
   IconButton,
+  type SelectChangeEvent,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -23,6 +24,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { toast } from "react-toastify";
 import { viewRoom, addRoom, updateRoom } from "../../../API/modules/AdminRooms";
 import { getAllFacilities } from "../../../API/modules/AdminData";
+import axios from "axios";
 
 export default function RoomData() {
   const { id } = useParams<{ id: string }>();
@@ -36,7 +38,7 @@ export default function RoomData() {
   const [discount, setDiscount] = useState("");
 
   const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
-  const [availableFacilities, setAvailableFacilities] = useState<any[]>([]);
+  const [availableFacilities, setAvailableFacilities] = useState<{_id:string,name:string}[]>([]);
 
   // imageFiles ستحتوي دائماً على ملفات حقيقية (القديمة المرفوعة مسبقاً + الجديدة)
   const [imageFiles, setImageFiles] = useState<File[]>([]);
@@ -81,7 +83,7 @@ export default function RoomData() {
       const getRoomDetails = async () => {
         setFetchingData(true);
         try {
-          const response = await viewRoom(id);
+          const response = await viewRoom(+id);
           const roomData =
             response?.data?.data?.room ||
             response?.data?.room ||
@@ -94,7 +96,7 @@ export default function RoomData() {
             setDiscount(roomData.discount?.toString() || "0");
 
             if (roomData.facilities) {
-              const facilityIds = roomData.facilities.map((f: any) =>
+              const facilityIds = roomData.facilities.map((f: {_id:string}) =>
                 typeof f === "object" ? f._id : f,
               );
               setSelectedFacilities(facilityIds);
@@ -179,8 +181,8 @@ export default function RoomData() {
     setImagePreviews((prev) => prev.filter((_, i) => i !== index));
     setImageFiles((prev) => prev.filter((_, i) => i !== index));
   };
-
-  const handleFacilityChange = (event: any) => {
+//(Event & {trget:{value:{string[];name:string;}}),child:ReactNode
+  const handleFacilityChange = (event: SelectChangeEvent<string[]>) => {
     const { value } = event.target;
     setSelectedFacilities(typeof value === "string" ? value.split(",") : value);
   };
@@ -214,18 +216,20 @@ export default function RoomData() {
       });
 
       if (isEdit && id) {
-        await updateRoom(id, formData);
+        await updateRoom(+id, formData);
         toast.success("Room updated successfully!");
       } else {
         await addRoom(formData);
         toast.success("Room created successfully!");
       }
       navigate("/dashboard/rooms");
-    } catch (error: any) {
-      console.error("Error saving room:", error);
-      const errorMessage =
+    } catch (error) {
+      if(axios.isAxiosError(error)){
+
+        const errorMessage =
         error?.response?.data?.message || "An error occurred!";
-      toast.error(errorMessage);
+        toast.error(errorMessage);
+      }
     } finally {
       setLoading(false);
     }

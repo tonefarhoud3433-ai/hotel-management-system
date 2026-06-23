@@ -19,7 +19,7 @@ import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axiosClient from "../../../API/axsiosClient";
 import { OnlyLoggedIn } from "../../Shared/ProtecedRoute/OnlyLoggedIn";
-import { RoomContext } from "../../../Contexts/RoomContext";
+import { RoomContext, type ADSData } from "../../../Contexts/RoomContext";
 interface RoomAPI {
   _id: string;
   roomNumber: string;
@@ -37,8 +37,8 @@ const ExploreRooms = () => {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const navigate = useNavigate();
-  const {handleCountChange} = useContext(RoomContext)
-
+  const context = useContext<ADSData | null>(RoomContext)
+  const  handleCountChange = context?.handleCountChange
   const pageSize = 15;
   const { capacity, start, end } = useLocation().state || { capacity: undefined, start: undefined, end: undefined }
   const fetchRooms = async (currentPage: number) => {
@@ -77,10 +77,10 @@ const ExploreRooms = () => {
     try {
       const res = await axiosClient.post('/api/v0/portal/favorite-rooms', { roomId: id })
       toast.success(res?.data?.message || 'success!');
-      handleCountChange()
+      handleCountChange?.call(this)
     }
     catch (error) {
-
+      if(axios.isAxiosError(error))
       toast.error(error?.response?.data?.message || 'wrong ')
     }
   }
@@ -92,7 +92,7 @@ const ExploreRooms = () => {
   }, [page]);
 
   const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
+    _event: React.ChangeEvent<unknown>,
     value: number,
   ) => {
     setPage(value);

@@ -42,7 +42,7 @@ export interface BookingData {
 interface ModalProps {
   open: boolean;
   onClose: () => void;
-  facility: any; // يستقبل الحجز الممرر من السطر النشط في الجدول
+  facility: BookingData; // يستقبل الحجز الممرر من السطر النشط في الجدول
 }
 
 const formatDate = (dateString: string | undefined) => {
@@ -138,9 +138,9 @@ export default function ViewBooking({
         {/* Info Grid Cards */}
         <Grid container spacing={2} sx={{ mb: 2 }}>
           {/* Total Price Paid Card */}
-          <Grid item xs={6} sm={4}>
+          <Grid size={{xs:6,md:4}}>
             <Card variant="outlined" sx={{ p: 1.5, borderRadius: 3, border: '1px solid #f3f4f6', bgcolor: '#fbfbfb' }}>
-              <Stack direction="row" alignItems="center" spacing={0.5} sx={{ mb: 0.5 }}>
+              <Stack direction="row" spacing={0.5} sx={{ mb: 0.5,alignItems:'center' }}>
                 <AttachMoneyIcon sx={{ color: '#059669', fontSize: '1.2rem' }} />
                 <Typography variant="caption" sx={{ fontWeight: 600, color: '#6b7280' }}>
                   Total Price
@@ -153,9 +153,9 @@ export default function ViewBooking({
           </Grid>
 
           {/* Status Tracker Card */}
-          <Grid item xs={6} sm={4}>
+          <Grid size={{xs:6,md:4}}>
             <Card variant="outlined" sx={{ p: 1.5, borderRadius: 3, border: '1px solid #f3f4f6', bgcolor: '#fbfbfb' }}>
-              <Stack direction="row" alignItems="center" spacing={0.5} sx={{ mb: 0.5 }}>
+              <Stack direction="row"  spacing={0.5} sx={{ mb: 0.5 ,alignItems:'center'}}>
                 {isCompleted ? (
                   <CheckCircleIcon sx={{ color: '#10b981', fontSize: '1.1rem' }} />
                 ) : (
@@ -172,9 +172,9 @@ export default function ViewBooking({
           </Grid>
 
           {/* Client Username Reference */}
-          <Grid item xs={12} sm={4}>
+          <Grid size={{xs:6,md:4}}>
             <Card variant="outlined" sx={{ p: 1.5, borderRadius: 3, border: '1px solid #f3f4f6', bgcolor: '#fbfbfb' }}>
-              <Stack direction="row" alignItems="center" spacing={0.5} sx={{ mb: 0.5 }}>
+              <Stack direction="row"  spacing={0.5} sx={{ mb: 0.5,alignItems:'center' }}>
                 <PeopleIcon sx={{ color: '#2563eb', fontSize: '1.1rem' }} />
                 <Typography variant="caption" sx={{ fontWeight: 600, color: '#6b7280' }}>
                   Client Account
@@ -191,7 +191,7 @@ export default function ViewBooking({
         <Box sx={{ mb: 2, p: 1.5, bgcolor: '#f8fafc', borderRadius: 2.5, border: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', gap: 1 }}>
           <KeyIcon sx={{ color: '#94a3b8', fontSize: '1.1rem' }} />
           <Box>
-            <Typography variant="caption" display="block" sx={{ fontWeight: 700, color: '#64748b', fontSize: '0.7rem', textTransform: 'uppercase' }}>
+            <Typography variant="caption"  sx={{display:'block', fontWeight: 700, color: '#64748b', fontSize: '0.7rem', textTransform: 'uppercase' }}>
               Booking Reference ID
             </Typography>
             <Typography variant="body2" sx={{ color: '#334155', fontWeight: 600, fontFamily: 'monospace', fontSize: '0.8rem' }}>
@@ -203,8 +203,7 @@ export default function ViewBooking({
         {/* Stay Duration Timeline Block */}
         <Typography 
           variant="caption" 
-          display="block" 
-          sx={{ fontWeight: 800, color: '#4b5563', textTransform: 'uppercase', mb: 1, letterSpacing: '0.05rem', fontSize: '0.75rem' }}
+          sx={{display:'block', fontWeight: 800, color: '#4b5563', textTransform: 'uppercase', mb: 1, letterSpacing: '0.05rem', fontSize: '0.75rem' }}
         >
           Stay Duration Timeline
         </Typography>
@@ -224,7 +223,7 @@ export default function ViewBooking({
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
             <CalendarMonthIcon sx={{ color: '#3b82f6', fontSize: '1.25rem' }} />
             <Box>
-              <Typography variant="caption" display="block" sx={{ color: '#64748b', fontWeight: 500 }}>Arrival Date</Typography>
+              <Typography variant="caption"  sx={{display:'block', color: '#64748b', fontWeight: 500 }}>Arrival Date</Typography>
               <Typography variant="body2" sx={{ fontWeight: 600, color: '#1e293b' }}>
                 {formatDate(bookingData?.startDate)}
               </Typography>
@@ -234,7 +233,7 @@ export default function ViewBooking({
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
             <CalendarMonthIcon sx={{ color: '#ef4444', fontSize: '1.25rem' }} />
             <Box>
-              <Typography variant="caption" display="block" sx={{ color: '#64748b', fontWeight: 500 }}>Departure Date</Typography>
+              <Typography variant="caption"  sx={{ color: '#64748b', fontWeight: 500 ,display:'block'}}>Departure Date</Typography>
               <Typography variant="body2" sx={{ fontWeight: 600, color: '#1e293b' }}>
                 {formatDate(bookingData?.endDate)}
               </Typography>

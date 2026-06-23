@@ -41,14 +41,14 @@ export default function BookingConfirm() {
 
   const steps = ["Personal Info", "WhatsApp Number", "Payment"];
 
-  const handleSubmit = async (event: any) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!stripe || !elements) return;
     setLoading(true);
 
     try {
       const cardElement = elements.getElement(CardElement);
-      const { token, error } = await stripe.createToken(cardElement!);
+      const { token} = await stripe.createToken(cardElement!);
 
       if (!token) {
         console.error("Failed to create token");
@@ -62,8 +62,9 @@ export default function BookingConfirm() {
 
       toast.success("Payment Successful!");
       navigate("/home/pay-success");
-    } catch (error: any) {
-      toast.error(error.message || "Payment Failed");
+    } catch (error) {
+      if(axios.isAxiosError(error))
+      toast.error(error?.response?.data?.message || "Payment Failed");
     } finally {
       setLoading(false);
     }

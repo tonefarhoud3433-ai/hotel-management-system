@@ -34,22 +34,23 @@ import FacilityViewModal, {
 import { AdminData } from "../../../API";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
 import { toast } from "react-toastify";
-import { number } from "yup";
+import axios from "axios";
 
 const paginationModel = { page: 0, pageSize: 5 };
 
+
+
 export default function Facilities() {
-  const [openViewModal, setOpenViewModal] = React.useState(false);
-  const [openModal, setOpenModal] = React.useState(false);
+  const [openViewModal, setOpenViewModal] = React.useState<boolean>(false);
+  const [openModal, setOpenModal] = React.useState<boolean>(false);
   const [facilityName, setFacilityName] = React.useState("");
-  const [rowsData, setRowsData] = React.useState([]);
-  const [selectedFacility, setSelectedFacility] = React.useState<any>(null);
+  const [rowsData, setRowsData] = React.useState<Facility[]>([]);
+  const [selectedFacility, setSelectedFacility] = React.useState<Facility | null>(null);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [viewFacility, setViewFacility] = React.useState<Facility | null>(null);
 
-  // إدارة حالة الـ Menu (الأكشنز)
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [activeRow, setActiveRow] = React.useState<any>(null);
+  const [activeRow, setActiveRow] = React.useState<Facility | null>(null);
   const openMenu = Boolean(anchorEl);
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
   const [selectedId, setSelectedId] = React.useState<string | null>(null); // تم توحيدها لـ string
@@ -59,7 +60,7 @@ export default function Facilities() {
       const response = await getAllFacilities();
       setRowsData(response?.data?.data?.facilities || []);
     } catch (error) {
-      toast.error(error?.response?.data?.message)
+      if(axios.isAxiosError(error))toast.error(error?.response?.data?.message)
     }
   };
 
@@ -81,10 +82,13 @@ export default function Facilities() {
       toast.success("Deleted successfully!");
       handleCloseDelete();
       fetchData();
-    } catch (err: any) {
-      const errorMessage =
+    } catch (err) {
+      if(axios.isAxiosError(err)){
+
+        const errorMessage =
         err?.response?.data?.message || "Failed to delete this facility!";
-      toast.error(errorMessage);
+        toast.error(errorMessage);
+      }
     }
   };
 
@@ -94,13 +98,13 @@ export default function Facilities() {
     setOpenModal(true);
   };
 
-  const handleOpenEdit = (row: any) => {
+  const handleOpenEdit = (row: Facility) => {
     setSelectedFacility(row);
     setFacilityName(row.name);
     setOpenModal(true);
   };
 
-  const handleOpenView = (row: any) => {
+  const handleOpenView = (row: Facility) => {
     setViewFacility(row);
     setOpenViewModal(true);
   };
@@ -116,7 +120,7 @@ export default function Facilities() {
     const isEdit = !!selectedFacility;
     try {
       if (isEdit) {
-        await updateFacilities(selectedFacility._id, { name: facilityName });
+        await updateFacilities(+selectedFacility._id, { name: facilityName });
       } else {
         await addFacilities({ name: facilityName });
       }
@@ -128,12 +132,15 @@ export default function Facilities() {
   };
 
   React.useEffect(() => {
-    fetchData();
+    (()=>{
+
+      fetchData();
+    })()
   }, []);
 
   const handleClickMenu = (
     event: React.MouseEvent<HTMLButtonElement>,
-    row: any,
+    row: Facility,
   ) => {
     setAnchorEl(event.currentTarget);
     setActiveRow(row);
@@ -144,7 +151,7 @@ export default function Facilities() {
     setActiveRow(null);
   };
 
-  const filteredRows = rowsData.filter((row: any) =>
+  const filteredRows = rowsData.filter((row: Facility) =>
     row.name?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
@@ -294,7 +301,7 @@ export default function Facilities() {
           }}
         >
           {filteredRows.length > 0 ? (
-            filteredRows.map((row: any) => (
+            filteredRows.map((row: Facility) => (
               <Card
                 key={row._id}
                 sx={{

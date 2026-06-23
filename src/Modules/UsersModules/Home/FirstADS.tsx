@@ -9,7 +9,7 @@ import noImages from "../../../assets/Images/Signature-2-Queen_body.webp";
 import { RoomContext } from '../../../Contexts/RoomContext';
 import { OnlyLoggedIn } from '../../Shared/ProtecedRoute/OnlyLoggedIn';
 
-interface room {
+export interface room {
     _id: string,
     roomNumber: string,
     price: number,
@@ -33,21 +33,25 @@ export default function FirstADS() {
     const data = async () => {
         setIsLoading(true);
         try {
-            let response = await axios("https://upskilling-egypt.com:3000/api/v0/portal/ads")
+            const response = await axios("https://upskilling-egypt.com:3000/api/v0/portal/ads")
             const ADS = response?.data?.data?.ads || [];
 
             const sortedRooms = ADS.slice(0, 5);
             setRoomData(sortedRooms)
-        } catch (error: any) {
-            toast.error(error.response.message)
+        } catch (error) {
+            if(axios.isAxiosError(error))
+            toast.error(error.response?.data.message)
         } finally {
-            setIsLoading(false); // انتهاء التحميل
-        }
+            setIsLoading(false); // ا
     }
-    const columns = roomData.length <= 3 ? 2 : 3;
+}
+const columns = roomData.length <= 3 ? 2 : 3;
 
     useEffect(() => {
-        data();
+        (()=>{
+
+            data()
+        })()
     }, []);
 
     return (

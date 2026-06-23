@@ -75,12 +75,12 @@ export default function ExploreSec() {
         capacity: capacity,
       };
 
-      const response = await axios.get(
+       await axios.get(
         "https://upskilling-egypt.com:3000/api/v0/portal/rooms/available",
         { params },
       );
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      if(axios.isAxiosError(error)) toast.error(error?.response?.data?.message);
     } finally {
       setLoading(false);
       navigate("/home/explore", {

@@ -45,7 +45,7 @@ export interface AdData {
 interface ModalProps {
   open: boolean;
   onClose: () => void;
-  facility: any; // خليناها any هنا عشان تستقبل الـ ستركشر المرن اللي جاي من الـ Ads مباشرة
+  facility: AdData
 }
 
 const formatDate = (dateString: string | undefined) => {
@@ -65,15 +65,15 @@ export default function ViewADS({
 }: ModalProps) {
   
   // هنا بنضمن إنه لو جاي كـ Object مباشر أو متغلف جوه ستركشر الـ API الجديد (ads) يشتغل في الحالتين
-  const adData = facility?.ads ? facility.ads : facility;
+  const adData =  facility;
 
-  const roomNumber = adData?.room?.roomNumber || adData?.roomNumber || "N/A";
-  const price = adData?.room?.price ?? adData?.price;
-  const discount = adData?.room?.discount ?? adData?.discount;
-  const capacity = adData?.room?.capacity ?? adData?.capacity;
+  const roomNumber = adData?.room?.roomNumber || "N/A";
+  const price = adData?.room?.price 
+  const discount = adData?.discount
+  const capacity = adData?.room?.capacity 
   
   // استخراج الصورة المرفقة بالركيرد لو موجودة
-  const roomImage = adData?.room?.images?.[0] || adData?.images?.[0] || null;
+  const roomImage = adData?.room?.images?.[0]
 
   return (
     <Dialog 
@@ -148,7 +148,7 @@ export default function ViewADS({
           <Chip 
             label={adData?.isActive ? "Active Ad" : "Inactive"} 
             color={adData?.isActive ? "success" : "error"}
-            variant="soft"
+            
             sx={{ 
               fontWeight: 700, 
               borderRadius: '8px',
@@ -162,12 +162,12 @@ export default function ViewADS({
         {/* Info Grid Cards */}
         <Grid container spacing={2} sx={{ mb: 1 }}>
           {/* Base Price Card */}
-          <Grid item xs={6} sm={4}>
+          <Grid size={{xs:6,md:4}}>
             <Card variant="outlined" sx={{ p: 2, borderRadius: 3, border: '1px solid #f3f4f6', bgcolor: '#fbfbfb', textAlign: 'center' }}>
                                 <Stack sx={{display:'flex',flexDirection:'row',alignItems:'center'}}>
 
               <AttachMoneyIcon sx={{ color: '#059669', mb: 0.5 }} />
-              <Typography variant="caption" display="block" sx={{ fontWeight: 600, color: '#6b7280' }}>
+              <Typography variant="caption" sx={{ fontWeight: 600, color: '#6b7280',display:'block' }}>
                 Base Price
               </Typography>
               </Stack>
@@ -178,7 +178,7 @@ export default function ViewADS({
           </Grid>
 
           {/* Discount Card */}
-          <Grid item xs={6} sm={4}>
+          <Grid size={{xs:6,md:4}}>
             <Card variant="outlined" sx={{ p: 2, borderRadius: 3, border: '1px solid #f3f4f6', bgcolor: '#fbfbfb', textAlign: 'center' }}>
                 <Stack sx={{display:'flex',flexDirection:'row',alignItems:'center'}}>
               <PercentIcon sx={{ color: '#d97706', mx: 0.5, fontSize: '1.2rem' }} />
@@ -193,12 +193,12 @@ export default function ViewADS({
           </Grid>
 
           {/* Capacity Card */}
-          <Grid item xs={12} sm={4}>
+          <Grid size={{xs:6,md:4}}>
             <Card variant="outlined" sx={{ p: 2, borderRadius: 3, border: '1px solid #f3f4f6', bgcolor: '#fbfbfb', textAlign: 'center' }}>
                 <Stack sx={{display:'flex',flexDirection:'row',alignItems:'center'}}>
 
               <PeopleIcon sx={{ color: '#2563eb',mx:0.5 }} />
-              <Typography variant="caption" display="block" sx={{ fontWeight: 600, color: '#6b7280' }}>
+              <Typography variant="caption" sx={{ fontWeight: 600, color: '#6b7280',display:'block' }}>
                 Max Capacity
               </Typography>
                 </Stack>
@@ -213,7 +213,7 @@ export default function ViewADS({
         <Box sx={{ mb: 1, p: 1.5, bgcolor: '#f8fafc', borderRadius: 2.5, border: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', gap: 1 }}>
           <KeyIcon sx={{ color: '#94a3b8', fontSize: '1.1rem' }} />
           <Box>
-            <Typography variant="caption" display="block" sx={{ fontWeight: 700, color: '#64748b', fontSize: '0.7rem', textTransform: 'uppercase' }}>
+            <Typography variant="caption" sx={{ fontWeight: 700, color: '#64748b', fontSize: '0.7rem', textTransform: 'uppercase', display:'block' }}>
               Ad Reference Key ID
             </Typography>
             <Typography variant="body2" sx={{ color: '#334155', fontWeight: 600, fontFamily: 'monospace', fontSize: '0.8rem' }}>
@@ -225,8 +225,7 @@ export default function ViewADS({
         {/* Timeline Details Block */}
         <Typography 
           variant="caption" 
-          display="block" 
-          sx={{ fontWeight: 800, color: '#4b5563', textTransform: 'uppercase', mb: 1.5, letterSpacing: '0.05rem', fontSize: '0.75rem' }}
+          sx={{ fontWeight: 800, display:'block' ,color: '#4b5563', textTransform: 'uppercase', mb: 1.5, letterSpacing: '0.05rem', fontSize: '0.75rem' }}
         >
           Timeline Sync
         </Typography>
@@ -246,7 +245,7 @@ export default function ViewADS({
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
             <CalendarMonthIcon sx={{ color: '#3b82f6', fontSize: '1.25rem' }} />
             <Box>
-              <Typography variant="caption" display="block" sx={{ color: '#64748b', fontWeight: 500 }}>Published At</Typography>
+              <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 500, display:'block' }}>Published At</Typography>
               <Typography variant="body2" sx={{ fontWeight: 600, color: '#1e293b' }}>
                 {formatDate(adData?.createdAt)}
               </Typography>
@@ -256,7 +255,7 @@ export default function ViewADS({
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
             <AccessTimeIcon sx={{ color: '#10b981', fontSize: '1.25rem' }} />
             <Box>
-              <Typography variant="caption" display="block" sx={{ color: '#64748b', fontWeight: 500 }}>Last Modified</Typography>
+              <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 500 ,display:'block'}}>Last Modified</Typography>
               <Typography variant="body2" sx={{ fontWeight: 600, color: '#1e293b' }}>
                 {formatDate(adData?.updatedAt)}
               </Typography>

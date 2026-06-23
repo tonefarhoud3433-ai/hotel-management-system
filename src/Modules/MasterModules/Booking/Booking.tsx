@@ -26,6 +26,7 @@ import {
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
 import ViewBooking from "../../Shared/ViewModals/ViewBooking";
+import axios from "axios";
 
 const paginationModel = { page: 0, pageSize: 5 };
 
@@ -38,21 +39,31 @@ const formatDate = (dateString: string) => {
   });
 };
 
+interface Row{
+  _id:string,
+  room:{roomNumber:string},
+  user:{userName:string},
+  status:string,
+  totalPrice:number,
+  startDate:string,
+  endDate:string
+}
+
 export default function Booking() {
   const [openViewModal, setOpenViewModal] = React.useState(false);
-  const [rowsData, setRowsData] = React.useState([]);
+  const [rowsData, setRowsData] = React.useState<Row[]>([]);
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [viewBooking, setViewBooking] = React.useState<any>(null);
+  const [viewBooking, setViewBooking] = React.useState<Row | null>(null);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [activeRow, setActiveRow] = React.useState<any>(null);
+  const [activeRow, setActiveRow] = React.useState<Row | null>(null);
   const openMenu = Boolean(anchorEl);
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
-  const [selectedId, setSelectedId] = React.useState<any>(null);
+  const [selectedId, setSelectedId] = React.useState<string>('');
   const [isLoading, setIsLoading] = React.useState(true);
 
   const fetchData = async () => {
-    setIsLoading(true); // ابدأ الـ Loading
+    setIsLoading(true);
     try {
       const response = await getAllBookings();
       const bookingList = response?.data?.data?.booking || [];
@@ -64,42 +75,48 @@ export default function Booking() {
     }
   };
 
-  const handleOpenDelete = (id: any) => {
+  const handleOpenDelete = (id: string) => {
     setSelectedId(id);
     setIsDeleteOpen(true);
   };
 
   const handleCloseDelete = () => {
     setIsDeleteOpen(false);
-    setSelectedId(null);
+    setSelectedId('');
   };
 
   const handleConfirmDelete = async () => {
     if (!selectedId) return;
     try {
-      await deleteBookings(selectedId);
+      await deleteBookings(+selectedId);
       toast.success("Booking deleted successfully!");
       handleCloseDelete();
       fetchData();
-    } catch (err: any) {
-      const errorMessage =
+    } catch (err) {
+      if(axios.isAxiosError(err)){
+
+        const errorMessage =
         err?.response?.data?.message || "Failed to delete this Booking!";
-      toast.error(errorMessage);
+        toast.error(errorMessage);
+      }
     }
   };
 
-  const handleOpenView = (row: any) => {
+  const handleOpenView = (row: Row) => {
     setViewBooking(row);
     setOpenViewModal(true);
   };
 
   React.useEffect(() => {
-    fetchData();
+    (()=>{
+
+      fetchData();
+    })()
   }, []);
 
   const handleClickMenu = (
     event: React.MouseEvent<HTMLButtonElement>,
-    row: any,
+    row: Row,
   ) => {
     setAnchorEl(event.currentTarget);
     setActiveRow(row);
@@ -110,7 +127,7 @@ export default function Booking() {
     setActiveRow(null);
   };
 
-  const filteredRows = rowsData.filter((row: any) => {
+  const filteredRows = rowsData.filter((row: Row) => {
     const roomNum = row?._id || "N/A";
     const user = row?.user?.userName || "";
     return (
@@ -128,7 +145,7 @@ export default function Booking() {
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueGetter: (value, row) => row?._id || "Deleted Room",
+      valueGetter: ( row : Row) => row?._id || "Deleted Room",
     },
     {
       field: "userName",
@@ -138,7 +155,7 @@ export default function Booking() {
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueGetter: (value, row) => row.user?.userName || "N/A",
+      valueGetter: ( row : Row) => row.user?.userName || "N/A",
     },
     {
       field: "totalPrice",
@@ -305,7 +322,7 @@ export default function Booking() {
           }}
         >
           {filteredRows.length > 0 ? (
-            filteredRows.map((row: any) => {
+            filteredRows.map((row: Row) => {
               const roomNumber = row.room?.roomNumber || "Deleted Room";
               const clientName = row.user?.userName || "N/A";
               const isCompleted = row.status === "completed";

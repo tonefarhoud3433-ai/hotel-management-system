@@ -32,30 +32,46 @@ import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
 import ViewADS from "../../Shared/ViewModals/viewADS";
 import { getAllRooms } from "../../../API/modules/AdminRooms";
+import axios from "axios";
 
 const paginationModel = { page: 0, pageSize: 5 };
+interface Room{
+  _id:string,
+  discount:number,
+  roomNumber:string,
+  price:number,
+  capacity:number
+}
+interface Ad{
+  _id:string
+  room:Room,
+  discount:number,
+  isActive:boolean,
+  roomNumber:string,
+  price:number,
+  capacity:number,
 
+}
 export default function ADS() {
   const [openViewModal, setOpenViewModal] = React.useState(false);
   const [openModal, setOpenModal] = React.useState(false);
 
   const [adRoomId, setAdRoomId] = React.useState("");
-  const [adDiscount, setAdDiscount] = React.useState("");
+  const [adDiscount, setAdDiscount] = React.useState<number>(0);
 
-  const [rowsData, setRowsData] = React.useState([]);
-  const [selectedAd, setSelectedAd] = React.useState<any>(null);
+  const [rowsData, setRowsData] = React.useState<Ad[]>([]);
+  const [selectedAd, setSelectedAd] = React.useState<Ad | null>(null);
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [viewAd, setViewAd] = React.useState<any>(null);
+  const [viewAd, setViewAd] = React.useState<Ad|null>(null);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [activeRow, setActiveRow] = React.useState<any>(null);
+  const [activeRow, setActiveRow] = React.useState<Ad|null>(null);
   const openMenu = Boolean(anchorEl);
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
-  const [selectedId, setSelectedId] = React.useState<any>(null);
+  const [selectedId, setSelectedId] = React.useState<string>('');
   const [adIsActive, setAdIsActive] = React.useState(true);
 
-  // git all rooms 
-  const [allRooms, setAllRooms] = React.useState([]);
+  const [allRooms, setAllRooms] = React.useState<Room[]>([]);
 
   const fetchRooms = async () => {
     try {
@@ -65,7 +81,6 @@ export default function ADS() {
       console.error("Error fetching rooms:", error);
     }
   };
-  // --------------------------
 
 
   const fetchData = async () => {
@@ -79,51 +94,54 @@ export default function ADS() {
     }
   };
 
-  const handleOpenDelete = (id: any) => {
+  const handleOpenDelete = (id:string ) => {
     setSelectedId(id);
     setIsDeleteOpen(true);
   };
 
   const handleCloseDelete = () => {
     setIsDeleteOpen(false);
-    setSelectedId(null);
+    setSelectedId('');
   };
 
   const handleConfirmDelete = async () => {
     if (!selectedId) return;
     try {
-      await deleteAds(selectedId);
+      await deleteAds(+selectedId);
       toast.success("Ad deleted successfully!");
       handleCloseDelete();
       fetchData();
-    } catch (err: any) {
-      const errorMessage = err?.response?.data?.message || "Failed to delete this ad!";
-      toast.error(errorMessage);
+    } catch (err) {
+      if(axios.isAxiosError(err)){
+
+        const errorMessage = err?.response?.data?.message || "Failed to delete this ad!";
+        toast.error(errorMessage);
+      }
     }
   };
 
   const handleOpenAdd = () => {
     setSelectedAd(null);
     setAdRoomId("");
-    setAdDiscount("");
+    setAdDiscount(0);
     setOpenModal(true);
   };
 
-  const handleOpenEdit = (row: any) => {
+  const handleOpenEdit = (row:Ad) => {
     setSelectedAd(row);
-    setAdRoomId(row.room?._id || row.room || "");
-    setAdDiscount(row.room?.discount ?? row.discount ?? "");
+    setAdRoomId(row.room?._id );
+    setAdDiscount(row.room?.discount ?? row.discount);
     setAdIsActive(row.isActive ?? true); 
     setOpenModal(true);
 };
 
-  const handleOpenView = async (row: any) => {
+  const handleOpenView = async (row:Ad) => {
     try {
-      const response = await viewAds(row._id);
+      const response = await viewAds(+row._id);
 
       setViewAd(response?.data?.data || row);
       setOpenViewModal(true);
-    } catch (error) {
+    } catch{
       setViewAd(row);
       setOpenViewModal(true);
     }
@@ -132,7 +150,7 @@ export default function ADS() {
   const handleCloseModal = () => {
     setOpenModal(false);
     setAdRoomId("");
-    setAdDiscount("");
+    setAdDiscount(0);
     setSelectedAd(null);
   };
 
@@ -143,7 +161,7 @@ export default function ADS() {
   }
 
   const bodyData = {
-    room: adRoomId, // تأكد من إرسال الـ room هنا
+    room: adRoomId,
     discount: Number(adDiscount) || 0,
     isActive: adIsActive
   };
@@ -154,7 +172,6 @@ export default function ADS() {
 
   try {
     if (selectedAd) {
-      // نرسل الـ bodyData كاملة
       await updateAds(selectedAd._id, bodyEditeData); 
       toast.success("Ad updated successfully!");
     } else {
@@ -163,18 +180,23 @@ export default function ADS() {
     }
     handleCloseModal();
     fetchData();
-  } catch (error: any) {
-    // هذه الخطوة ضرورية جداً لمعرفة سبب الرفض من الـ Backend
-    toast.error(error?.response?.data?.message || "Failed to save!");
+  } catch (error) {
+    if(axios.isAxiosError(error)){
+
+      toast.error(error?.response?.data?.message || "Failed to save!");
+    }
   }
 };
 
   React.useEffect(() => {
-    fetchData();
-    fetchRooms();
+    (()=>{
+
+      fetchData();
+      fetchRooms();
+    })()
   }, []);
 
-  const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>, row: any) => {
+  const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>, row:Ad) => {
     setAnchorEl(event.currentTarget);
     setActiveRow(row);
   };
@@ -184,7 +206,7 @@ export default function ADS() {
     setActiveRow(null);
   };
 
-  const filteredRows = rowsData.filter((row: any) => {
+  const filteredRows = rowsData.filter((row) => {
     const roomNum = row.room?.roomNumber || row.roomNumber || "";
     return roomNum.toLowerCase().includes(searchTerm.toLowerCase());
   });
@@ -198,7 +220,7 @@ export default function ADS() {
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueGetter: (value, row) => row.room?.roomNumber || row.roomNumber || "N/A"
+      valueGetter: ( row:Ad) => row.room?.roomNumber || row.roomNumber || "N/A"
     },
     {
       field: "price",
@@ -208,7 +230,7 @@ export default function ADS() {
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueGetter: (value, row) => row.room?.price ?? row.price ?? null,
+      valueGetter: ( row:Ad) => row.room?.price ?? row.price ?? null,
       valueFormatter: (value) => (value != null ? `$${Number(value).toLocaleString()}` : "N/A"),
     },
     {
@@ -219,7 +241,7 @@ export default function ADS() {
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueGetter: (value, row) => row.room?.discount ?? row.discount ?? 0,
+      valueGetter: ( row:Ad) => row.room?.discount ?? row.discount ?? 0,
       valueFormatter: (value) => (value != null ? `${value}%` : "0%"),
     },
     {
@@ -230,7 +252,7 @@ export default function ADS() {
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueGetter: (value, row) => row.room?.capacity ?? row.capacity ?? null,
+      valueGetter: ( row:Ad) => row.room?.capacity ?? row.capacity ?? null,
       valueFormatter: (value) => (value != null ? `${value} Guests` : "N/A"),
     },
     {
@@ -241,7 +263,7 @@ export default function ADS() {
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueGetter: (value, row) => row.isActive,
+      valueGetter: ( row :Ad) => row.isActive,
       renderCell: (params) => (
         <span style={{
           color: params.value ? "#10B981" : "#EF4444",
@@ -341,7 +363,7 @@ export default function ADS() {
         {/* Mobile Responsive Cards View */}
         <Box sx={{ display: { xs: "flex", sm: "none" }, flexDirection: "column", gap: 2, mb: 3 }}>
           {filteredRows.length > 0 ? (
-            filteredRows.map((row: any) => {
+            filteredRows.map((row: Ad) => {
               const roomNumber = row.room?.roomNumber || row.roomNumber || "N/A";
               const price = row.room?.price ?? row.price;
               const discount = row.room?.discount ?? row.discount;
@@ -431,7 +453,7 @@ export default function ADS() {
               onChange={(e) => setAdRoomId(e.target.value)}
               disabled={!!selectedAd}
             >
-              {allRooms.map((room: any) => (
+              {allRooms.map((room) => (
                 <MenuItem key={room._id} value={room._id}>
                   {room.roomNumber}
                 </MenuItem>
@@ -447,7 +469,7 @@ export default function ADS() {
             fullWidth
             variant="outlined"
             value={adDiscount}
-            onChange={(e) => setAdDiscount(e.target.value)}
+            onChange={(e) => setAdDiscount(+e.target.value)}
             sx={{ mt: 2 }}
           />
 

@@ -1,4 +1,4 @@
-import { Box, Container, Grid, Typography, CircularProgress } from "@mui/material"; // إضافة CircularProgress
+import { Box,  Grid, Typography, CircularProgress } from "@mui/material"; // إضافة CircularProgress
 import { useEffect, useState } from "react";
 import axiosClient from "../../../API/axsiosClient";
 import FavCard from "./FavCard";
@@ -35,7 +35,10 @@ export default function FavList() {
     };
 
     useEffect(() => {
-        getFavorites();
+        (()=>{
+
+            getFavorites();
+        })()
     }, []);
 
     return (

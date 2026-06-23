@@ -15,6 +15,7 @@ import {
   getDashboardCharts,
   type DashboardDataResponse,
 } from "../../../API/modules/DashboardCharts";
+import axios from "axios";
 
 export default function Home() {
   const [dashboardData, setDashboardData] = useState<
@@ -29,7 +30,8 @@ export default function Home() {
         const response = await getDashboardCharts();
         setDashboardData(response.data.data);
       } catch (error) {
-        toast.error("Failed To Fetch Dashboard Summary Data");
+        if(axios.isAxiosError(error))
+        toast.error(error?.response?.data?.message);
       } finally {
         setLoading(false);
       }

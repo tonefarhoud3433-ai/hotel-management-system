@@ -15,6 +15,7 @@ import { apiLogin } from "../../../API/modules/Auth";
 import { AuthContext } from "../../../Contexts/AuthContext";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 interface IFormInput {
   email: string;
@@ -61,7 +62,7 @@ export default function Login() {
         localStorage.setItem("token", token);
         saveUserData();
         toast.success(response?.data?.message || "Login successful!");
-        const decoded: any = jwtDecode(token);
+        const decoded:{role:string} = jwtDecode(token);
 
         if (decoded.role == "user") {
           if (state?.curunteLocation) {
@@ -75,9 +76,9 @@ export default function Login() {
       } else {
         toast.error("Invalid token received from server.");
       }
-    } catch (error: any) {
-      console.error("Login error:", error);
-      toast.error(error?.response?.data?.message || "Login failed!");
+    } catch (error) {
+
+     if(axios.isAxiosError(error)) toast.error(error?.response?.data?.message || "Login failed!");
     } finally {
       setLoading(false);
     }

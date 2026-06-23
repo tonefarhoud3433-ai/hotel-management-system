@@ -32,12 +32,16 @@ export default function SwiperReviews({ idRoom }: RoomID) {
       );
       setReviews(response.data.data.roomReviews);
     } catch (error) {
-      //   toast.error(error?.response?.data?.message);
+
+      if(axios.isAxiosError(error))  toast.error(error?.response?.data?.message);
     }
   };
 
   useEffect(() => {
-    getReviews();
+    (()=>{
+
+      getReviews();
+    })()
   }, []);
 
   return (

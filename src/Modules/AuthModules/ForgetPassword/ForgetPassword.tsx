@@ -36,7 +36,7 @@ export default function ForgetPassword() {
     setLoading(true);
 
     try {
-      let response = await axios.post(
+      const response = await axios.post(
         "https://upskilling-egypt.com:3000/api/v0/portal/users/forgot-password",
         data,
       );
@@ -46,8 +46,8 @@ export default function ForgetPassword() {
       reset();
 
       navigate("/auth/reset-password");
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || " Something went wrong!!");
+    } catch (error) {
+      if(axios.isAxiosError(error))toast.error(error.response?.data?.message || " Something went wrong!!");
     } finally {
       setLoading(false);
     }

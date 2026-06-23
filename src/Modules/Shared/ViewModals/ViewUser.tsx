@@ -18,30 +18,29 @@ import {
     Stack,
     Typography,
 } from "@mui/material";
-import noImageProfile from "../../../assets/Images/fack_profile.png"
 
 
 // تعريف الـ Interface الخاص بالمستخدم
 export interface UserData {
-  _id: string;
-  userName: string;
-  email: string;
-  phoneNumber: number;
-  country: string;
-  role: string;
-  profileImage: string;
-  verified: boolean;
-  createdAt: string;
+  _id?: string;
+  userName?: string;
+  email?: string;
+  phoneNumber?: number;
+  country?: string;
+  role?: string;
+  profileImage?: string;
+  verified?: boolean;
+  createdAt?: string;
 }
 
 interface ModalProps {
   open: boolean;
   onClose: () => void;
-  facility: any; // استقبال بيانات المستخدم
+  facility: UserData |null | undefined; // استقبال بيانات المستخدم
 }
 
 export default function ViewUser({ open, onClose, facility }: ModalProps) {
-  const user: UserData = facility;
+  const user: UserData | null | undefined= facility;
 
   if (!user) return null;
 
@@ -89,9 +88,9 @@ export default function ViewUser({ open, onClose, facility }: ModalProps) {
         {/* Info Grid Cards */}
         <Grid container spacing={2} sx={{ mb: 2 }}>
           {/* Email Card */}
-          <Grid item xs={6}>
+          <Grid size={{xs:6}}>
             <Card variant="outlined" sx={{ p: 1.5, borderRadius: 3, border: "1px solid #f3f4f6", bgcolor: "#fbfbfb" }}>
-              <Stack direction="row" alignItems="center" spacing={0.5} sx={{ mb: 0.5 }}>
+              <Stack direction="row"  spacing={0.5} sx={{ mb: 0.5 ,alignItems:'center'}}>
                 <EmailIcon sx={{ color: "#6b7280", fontSize: "1.1rem" }} />
                 <Typography variant="caption" sx={{ fontWeight: 600, color: "#6b7280" }}>Email</Typography>
               </Stack>
@@ -100,9 +99,9 @@ export default function ViewUser({ open, onClose, facility }: ModalProps) {
           </Grid>
 
           {/* Phone Card */}
-          <Grid item xs={6}>
+          <Grid size={{xs:6}}>
             <Card variant="outlined" sx={{ p: 1.5, borderRadius: 3, border: "1px solid #f3f4f6", bgcolor: "#fbfbfb" }}>
-              <Stack direction="row" alignItems="center" spacing={0.5} sx={{ mb: 0.5 }}>
+              <Stack direction="row"  spacing={0.5} sx={{ mb: 0.5 ,alignItems:'center'}}>
                 <PhoneIcon sx={{ color: "#6b7280", fontSize: "1.1rem" }} />
                 <Typography variant="caption" sx={{ fontWeight: 600, color: "#6b7280" }}>Phone</Typography>
               </Stack>

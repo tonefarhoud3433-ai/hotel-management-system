@@ -25,6 +25,7 @@ import {
   registerSchema,
 } from "../YupValidation/YupValidation";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -86,9 +87,9 @@ export default function Register() {
       reset();
 
       navigate("/auth/login");
-    } catch (error: any) {
+    } catch (error) {
       console.error("Registration Error:", error);
-      toast.error(error.response?.data?.message || " Registration Error:");
+      if(axios.isAxiosError(error))toast.error(error.response?.data?.message || " Registration Error:");
     } finally {
       setLoading(false);
     }
@@ -154,16 +155,13 @@ export default function Register() {
         {/* --- تم إضافة جزء رفع ومعاينة الصورة هنا --- */}
         <Grid
           size={12}
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          sx={{}}
+          
+          sx={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}
         >
           <Box
-            position="relative"
             onClick={handleImageClick}
             sx={{
+              position:'relative',
               cursor: "pointer",
               width: "fit-content",
               borderRadius: "50%",

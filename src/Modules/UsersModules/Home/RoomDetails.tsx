@@ -15,7 +15,7 @@ import { format } from "date-fns";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { DateRange, type Range } from "react-date-range";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link,  useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import noImage from "../../../assets/Images/no image.jpg";
 import PostReviews from "./PostReviews";
@@ -58,8 +58,6 @@ function GradientCircularProgress() {
 
 export default function RoomDetails() {
   const { id } = useParams();
-  const location = useLocation();
-  const { adsData } = location.state || {};
   const navigate = useNavigate();
 
   const [dateRange, setDateRange] = useState<Range[]>([
@@ -114,7 +112,7 @@ export default function RoomDetails() {
     }
     setLoading(true);
     try {
-      let response = await axios.post(
+      const response = await axios.post(
         "https://upskilling-egypt.com:3000/api/v0/portal/booking",
         {
           startDate: format(dateRange[0].startDate, "yyyy-MM-dd"),
@@ -133,7 +131,8 @@ export default function RoomDetails() {
       const id = response?.data?.data?.booking?._id;
       navigate("/booking-confirmation", { state: { bookingId: id } });
     } catch (error) {
-      toast.error("Booking failed");
+      if(axios.isAxiosError(error))
+      toast.error(error.response?.data?.message);
     } finally {
       setLoading(false);
     }
@@ -145,13 +144,16 @@ export default function RoomDetails() {
         `https://upskilling-egypt.com:3000/api/v0/portal/rooms/${id}`,
       );
       setRoomData(response?.data?.data?.room || null);
-    } catch (error: any) {
-      toast.error("Failed to load room data");
+    } catch (error) {
+      if(axios.isAxiosError(error)) toast.error(error.response?.data?.message);
     }
   };
 
   useEffect(() => {
-    getRoomDetail();
+    (()=>{
+
+      getRoomDetail();
+    })()
   }, []);
 
   if (!roomData) {

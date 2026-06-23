@@ -18,7 +18,7 @@ export const deleteRoom = (id: number) => {
     return axiosClient.delete(`/api/v0/admin/rooms/${id}`);
 };
 
-export const updateRoom = (id: number, data: FormData) => {
+export const updateRoom = (id: number, data:FormData) => {
     return axiosClient.put(`/api/v0/admin/rooms/${id}`, data, {
         headers: { "Content-Type": "multipart/form-data" },
     });

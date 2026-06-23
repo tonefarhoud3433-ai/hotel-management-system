@@ -17,10 +17,16 @@ import noImages from "../../../assets/Images/Signature-2-Queen_body.webp";
 import { RoomContext } from "../../../Contexts/RoomContext";
 import { OnlyLoggedIn } from "../../Shared/ProtecedRoute/OnlyLoggedIn";
 
+interface Item{
+  _id:string,
+  isActive:string,
+  room:{images:string[],_id:string,discount:number,roomNumber:string}
+}
+
 export default function SwiperADS() {
-  const [adsData, setAdsData] = useState<any[]>([]);
+  const [adsData, setAdsData] = useState<Item[]>([]);
   const navigate = useNavigate();
-  const { getRoomFav, getRoomDetail } = useContext(RoomContext)!;
+  const { getRoomFav } = useContext(RoomContext)!;
 
   const fetchData = async () => {
     try {
@@ -30,13 +36,16 @@ export default function SwiperADS() {
       const activeAds = response?.data?.data?.ads || [];
 
       setAdsData(activeAds);
-    } catch (error: any) {
-      toast.error("brooking data ");
+    } catch (e) {
+      if(axios.isAxiosError(e)) toast.error(e.response?.data?.message);
     }
   };
 
   useEffect(() => {
-    fetchData();
+    (()=>{
+
+      fetchData();
+    })()
   }, []);
 
   return (
@@ -86,7 +95,7 @@ export default function SwiperADS() {
                   position: "relative",
                   borderRadius: 3,
                   overflow: "hidden",
-                  backgroundImage: `url(${ad?.room?.images?.length > 0 ? ad.room.images[0] : noImages})`,
+                  backgroundImage: `url(${ad?.room?.images?.length > 0 ? ad?.room?.images[0] : noImages})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   "&:hover .hover-actions": {
