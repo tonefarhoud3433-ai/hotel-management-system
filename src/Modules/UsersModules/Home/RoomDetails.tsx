@@ -109,7 +109,7 @@ export default function RoomDetails() {
                 startDate: format(dateRange[0].startDate, "yyyy-MM-dd"),
                 endDate: format(dateRange[0].endDate, "yyyy-MM-dd"),
                 room: roomId,
-                totalPrice: totalPrice
+                totalPrice: Math.trunc(totalPrice)
             },
                 {
                     headers: {
