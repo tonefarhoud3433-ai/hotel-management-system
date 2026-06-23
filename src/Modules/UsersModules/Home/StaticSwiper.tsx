@@ -27,7 +27,7 @@ export default function StaticSwiper({ cards, title }: SwiperProps) {
         loop={true}
         // 2. عدّل الـ autoplay هنا
         autoplay={{
-          delay: 2500,
+          delay: 0,
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
         }}
@@ -37,7 +37,7 @@ export default function StaticSwiper({ cards, title }: SwiperProps) {
           768: { slidesPerView: 3 },
           1024: { slidesPerView: 3 },
         }}
-        speed={1000} // زيادة السرعة قليلاً لجعل الحركة أنعم
+        speed={5000} // زيادة السرعة قليلاً لجعل الحركة أنعم
       >
         {cards.map((card, index) => (
           // 3. أضف key فريد لكل شريحة

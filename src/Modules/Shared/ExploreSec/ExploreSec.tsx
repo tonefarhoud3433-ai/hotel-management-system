@@ -80,7 +80,8 @@ export default function ExploreSec() {
         { params },
       );
     } catch (error) {
-toast.error(error?.response?.data?.message)    } finally {
+      toast.error(error?.response?.data?.message);
+    } finally {
       setLoading(false);
       navigate("/home/explore", {
         state: {
