@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, Container, Typography, Link as MuiLink } from "@mui/material";
 // 🛠️ التعديل الجوهري هنا: استيراد الـ Grid2 الحديث لتجنب أي إيرور رندر
 import { Grid } from "@mui/material";

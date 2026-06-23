@@ -4,7 +4,7 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
-import { RoomContextProvider } from "./Contexts/RoomContext.tsx";
+import { RoomContextProvider } from "./Contexts/roomContextProvider.tsx";
 import "./index.css";
 import AuthContextProvider from "./Contexts/AuthContextProvider.tsx";
 

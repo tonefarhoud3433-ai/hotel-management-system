@@ -8,7 +8,7 @@ export interface RoomContextProviderProps {
     children: ReactNode
 }
 export function RoomContextProvider({ children }: RoomContextProviderProps) {
-      const [favoritesCount,setFavoritesCount] = useState(1);
+      const [favoritesCount,setFavoritesCount] = useState(0);
      const handleCountChange = async()=>{
         const response = await axiosClient.get('/api/v0/portal/favorite-rooms');
     setFavoritesCount(response.data?.data?.favoriteRooms[0]?.rooms?.length)
