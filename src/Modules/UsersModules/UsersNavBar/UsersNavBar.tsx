@@ -26,8 +26,7 @@ import { AuthContext } from "../../../Contexts/AuthContext";
 import { RoomContext } from "../../../Contexts/RoomContext";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
 import ViewUser from "../../Shared/ViewModals/ViewUser";
-import noImageProfile from "../../../assets/Images/noPersoneEmage.avif"
-
+import noImageProfile from "../../../assets/Images/noPersoneEmage.avif";
 
 export default function UsersNavBar() {
   const navigate = useNavigate();
@@ -36,21 +35,16 @@ export default function UsersNavBar() {
   const { favoritesCount, handleCountChange } = useContext(RoomContext);
   const [viewProfile, setViewProfile] = useState(false);
 
-  const [openConfirm, setOpenConfirm] = useState<boolean>(false)
-
-
-
-
+  const [openConfirm, setOpenConfirm] = useState<boolean>(false);
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const activeLink = location.pathname
+  const activeLink = location.pathname;
   const drawerContent = (
     <Box sx={{ width: 260, p: 2 }} onClick={handleDrawerToggle}>
       <Typography
@@ -67,15 +61,16 @@ export default function UsersNavBar() {
       <Divider sx={{ mb: 2 }} />
 
       <List>
-
         <ListItem disablePadding>
           <ListItemButton sx={{ borderRadius: 1 }}>
             <ListItemText
-              onClick={() => navigate('/home')}
-
-              primary={'Home'}
+              onClick={() => navigate("/home")}
+              primary={"Home"}
               sx={{
-                color: (activeLink == "/home" || activeLink == '/') ? "#3252DF" : "black",
+                color:
+                  activeLink == "/home" || activeLink == "/"
+                    ? "#3252DF"
+                    : "black",
                 fontWeight: 600,
               }}
             />
@@ -84,9 +79,8 @@ export default function UsersNavBar() {
         <ListItem disablePadding>
           <ListItemButton sx={{ borderRadius: 1 }}>
             <ListItemText
-
-              onClick={() => navigate('/home/explore')}
-              primary={'Explore'}
+              onClick={() => navigate("/home/explore")}
+              primary={"Explore"}
               sx={{
                 color: activeLink == "/explore" ? "#3252DF" : "black",
                 fontWeight: 600,
@@ -95,12 +89,11 @@ export default function UsersNavBar() {
           </ListItemButton>
         </ListItem>
         <OnlyLoggedIn>
-
           <ListItem disablePadding>
             <ListItemButton sx={{ borderRadius: 1 }}>
               <ListItemText
-                onClick={() => navigate('favorites')}
-                primary={'Favorites'}
+                onClick={() => navigate("favorites")}
+                primary={"Favorites"}
                 sx={{
                   color: activeLink == "/favorites" ? "#3252DF" : "black",
                   fontWeight: 600,
@@ -109,25 +102,28 @@ export default function UsersNavBar() {
             </ListItemButton>
           </ListItem>
         </OnlyLoggedIn>
-
       </List>
 
       <Divider sx={{ my: 2 }} />
       <OnlyLoggedIn>
-
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1, p: 1, mb: 2 }}>
+        <Box
+          sx={{ display: "flex", alignItems: "center", gap: 1, p: 1, mb: 2 }}
+        >
           <Avatar
             alt="Upskilling"
             src="https://mui.com/static/images/avatar/1.jpg"
             sx={{ width: 35, height: 35 }}
           />
-          <Typography variant="body2" sx={{ color: "#152C5B", fontWeight: 500 }}>
+          <Typography
+            variant="body2"
+            sx={{ color: "#152C5B", fontWeight: 500 }}
+          >
             Upskilling
           </Typography>
           <KeyboardArrowDownIcon sx={{ color: "#152C5B" }} />
         </Box>
       </OnlyLoggedIn>
-      {!localStorage.getItem('token') ?
+      {!localStorage.getItem("token") ? (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
           <Button
             fullWidth
@@ -138,7 +134,7 @@ export default function UsersNavBar() {
               color: "#3252DF",
               textTransform: "none",
             }}
-            onClick={() => navigate('/auth/register')}
+            onClick={() => navigate("/auth/register")}
           >
             Register
           </Button>
@@ -151,18 +147,20 @@ export default function UsersNavBar() {
               color: "#fff",
               textTransform: "none",
             }}
-            onClick={() => navigate('/auth/login')}
+            onClick={() => navigate("/auth/login")}
           >
             Login Now
           </Button>
         </Box>
-        : <></>}
+      ) : (
+        <></>
+      )}
     </Box>
   );
 
   useEffect(() => {
     handleCountChange();
-  }, [])
+  }, []);
 
   return (
     <>
@@ -170,7 +168,6 @@ export default function UsersNavBar() {
         position="sticky"
         elevation={1}
         sx={{
-
           backgroundColor: "#fff",
           borderBottom: "1px solid #E5E5E5",
           py: 1,
@@ -202,31 +199,32 @@ export default function UsersNavBar() {
             >
               <Button
                 sx={{
-                  color: location.pathname == '/home' ? "#3252DF" : "#152C5B",
+                  color: location.pathname == "/home" ? "#3252DF" : "#152C5B",
                   textTransform: "none",
                   fontWeight: 500,
                 }}
-                onClick={() => navigate('home')}
+                onClick={() => navigate("home")}
               >
                 Home
               </Button>
               <Button
-
                 sx={{
-                  color: location.pathname == '/home/explore' ? "#3252DF" : "#152C5B",
+                  color:
+                    location.pathname == "/home/explore"
+                      ? "#3252DF"
+                      : "#152C5B",
                   textTransform: "none",
                   fontWeight: 400,
                 }}
-                onClick={() => navigate('home/explore')}
+                onClick={() => navigate("home/explore")}
               >
                 Explore
               </Button>
 
               <OnlyLoggedIn>
-
                 <Badge badgeContent={favoritesCount} color="error">
                   <Button
-                    onClick={() => navigate('home/favorites')}
+                    onClick={() => navigate("home/favorites")}
                     sx={{
                       color: "#152C5B",
                       textTransform: "none",
@@ -237,7 +235,9 @@ export default function UsersNavBar() {
                   </Button>
                 </Badge>
               </OnlyLoggedIn>
-              {localStorage.getItem('token') ? <></> :
+              {localStorage.getItem("token") ? (
+                <></>
+              ) : (
                 <Box sx={{ display: "flex", gap: 1.5, ml: 2 }}>
                   <Button
                     variant="contained"
@@ -249,7 +249,7 @@ export default function UsersNavBar() {
                       px: 3,
                       "&:hover": { backgroundColor: "#d0def0" },
                     }}
-                    onClick={() => navigate('/auth/register')}
+                    onClick={() => navigate("/auth/register")}
                   >
                     Register
                   </Button>
@@ -263,19 +263,28 @@ export default function UsersNavBar() {
                       px: 3,
                       "&:hover": { backgroundColor: "#2945c5" },
                     }}
-                    onClick={() => navigate('/auth/login')}
+                    onClick={() => navigate("/auth/login")}
                   >
                     Login Now
                   </Button>
                 </Box>
-              }
+              )}
               <OnlyLoggedIn>
                 <Box
-                  sx={{ display: "flex", alignItems: "center", gap: 0.5, ml: 1 }}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.5,
+                    ml: 1,
+                  }}
                 >
                   <Avatar
                     alt="user Profile image"
-                    src={profile?.profileImage?profile?.profileImage :noImageProfile}
+                    src={
+                      profile?.profileImage
+                        ? profile?.profileImage
+                        : noImageProfile
+                    }
                     sx={{ width: 35, height: 35 }}
                   />
                   <Typography
@@ -284,31 +293,57 @@ export default function UsersNavBar() {
                   >
                     {profile?.userName}
                   </Typography>
-                  <IconButton size="small" sx={{ color: "#152C5B" }} onClick={(e) => setAnchorElUser(e.currentTarget)}>
+                  <IconButton
+                    size="small"
+                    sx={{ color: "#152C5B" }}
+                    onClick={(e) => setAnchorElUser(e.currentTarget)}
+                  >
                     <KeyboardArrowDownIcon scale={1} />
                   </IconButton>
                 </Box>
                 <Menu
-                  sx={{ mt: '45px' }}
+                  sx={{ mt: "45px" }}
                   id="menu-appbar"
                   anchorEl={anchorElUser}
                   anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
+                    vertical: "top",
+                    horizontal: "right",
                   }}
                   keepMounted
                   transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
+                    vertical: "top",
+                    horizontal: "right",
                   }}
                   open={Boolean(anchorElUser)}
                   onClose={() => setAnchorElUser(null)}
                 >
-                  <MenuItem onClick={() => { setAnchorElUser(null); setViewProfile(true) }}>
-                    <Typography sx={{ textAlign: 'center' }}>profile</Typography>
+                  <MenuItem
+                    onClick={() => {
+                      setAnchorElUser(null);
+                      setViewProfile(true);
+                    }}
+                  >
+                    <Typography sx={{ textAlign: "center" }}>
+                      profile
+                    </Typography>
                   </MenuItem>
-                  <MenuItem onClick={() => { setAnchorElUser(null); setOpenConfirm(true) }}>
-                    <Typography sx={{ textAlign: 'center' }}>logout</Typography>
+                  <MenuItem
+                    onClick={() => {
+                      setAnchorElUser(null);
+                      navigate("/auth/change-password");
+                    }}
+                  >
+                    <Typography sx={{ textAlign: "center" }}>
+                      change password
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setAnchorElUser(null);
+                      setOpenConfirm(true);
+                    }}
+                  >
+                    <Typography sx={{ textAlign: "center" }}>logout</Typography>
                   </MenuItem>
                 </Menu>
               </OnlyLoggedIn>
@@ -343,8 +378,13 @@ export default function UsersNavBar() {
       >
         {drawerContent}
       </Drawer>
-      <ViewUser facility={profile} onClose={() => setViewProfile(false)} open={viewProfile} />
-      <DeleteConfirmations onClose={() => setOpenConfirm(false)}
+      <ViewUser
+        facility={profile}
+        onClose={() => setViewProfile(false)}
+        open={viewProfile}
+      />
+      <DeleteConfirmations
+        onClose={() => setOpenConfirm(false)}
         open={openConfirm}
         onDelete={logOut}
         title="Confirm Logout"

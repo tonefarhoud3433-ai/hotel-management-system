@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   forgetSchema,
   type ForgetSchema,
@@ -45,7 +45,7 @@ export default function ForgetPassword() {
       );
       reset();
 
-      navigate("/reset-password");
+      navigate("/auth/reset-password");
     } catch (error: any) {
       toast.error(error.response?.data?.message || " Something went wrong!!");
     } finally {
@@ -95,12 +95,7 @@ export default function ForgetPassword() {
           If you already have an account register
         </Typography>
         <Typography variant="body1" sx={{ mb: 4 }}>
-          You can{" "}
-          <Link
-          to='/login'
-          >
-            Login here !
-          </Link>
+          You can <Link to="/auth/login">Login here !</Link>
         </Typography>
 
         {/* parent Grid  */}

@@ -47,7 +47,7 @@ export default function ResetPassword() {
       );
       reset();
 
-      navigate("/login");
+      navigate("/auth/login");
     } catch (error: any) {
       toast.error(error.response?.data?.message || " Something went wrong!!");
     } finally {
@@ -103,13 +103,9 @@ export default function ResetPassword() {
           If you already have an account register
         </Typography>
         <Typography variant="body1" sx={{ mb: 2 }}>
-          You can 
-          <Link
-          className="customLink"
-          
-            to="/login"
-          >
-             Login here !
+          You can
+          <Link className="customLink" to="/auth/login">
+            Login here !
           </Link>
         </Typography>
 
