@@ -17,7 +17,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axiosClient from "../../../Apii/axsiosClient";
+import axiosClient from "../../../Api/axsiosClient";
 import { OnlyLoggedIn } from "../../Shared/ProtecedRoute/OnlyLoggedIn";
 import { RoomContext, type ADSData } from "../../../Contexts/RoomContext";
 interface RoomAPI {

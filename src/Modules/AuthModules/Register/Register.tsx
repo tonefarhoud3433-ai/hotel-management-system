@@ -19,7 +19,7 @@ import { CircularProgress } from "@mui/material";
 import { useRef, useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { apiRegister } from "../../../Apii/modules/Auth";
+import { apiRegister } from "../../../Api/modules/Auth";
 import {
   type RegisterFormData,
   registerSchema,
