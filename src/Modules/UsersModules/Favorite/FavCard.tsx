@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { toast } from "react-toastify";
-import axiosClient, { API_BASE_URL } from "../../../Api/axsiosClient";
+import axiosClient, { API_BASE_URL } from "../../../Apii/axsiosClient";
 import type { FavItem } from "./FavList";
 import { useNavigate } from "react-router-dom";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";

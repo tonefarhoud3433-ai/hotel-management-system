@@ -37,7 +37,7 @@ import {
   viewRoom,
   deleteRoom,
   updateRoom,
-} from "../../../Api/modules/AdminRooms";
+} from "../../../Apii/modules/AdminRooms";
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
 import ViewRooms from "../../Shared/ViewModals/viewRooms";

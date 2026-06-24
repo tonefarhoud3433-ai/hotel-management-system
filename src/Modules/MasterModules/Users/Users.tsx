@@ -16,7 +16,7 @@ import type { GridColDef } from "@mui/x-data-grid";
 import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
 
-import { getAllUsers } from "../../../Api/modules/AdminUsers";
+import { getAllUsers } from "../../../Apii/modules/AdminUsers";
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import ViewUser from "../../Shared/ViewModals/ViewUser";
 

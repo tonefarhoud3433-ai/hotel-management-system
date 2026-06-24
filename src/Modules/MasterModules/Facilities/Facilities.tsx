@@ -29,7 +29,7 @@ import {
   addFacilities,
   getAllFacilities,
   updateFacilities,
-} from "../../../Api/modules/AdminData";
+} from "../../../Apii/modules/AdminData";
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
 import FacilityViewModal, {

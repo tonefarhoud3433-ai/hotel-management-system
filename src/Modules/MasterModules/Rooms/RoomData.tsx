@@ -22,8 +22,12 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { toast } from "react-toastify";
-import { viewRoom, addRoom, updateRoom } from "../../../Api/modules/AdminRooms";
-import { getAllFacilities } from "../../../Api/modules/AdminData";
+import {
+  viewRoom,
+  addRoom,
+  updateRoom,
+} from "../../../Apii/modules/AdminRooms";
+import { getAllFacilities } from "../../../Apii/modules/AdminData";
 import axios from "axios";
 
 export default function RoomData() {

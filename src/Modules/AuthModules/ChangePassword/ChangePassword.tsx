@@ -14,7 +14,7 @@ import { yupResolver } from "@hookform/resolvers/yup/dist/yup.js";
 import {
   apichangePassword,
   type ChangePasswordData,
-} from "../../../Api/modules/Auth";
+} from "../../../Apii/modules/Auth";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
