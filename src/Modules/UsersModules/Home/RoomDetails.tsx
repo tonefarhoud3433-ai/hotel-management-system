@@ -15,7 +15,7 @@ import { format } from "date-fns";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { DateRange, type Range } from "react-date-range";
-import { Link,  useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import noImage from "../../../assets/Images/no image.jpg";
 import PostReviews from "./PostReviews";
@@ -131,8 +131,7 @@ export default function RoomDetails() {
       const id = response?.data?.data?.booking?._id;
       navigate("/booking-confirmation", { state: { bookingId: id } });
     } catch (error) {
-      if(axios.isAxiosError(error))
-      toast.error(error.response?.data?.message);
+      if (axios.isAxiosError(error)) toast.error(error.response?.data?.message);
     } finally {
       setLoading(false);
     }
@@ -145,15 +144,14 @@ export default function RoomDetails() {
       );
       setRoomData(response?.data?.data?.room || null);
     } catch (error) {
-      if(axios.isAxiosError(error)) toast.error(error.response?.data?.message);
+      if (axios.isAxiosError(error)) toast.error(error.response?.data?.message);
     }
   };
 
   useEffect(() => {
-    (()=>{
-
+    (() => {
       getRoomDetail();
-    })()
+    })();
   }, []);
 
   if (!roomData) {
@@ -219,7 +217,7 @@ export default function RoomDetails() {
               <Box
                 sx={{
                   mx: "auto",
-                  minWidth: "320px",
+                  width: { xs: "220px", md: "440px" },
                 }}
               >
                 <Box
