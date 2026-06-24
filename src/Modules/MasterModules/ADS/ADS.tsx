@@ -34,8 +34,8 @@ import {
   getAllAds,
   updateAds,
   viewAds,
-} from "../../../Apii/modules/AdminAds";
-import { getAllRooms } from "../../../Apii/modules/AdminRooms";
+} from "../../../Api/modules/AdminAds";
+import { getAllRooms } from "../../../Api/modules/AdminRooms";
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
 import ViewADS, { type AdData } from "../../Shared/ViewModals/viewADS";

@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 import { RoomContext, type Ads } from "./RoomContext";
 import axios from "axios";
 import { useState, type ReactNode } from "react";
-import axiosClient from "../Apii/axsiosClient";
+import axiosClient from "../Api/axsiosClient";
 
 export interface RoomContextProviderProps {
   children: ReactNode;
