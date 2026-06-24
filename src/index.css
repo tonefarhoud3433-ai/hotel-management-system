@@ -1,0 +1,51 @@
+.ps-sidebar-container{
+    background-color: rgba(32, 63, 199, 1) !important;
+    color: white;
+}
+.ps-menuitem-root:first-child .ps-menu-button:hover {
+    background-color: transparent !important;
+    cursor: auto;
+}
+.ps-menuitem-root:first-child .ps-menu-button svg {
+transition: background-color 0.3s ease;
+padding: 2px;
+border-radius: 50%;
+}
+.ps-menuitem-root:first-child .ps-menu-button svg:hover {
+    background-color: #0008994f !important;
+}
+ .ps-menu-button:hover {
+    background-color: #0008994f !important;
+    cursor: pointer;
+}
+ .ps-menu-button {
+    cursor: pointer !important;
+}
+
+.tras{
+    transition: all .3s ease;
+}
+
+.hide{
+    transform: translatex(-200vw);
+    width: 0 !important;
+    transition-property: all;
+    transition-duration: 1s;
+    transition-timing-function: ease;
+    
+}
+
+.show{transform: translateX(0); width: 100% !important;}
+
+.done{
+        transform: translatex(200vw);
+        width: 0 !important;
+
+}
+#card-element{
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1px solid #1975d1;
+    width:100%;
+    
+}
