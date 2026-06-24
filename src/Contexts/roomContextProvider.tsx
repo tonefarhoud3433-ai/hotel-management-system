@@ -10,32 +10,36 @@ export interface RoomContextProviderProps {
 export function RoomContextProvider({ children }: RoomContextProviderProps) {
   const [favoritesCount, setFavoritesCount] = useState(0);
   const handleCountChange = async () => {
-    const response = await axiosClient.get("/api/v0/portal/favorite-rooms");
-    setFavoritesCount(response.data?.data?.favoriteRooms[0]?.rooms?.length);
+    if (localStorage.getItem("token")) {
+      const response = await axiosClient.get("/api/v0/portal/favorite-rooms");
+      setFavoritesCount(response.data?.data?.favoriteRooms[0]?.rooms?.length);
+    }
   };
 
   const adsDataFav: Ads[] = [];
   const token = localStorage.getItem("token");
 
   const getRoomFav = async (id: string) => {
-    try {
-      const response = await axios.post(
-        "https://upskilling-egypt.com:3000/api/v0/portal/favorite-rooms",
-        { roomId: id },
-        {
-          headers: {
-            Authorization: ` ${token}`,
+    if (token) {
+      try {
+        const response = await axios.post(
+          "https://upskilling-egypt.com:3000/api/v0/portal/favorite-rooms",
+          { roomId: id },
+          {
+            headers: {
+              Authorization: ` ${token}`,
+            },
           },
-        },
-      );
+        );
 
-      toast.success(response?.data?.message);
-      handleCountChange();
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        toast.error(error?.response?.data?.message);
-      } else {
-        toast.error("An unexpected error occurred");
+        toast.success(response?.data?.message);
+        handleCountChange();
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          toast.error(error?.response?.data?.message);
+        } else {
+          toast.error("An unexpected error occurred");
+        }
       }
     }
   };

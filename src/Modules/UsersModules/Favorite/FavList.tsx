@@ -21,14 +21,16 @@ export default function FavList() {
   const [looding, setLooding] = useState(false);
 
   const getFavorites = async () => {
-    setLooding(true);
-    try {
-      const res = await axiosClient.get(`/api/v0/portal/favorite-rooms`);
-      setFavorites(res?.data?.data?.favoriteRooms[0]?.rooms || []);
-    } catch (error) {
-      console.error("Error fetching favorites", error);
-    } finally {
-      setLooding(false);
+    if (localStorage.getItem("token")) {
+      setLooding(true);
+      try {
+        const res = await axiosClient.get(`/api/v0/portal/favorite-rooms`);
+        setFavorites(res?.data?.data?.favoriteRooms[0]?.rooms || []);
+      } catch (error) {
+        console.error("Error fetching favorites", error);
+      } finally {
+        setLooding(false);
+      }
     }
   };
 
