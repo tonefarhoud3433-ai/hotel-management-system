@@ -24,7 +24,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import * as React from "react";
 import { toast } from "react-toastify";
-import { AdminData } from "../../../Api";
+import { AdminData } from "../../../API";
 import {
   addFacilities,
   getAllFacilities,
