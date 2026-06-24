@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import {
   getDashboardCharts,
   type DashboardDataResponse,
-} from "../../../API/modules/DashboardCharts";
+} from "../../../Apii/modules/DashboardCharts";
 import axios from "axios";
 
 export default function Home() {

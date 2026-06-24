@@ -1,6 +1,6 @@
 import { Box, Grid, Typography, CircularProgress } from "@mui/material"; // إضافة CircularProgress
 import { useEffect, useState } from "react";
-import axiosClient from "../../../API/axsiosClient";
+import axiosClient from "../../../Apii/axsiosClient";
 import FavCard from "./FavCard";
 
 export interface FavItem {
