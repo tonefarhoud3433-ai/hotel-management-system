@@ -22,8 +22,8 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { toast } from "react-toastify";
-import { viewRoom, addRoom, updateRoom } from "../../../API/modules/AdminRooms";
-import { getAllFacilities } from "../../../API/modules/AdminData";
+import { viewRoom, addRoom, updateRoom } from "../../../Api/modules/AdminRooms";
+import { getAllFacilities } from "../../../Api/modules/AdminData";
 import axios from "axios";
 
 export default function RoomData() {
@@ -38,7 +38,9 @@ export default function RoomData() {
   const [discount, setDiscount] = useState("");
 
   const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
-  const [availableFacilities, setAvailableFacilities] = useState<{_id:string,name:string}[]>([]);
+  const [availableFacilities, setAvailableFacilities] = useState<
+    { _id: string; name: string }[]
+  >([]);
 
   // imageFiles ستحتوي دائماً على ملفات حقيقية (القديمة المرفوعة مسبقاً + الجديدة)
   const [imageFiles, setImageFiles] = useState<File[]>([]);
@@ -96,8 +98,8 @@ export default function RoomData() {
             setDiscount(roomData.discount?.toString() || "0");
 
             if (roomData.facilities) {
-              const facilityIds = roomData.facilities.map((f: {_id:string}) =>
-                typeof f === "object" ? f._id : f,
+              const facilityIds = roomData.facilities.map(
+                (f: { _id: string }) => (typeof f === "object" ? f._id : f),
               );
               setSelectedFacilities(facilityIds);
             }
@@ -181,7 +183,7 @@ export default function RoomData() {
     setImagePreviews((prev) => prev.filter((_, i) => i !== index));
     setImageFiles((prev) => prev.filter((_, i) => i !== index));
   };
-//(Event & {trget:{value:{string[];name:string;}}),child:ReactNode
+  //(Event & {trget:{value:{string[];name:string;}}),child:ReactNode
   const handleFacilityChange = (event: SelectChangeEvent<string[]>) => {
     const { value } = event.target;
     setSelectedFacilities(typeof value === "string" ? value.split(",") : value);
@@ -224,10 +226,9 @@ export default function RoomData() {
       }
       navigate("/dashboard/rooms");
     } catch (error) {
-      if(axios.isAxiosError(error)){
-
+      if (axios.isAxiosError(error)) {
         const errorMessage =
-        error?.response?.data?.message || "An error occurred!";
+          error?.response?.data?.message || "An error occurred!";
         toast.error(errorMessage);
       }
     } finally {
@@ -251,31 +252,31 @@ export default function RoomData() {
   }
 
   const textFieldStyle = {
-    '& .css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input': {
-      padding: '10px 14px'
+    "& .css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input": {
+      padding: "10px 14px",
     },
-    '& .css-1dune0f-MuiInputBase-input-MuiOutlinedInput-input': {
-      padding: '10px 14px'
+    "& .css-1dune0f-MuiInputBase-input-MuiOutlinedInput-input": {
+      padding: "10px 14px",
     },
-    '& .MuiOutlinedInput-root': {
-      backgroundColor: 'rgba(245, 246, 248, 1)',
-      borderRadius: '6px',
-      '& fieldset': {
-        borderColor: '#e2e8f0',
-        borderWidth: '0px',
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "rgba(245, 246, 248, 1)",
+      borderRadius: "6px",
+      "& fieldset": {
+        borderColor: "#e2e8f0",
+        borderWidth: "0px",
       },
-      '&:hover fieldset': {
-        borderColor: '#cbd5e1',
+      "&:hover fieldset": {
+        borderColor: "#cbd5e1",
       },
-      '&.Mui-focused fieldset': {
-        borderColor: 'rgba(21, 44, 91, 1)',
-        borderWidth: '2px'
-      }
-    }
+      "&.Mui-focused fieldset": {
+        borderColor: "rgba(21, 44, 91, 1)",
+        borderWidth: "2px",
+      },
+    },
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt:2 }}>
+    <Container maxWidth="md" sx={{ mt: 2 }}>
       <Button
         startIcon={<ArrowBackIcon />}
         onClick={() => navigate("/dashboard/rooms")}
@@ -286,7 +287,7 @@ export default function RoomData() {
 
       <Paper
         elevation={0}
-        sx={{ px:4,py:2 , borderRadius: "16px", border: "1px solid #F3F4F6" }}
+        sx={{ px: 4, py: 2, borderRadius: "16px", border: "1px solid #F3F4F6" }}
       >
         <Typography
           variant="h5"
@@ -308,7 +309,7 @@ export default function RoomData() {
               />
             </Grid>
 
-            <Grid size={{ xs: 12, sm: 6 }} >
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 label="Price"
                 type="number"
@@ -420,7 +421,14 @@ export default function RoomData() {
                   onChange={handleFileChange}
                 />
                 <CloudUploadIcon sx={{ fontSize: "2.5rem" }} />
-                <Typography sx={{ fontWeight: "600", textAlign: "center", width: { md: '100%', sm: '80%' }, fontSize: { md: '18px' } }}>
+                <Typography
+                  sx={{
+                    fontWeight: "600",
+                    textAlign: "center",
+                    width: { md: "100%", sm: "80%" },
+                    fontSize: { md: "18px" },
+                  }}
+                >
                   Drag & Drop or{" "}
                   <span style={{ textDecoration: "underline" }}>
                     Choose Room Images
@@ -473,17 +481,17 @@ export default function RoomData() {
             </Grid>
           </Grid>
 
-          <Grid container
+          <Grid
+            container
             direction="row"
             spacing={1}
             sx={{
-              my:2,
+              my: 2,
               justifyContent: "flex-end",
               alignItems: "center",
             }}
           >
-            <Grid  >
-
+            <Grid>
               <Button
                 onClick={() => navigate("/dashboard/rooms")}
                 variant="outlined"
@@ -494,7 +502,7 @@ export default function RoomData() {
               </Button>
             </Grid>
 
-            <Grid >
+            <Grid>
               <Button
                 type="submit"
                 variant="contained"

@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Avatar, Box, Grid, Paper, Rating, Typography } from "@mui/material";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
-import axios from "axios";
-import { Box, Typography, Rating, Avatar, Paper, Grid } from "@mui/material";
+import { Swiper, SwiperSlide } from "swiper/react";
 import noImage from "../../../assets/Images/noPersoneEmage.avif";
-import { toast } from "react-toastify";
 
 export interface Review {
   _id: string;
@@ -17,6 +17,7 @@ export interface Review {
     profileImage: string;
   };
 }
+
 export interface RoomID {
   idRoom: string | undefined;
 }
@@ -24,25 +25,24 @@ export interface RoomID {
 export default function SwiperReviews({ idRoom }: RoomID) {
   const [reviews, setReviews] = useState<Review[]>([]);
 
-  const getReviews = async () => {
-    try {
-      const response = await axios(
-        `https://upskilling-egypt.com:3000/api/v0/portal/room-reviews/${idRoom}`,
-        { headers: { Authorization: `${localStorage.getItem("token")}` } },
-      );
-      setReviews(response.data.data.roomReviews);
-    } catch (error) {
-
-      if(axios.isAxiosError(error))  toast.error(error?.response?.data?.message);
-    }
-  };
-
   useEffect(() => {
-    (()=>{
+    const getReviews = async () => {
+      try {
+        const response = await axios(
+          `https://upskilling-egypt.com:3000/api/v0/portal/room-reviews/${idRoom}`,
+          { headers: { Authorization: `${localStorage.getItem("token")}` } },
+        );
+        setReviews(response.data.data.roomReviews);
+      } catch (error) {
+        if (axios.isAxiosError(error))
+          toast.error(error?.response?.data?.message);
+      }
+    };
 
+    if (idRoom) {
       getReviews();
-    })()
-  }, []);
+    }
+  }, [idRoom]);
 
   return (
     <Box sx={{ width: { sx: "100%", md: "65%" }, mx: "auto", py: 5 }}>

@@ -27,30 +27,35 @@ import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
 import { toast } from "react-toastify";
 
-import { getAllAds, addAds, deleteAds, updateAds, viewAds } from "../../../API/modules/AdminAds";
+import axios from "axios";
+import {
+  addAds,
+  deleteAds,
+  getAllAds,
+  updateAds,
+  viewAds,
+} from "../../../Api/modules/AdminAds";
+import { getAllRooms } from "../../../Api/modules/AdminRooms";
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
-import ViewADS from "../../Shared/ViewModals/viewADS";
-import { getAllRooms } from "../../../API/modules/AdminRooms";
-import axios from "axios";
+import ViewADS, { type AdData } from "../../Shared/ViewModals/viewADS";
 
 const paginationModel = { page: 0, pageSize: 5 };
-interface Room{
-  _id:string,
-  discount:number,
-  roomNumber:string,
-  price:number,
-  capacity:number
+interface Room {
+  _id: string;
+  discount: number;
+  roomNumber: string;
+  price: number;
+  capacity: number;
 }
-interface Ad{
-  _id:string
-  room:Room,
-  discount:number,
-  isActive:boolean,
-  roomNumber:string,
-  price:number,
-  capacity:number,
-
+interface Ad {
+  _id: string;
+  room: Room;
+  discount: number;
+  isActive: boolean;
+  roomNumber: string;
+  price: number;
+  capacity: number;
 }
 export default function ADS() {
   const [openViewModal, setOpenViewModal] = React.useState(false);
@@ -62,13 +67,13 @@ export default function ADS() {
   const [rowsData, setRowsData] = React.useState<Ad[]>([]);
   const [selectedAd, setSelectedAd] = React.useState<Ad | null>(null);
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [viewAd, setViewAd] = React.useState<Ad|null>(null);
+  const [viewAd, setViewAd] = React.useState<Ad | null>(null);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [activeRow, setActiveRow] = React.useState<Ad|null>(null);
+  const [activeRow, setActiveRow] = React.useState<Ad | null>(null);
   const openMenu = Boolean(anchorEl);
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
-  const [selectedId, setSelectedId] = React.useState<string>('');
+  const [selectedId, setSelectedId] = React.useState<string>("");
   const [adIsActive, setAdIsActive] = React.useState(true);
 
   const [allRooms, setAllRooms] = React.useState<Room[]>([]);
@@ -82,7 +87,6 @@ export default function ADS() {
     }
   };
 
-
   const fetchData = async () => {
     try {
       const response = await getAllAds();
@@ -94,14 +98,14 @@ export default function ADS() {
     }
   };
 
-  const handleOpenDelete = (id:string ) => {
+  const handleOpenDelete = (id: string) => {
     setSelectedId(id);
     setIsDeleteOpen(true);
   };
 
   const handleCloseDelete = () => {
     setIsDeleteOpen(false);
-    setSelectedId('');
+    setSelectedId("");
   };
 
   const handleConfirmDelete = async () => {
@@ -112,9 +116,9 @@ export default function ADS() {
       handleCloseDelete();
       fetchData();
     } catch (err) {
-      if(axios.isAxiosError(err)){
-
-        const errorMessage = err?.response?.data?.message || "Failed to delete this ad!";
+      if (axios.isAxiosError(err)) {
+        const errorMessage =
+          err?.response?.data?.message || "Failed to delete this ad!";
         toast.error(errorMessage);
       }
     }
@@ -127,21 +131,21 @@ export default function ADS() {
     setOpenModal(true);
   };
 
-  const handleOpenEdit = (row:Ad) => {
+  const handleOpenEdit = (row: Ad) => {
     setSelectedAd(row);
-    setAdRoomId(row.room?._id );
+    setAdRoomId(row.room?._id);
     setAdDiscount(row.room?.discount ?? row.discount);
-    setAdIsActive(row.isActive ?? true); 
+    setAdIsActive(row.isActive ?? true);
     setOpenModal(true);
-};
+  };
 
-  const handleOpenView = async (row:Ad) => {
+  const handleOpenView = async (row: Ad) => {
     try {
       const response = await viewAds(+row._id);
 
       setViewAd(response?.data?.data || row);
       setOpenViewModal(true);
-    } catch{
+    } catch {
       setViewAd(row);
       setOpenViewModal(true);
     }
@@ -155,48 +159,49 @@ export default function ADS() {
   };
 
   const handleSaveAd = async () => {
-  if (!adRoomId) {
-    toast.error("Please select a room");
-    return;
-  }
-
-  const bodyData = {
-    room: adRoomId,
-    discount: Number(adDiscount) || 0,
-    isActive: adIsActive
-  };
-  const bodyEditeData = {
-    discount: Number(adDiscount) || 0,
-    isActive: adIsActive
-  };
-
-  try {
-    if (selectedAd) {
-      await updateAds(selectedAd._id, bodyEditeData); 
-      toast.success("Ad updated successfully!");
-    } else {
-      await addAds(bodyData);
-      toast.success("Ad created successfully!");
+    if (!adRoomId) {
+      toast.error("Please select a room");
+      return;
     }
-    handleCloseModal();
-    fetchData();
-  } catch (error) {
-    if(axios.isAxiosError(error)){
 
-      toast.error(error?.response?.data?.message || "Failed to save!");
+    const bodyData = {
+      room: adRoomId,
+      discount: Number(adDiscount) || 0,
+      isActive: adIsActive,
+    };
+    const bodyEditeData = {
+      discount: Number(adDiscount) || 0,
+      isActive: adIsActive,
+    };
+
+    try {
+      if (selectedAd) {
+        await updateAds(selectedAd._id, bodyEditeData);
+        toast.success("Ad updated successfully!");
+      } else {
+        await addAds(bodyData);
+        toast.success("Ad created successfully!");
+      }
+      handleCloseModal();
+      fetchData();
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error?.response?.data?.message || "Failed to save!");
+      }
     }
-  }
-};
+  };
 
   React.useEffect(() => {
-    (()=>{
-
+    (() => {
       fetchData();
       fetchRooms();
-    })()
+    })();
   }, []);
 
-  const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>, row:Ad) => {
+  const handleClickMenu = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    row: Ad,
+  ) => {
     setAnchorEl(event.currentTarget);
     setActiveRow(row);
   };
@@ -220,7 +225,7 @@ export default function ADS() {
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueGetter: ( row:Ad) => row.room?.roomNumber || row.roomNumber || "N/A"
+      valueGetter: (row: Ad) => row.room?.roomNumber || row.roomNumber || "N/A",
     },
     {
       field: "price",
@@ -230,8 +235,9 @@ export default function ADS() {
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueGetter: ( row:Ad) => row.room?.price ?? row.price ?? null,
-      valueFormatter: (value) => (value != null ? `$${Number(value).toLocaleString()}` : "N/A"),
+      valueGetter: (row: Ad) => row.room?.price ?? row.price ?? null,
+      valueFormatter: (value) =>
+        value != null ? `$${Number(value).toLocaleString()}` : "N/A",
     },
     {
       field: "discount",
@@ -241,7 +247,7 @@ export default function ADS() {
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueGetter: ( row:Ad) => row.room?.discount ?? row.discount ?? 0,
+      valueGetter: (row: Ad) => row.room?.discount ?? row.discount ?? 0,
       valueFormatter: (value) => (value != null ? `${value}%` : "0%"),
     },
     {
@@ -252,7 +258,7 @@ export default function ADS() {
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueGetter: ( row:Ad) => row.room?.capacity ?? row.capacity ?? null,
+      valueGetter: (row: Ad) => row.room?.capacity ?? row.capacity ?? null,
       valueFormatter: (value) => (value != null ? `${value} Guests` : "N/A"),
     },
     {
@@ -263,15 +269,17 @@ export default function ADS() {
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueGetter: ( row :Ad) => row.isActive,
+      valueGetter: (row: Ad) => row.isActive,
       renderCell: (params) => (
-        <span style={{
-          color: params.value ? "#10B981" : "#EF4444",
-          fontWeight: "600",
-          backgroundColor: params.value ? "#E6F4EA" : "#FCE8E6",
-          padding: "4px 12px",
-          borderRadius: "6px"
-        }}>
+        <span
+          style={{
+            color: params.value ? "#10B981" : "#EF4444",
+            fontWeight: "600",
+            backgroundColor: params.value ? "#E6F4EA" : "#FCE8E6",
+            padding: "4px 12px",
+            borderRadius: "6px",
+          }}
+        >
           {params.value ? "Yes" : "No"}
         </span>
       ),
@@ -286,7 +294,10 @@ export default function ADS() {
       headerClassName: "custom-id-header",
       renderCell: (params) => (
         <Box>
-          <IconButton onClick={(e) => handleClickMenu(e, params.row)} sx={{ color: "#6B7280" }}>
+          <IconButton
+            onClick={(e) => handleClickMenu(e, params.row)}
+            sx={{ color: "#6B7280" }}
+          >
             <MoreHorizIcon />
           </IconButton>
         </Box>
@@ -303,7 +314,9 @@ export default function ADS() {
         onButtonClick={handleOpenAdd}
       />
 
-      <Box sx={{ width: { xs: "90%", sm: "90%", md: "85%" }, mx: "auto", mt: 3 }}>
+      <Box
+        sx={{ width: { xs: "90%", sm: "90%", md: "85%" }, mx: "auto", mt: 3 }}
+      >
         <Box sx={{ mb: 3 }}>
           <TextField
             size="small"
@@ -312,7 +325,7 @@ export default function ADS() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             sx={{
-              width: { xs: "100%", sm: "320px",md:'100%' },
+              width: { xs: "100%", sm: "320px", md: "100%" },
               backgroundColor: "#fff",
               borderRadius: "8px",
               "& .MuiOutlinedInput-root": { borderRadius: "8px" },
@@ -352,55 +365,122 @@ export default function ADS() {
               },
               "& .MuiDataGrid-row": {
                 borderBottom: "0px solid rgba(243, 244, 246, 1)",
-                "&:nth-of-type(even)": { backgroundColor: "rgba(248, 249, 251, 1)" },
+                "&:nth-of-type(even)": {
+                  backgroundColor: "rgba(248, 249, 251, 1)",
+                },
                 "&:nth-of-type(odd)": { backgroundColor: "#fff" },
               },
-              "& .MuiDataGrid-row:hover": { backgroundColor: "#F3F4F6 !important" },
+              "& .MuiDataGrid-row:hover": {
+                backgroundColor: "#F3F4F6 !important",
+              },
             }}
           />
         </Paper>
 
         {/* Mobile Responsive Cards View */}
-        <Box sx={{ display: { xs: "flex", sm: "none" }, flexDirection: "column", gap: 2, mb: 3 }}>
+        <Box
+          sx={{
+            display: { xs: "flex", sm: "none" },
+            flexDirection: "column",
+            gap: 2,
+            mb: 3,
+          }}
+        >
           {filteredRows.length > 0 ? (
             filteredRows.map((row: Ad) => {
-              const roomNumber = row.room?.roomNumber || row.roomNumber || "N/A";
+              const roomNumber =
+                row.room?.roomNumber || row.roomNumber || "N/A";
               const price = row.room?.price ?? row.price;
               const discount = row.room?.discount ?? row.discount;
 
               return (
                 <Card
                   key={row._id}
-                  sx={{ borderRadius: "12px", boxShadow: "0px 2px 4px rgba(0,0,0,0.05)", border: "1px solid #E5E7EB" }}
+                  sx={{
+                    borderRadius: "12px",
+                    boxShadow: "0px 2px 4px rgba(0,0,0,0.05)",
+                    border: "1px solid #E5E7EB",
+                  }}
                 >
                   <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
-                      <Typography variant="subtitle1" sx={{ fontWeight: "700", color: "#1F2937" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mb: 1,
+                      }}
+                    >
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ fontWeight: "700", color: "#1F2937" }}
+                      >
                         Room: {roomNumber}
                       </Typography>
-                      <IconButton size="small" onClick={(e) => handleClickMenu(e, row)} sx={{ color: "#6B7280" }}>
+                      <IconButton
+                        size="small"
+                        onClick={(e) => handleClickMenu(e, row)}
+                        sx={{ color: "#6B7280" }}
+                      >
                         <MoreHorizIcon />
                       </IconButton>
                     </Box>
 
                     <Divider sx={{ my: 1, borderColor: "#F3F4F6" }} />
 
-                    <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 1 }}>
-                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Price:</Typography>
-                        <Typography variant="body2" sx={{ color: "#4B5563", fontWeight: "600" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 1,
+                        mt: 1,
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>
+                          Price:
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "#4B5563", fontWeight: "600" }}
+                        >
                           {price ? `$${price}` : "N/A"}
                         </Typography>
                       </Box>
-                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Discount:</Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>
+                          Discount:
+                        </Typography>
                         <Typography variant="body2" sx={{ color: "#4B5563" }}>
                           {discount ? `${discount}%` : "0%"}
                         </Typography>
                       </Box>
-                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Active:</Typography>
-                        <Typography variant="body2" sx={{ color: row.isActive ? "#10B981" : "#EF4444", fontWeight: "700" }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>
+                          Active:
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: row.isActive ? "#10B981" : "#EF4444",
+                            fontWeight: "700",
+                          }}
+                        >
                           {row.isActive ? "Yes" : "No"}
                         </Typography>
                       </Box>
@@ -426,19 +506,42 @@ export default function ADS() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={() => { if (activeRow) handleOpenView(activeRow); handleCloseMenu(); }}>
-          <RemoveRedEyeIcon sx={{ fontSize: 20, color: "darkblue", mx: 1 }} /> View
+        <MenuItem
+          onClick={() => {
+            if (activeRow) handleOpenView(activeRow);
+            handleCloseMenu();
+          }}
+        >
+          <RemoveRedEyeIcon sx={{ fontSize: 20, color: "darkblue", mx: 1 }} />{" "}
+          View
         </MenuItem>
-        <MenuItem onClick={() => { if (activeRow) handleOpenEdit(activeRow); handleCloseMenu(); }}>
-          <EditDocumentIcon sx={{ fontSize: 20, color: "orange", mx: 1 }} /> Edit
+        <MenuItem
+          onClick={() => {
+            if (activeRow) handleOpenEdit(activeRow);
+            handleCloseMenu();
+          }}
+        >
+          <EditDocumentIcon sx={{ fontSize: 20, color: "orange", mx: 1 }} />{" "}
+          Edit
         </MenuItem>
-        <MenuItem onClick={() => { if (activeRow) handleOpenDelete(activeRow._id); handleCloseMenu(); }}>
-          <DeleteForeverIcon sx={{ fontSize: 20, color: "red", mx: 1 }} /> Delete
+        <MenuItem
+          onClick={() => {
+            if (activeRow) handleOpenDelete(activeRow._id);
+            handleCloseMenu();
+          }}
+        >
+          <DeleteForeverIcon sx={{ fontSize: 20, color: "red", mx: 1 }} />{" "}
+          Delete
         </MenuItem>
       </Menu>
 
       {/* Mutation Form Dialog for creating and modifying Ads */}
-      <Dialog open={openModal} onClose={handleCloseModal} fullWidth maxWidth="xs">
+      <Dialog
+        open={openModal}
+        onClose={handleCloseModal}
+        fullWidth
+        maxWidth="xs"
+      >
         <DialogTitle sx={{ textAlign: "center", fontWeight: "bold" }}>
           {selectedAd ? "Edit Ad" : "Add New Ad"}
         </DialogTitle>
@@ -488,18 +591,34 @@ export default function ADS() {
           </FormControl>
         </DialogContent>
 
-
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={handleCloseModal} color="inherit">Cancel</Button>
-          <Button onClick={handleSaveAd} variant="contained" color={selectedAd ? "warning" : "primary"}>
+          <Button onClick={handleCloseModal} color="inherit">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSaveAd}
+            variant="contained"
+            color={selectedAd ? "warning" : "primary"}
+          >
             {selectedAd ? "Update" : "Save"}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Linked Modals */}
-      <ViewADS open={openViewModal} onClose={() => setOpenViewModal(false)} facility={viewAd} />
-      <DeleteConfirmations open={isDeleteOpen} onClose={handleCloseDelete} onDelete={handleConfirmDelete} title="Delete This Ad ?" />
+      {viewAd && (
+        <ViewADS
+          open={openViewModal}
+          onClose={() => setOpenViewModal(false)}
+          facility={viewAd as AdData}
+        />
+      )}
+      <DeleteConfirmations
+        open={isDeleteOpen}
+        onClose={handleCloseDelete}
+        onDelete={handleConfirmDelete}
+        title="Delete This Ad ?"
+      />
     </>
   );
 }

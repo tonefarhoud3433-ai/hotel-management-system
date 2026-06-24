@@ -1,51 +1,50 @@
-import { DataGrid } from "@mui/x-data-grid";
-import type { GridColDef } from "@mui/x-data-grid";
-import Paper from "@mui/material/Paper";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import EditDocumentIcon from "@mui/icons-material/EditDocument";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import {
   Box,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
   Card,
   CardContent,
-  Typography,
-  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
+  IconButton,
+  TextField,
+  Typography,
 } from "@mui/material";
-import * as React from "react";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import Paper from "@mui/material/Paper";
+import type { GridColDef } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
+import axios from "axios";
+import * as React from "react";
+import { toast } from "react-toastify";
+import { AdminData } from "../../../Api";
 import {
   addFacilities,
   getAllFacilities,
   updateFacilities,
-} from "../../../API/modules/AdminData";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import EditDocumentIcon from "@mui/icons-material/EditDocument";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+} from "../../../Api/modules/AdminData";
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
+import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
 import FacilityViewModal, {
   type Facility,
 } from "../../Shared/ViewModals/FacilityViewModal";
-import { AdminData } from "../../../API";
-import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
-import { toast } from "react-toastify";
-import axios from "axios";
 
 const paginationModel = { page: 0, pageSize: 5 };
-
-
 
 export default function Facilities() {
   const [openViewModal, setOpenViewModal] = React.useState<boolean>(false);
   const [openModal, setOpenModal] = React.useState<boolean>(false);
   const [facilityName, setFacilityName] = React.useState("");
   const [rowsData, setRowsData] = React.useState<Facility[]>([]);
-  const [selectedFacility, setSelectedFacility] = React.useState<Facility | null>(null);
+  const [selectedFacility, setSelectedFacility] =
+    React.useState<Facility | null>(null);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [viewFacility, setViewFacility] = React.useState<Facility | null>(null);
 
@@ -60,7 +59,8 @@ export default function Facilities() {
       const response = await getAllFacilities();
       setRowsData(response?.data?.data?.facilities || []);
     } catch (error) {
-      if(axios.isAxiosError(error))toast.error(error?.response?.data?.message)
+      if (axios.isAxiosError(error))
+        toast.error(error?.response?.data?.message);
     }
   };
 
@@ -83,10 +83,9 @@ export default function Facilities() {
       handleCloseDelete();
       fetchData();
     } catch (err) {
-      if(axios.isAxiosError(err)){
-
+      if (axios.isAxiosError(err)) {
         const errorMessage =
-        err?.response?.data?.message || "Failed to delete this facility!";
+          err?.response?.data?.message || "Failed to delete this facility!";
         toast.error(errorMessage);
       }
     }
@@ -132,10 +131,9 @@ export default function Facilities() {
   };
 
   React.useEffect(() => {
-    (()=>{
-
+    (() => {
       fetchData();
-    })()
+    })();
   }, []);
 
   const handleClickMenu = (
@@ -182,7 +180,7 @@ export default function Facilities() {
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueGetter: (value, row) => row.createdBy?.userName || "N/A",
+      valueGetter: (_, row) => row.createdBy?.userName || "N/A",
     },
     {
       field: "createdAt",
@@ -192,7 +190,7 @@ export default function Facilities() {
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueGetter: (value, row) =>
+      valueGetter: (_, row) =>
         row.createdAt
           ? new Date(row.createdAt).toLocaleDateString("en-US")
           : "N/A",
@@ -239,7 +237,7 @@ export default function Facilities() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             sx={{
-              width: { xs: "100%", sm: "320px",md:'100%' },
+              width: { xs: "100%", sm: "320px", md: "100%" },
               backgroundColor: "#fff",
               borderRadius: "8px",
               "& .MuiOutlinedInput-root": { borderRadius: "8px" },

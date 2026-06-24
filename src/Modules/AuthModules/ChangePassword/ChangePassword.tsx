@@ -14,7 +14,7 @@ import { yupResolver } from "@hookform/resolvers/yup/dist/yup.js";
 import {
   apichangePassword,
   type ChangePasswordData,
-} from "../../../API/modules/Auth";
+} from "../../../Api/modules/Auth";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -67,7 +67,7 @@ export default function ChangePassword() {
       const response = await apichangePassword(data);
       toast.success(response?.data?.message || " Change Password is Updated ");
       if (token) {
-        const decoded:User = jwtDecode(token);
+        const decoded: User = jwtDecode(token);
         if (decoded.role == "admin") {
           navegate("/dashboard");
         } else {
@@ -75,8 +75,7 @@ export default function ChangePassword() {
         }
       }
     } catch (error) {
-      if(axios.isAxiosError(error)){
-
+      if (axios.isAxiosError(error)) {
         toast.error(error.response?.data?.message);
       }
     } finally {

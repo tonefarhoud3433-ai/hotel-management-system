@@ -16,22 +16,21 @@ import type { GridColDef } from "@mui/x-data-grid";
 import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
 
-import { getAllUsers } from "../../../API/modules/AdminUsers";
+import { getAllUsers } from "../../../Api/modules/AdminUsers";
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import ViewUser from "../../Shared/ViewModals/ViewUser";
 
 const paginationModel = { page: 0, pageSize: 5 };
 
-interface Row{
-userName:string,
-room:{roomNumber:string},
-status:string,
-_id:string,
-user:{userName:string},
-totalPrice:number,
-startDate:string,
-endDate:string
-
+interface Row {
+  userName: string;
+  room: { roomNumber: string };
+  status: string;
+  _id: string;
+  user: { userName: string };
+  totalPrice: number;
+  startDate: string;
+  endDate: string;
 }
 
 const formatDate = (dateString: string) => {
@@ -56,7 +55,7 @@ export default function Users() {
   const fetchData = async () => {
     try {
       const response = await getAllUsers();
-      
+
       const bookingList = response?.data?.data?.users || [];
       setRowsData(bookingList);
     } catch (error) {
@@ -70,13 +69,15 @@ export default function Users() {
   };
 
   React.useEffect(() => {
-    (()=>{
-
+    (() => {
       fetchData();
-    })()
+    })();
   }, []);
 
-  const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>, row: Row) => {
+  const handleClickMenu = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    row: Row,
+  ) => {
     setAnchorEl(event.currentTarget);
     setActiveRow(row);
   };
@@ -88,9 +89,7 @@ export default function Users() {
 
   const filteredRows = rowsData.filter((row: Row) => {
     const user = row?.userName || "";
-    return (
-      user.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    return user.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
   const columns: GridColDef[] = [
@@ -108,7 +107,7 @@ export default function Users() {
       minWidth: 140,
       headerClassName: "custom-id-header",
       // نصل للـ userName مباشرة من الـ row
-      valueGetter: (row:{userName:string}) => row.userName || "N/A",
+      valueGetter: (row: { userName: string }) => row.userName || "N/A",
     },
     {
       field: "email",
@@ -153,7 +152,10 @@ export default function Users() {
       headerClassName: "custom-id-header",
       renderCell: (params) => (
         <Box>
-          <IconButton onClick={(e) => handleClickMenu(e, params.row)} sx={{ color: "#6B7280" }}>
+          <IconButton
+            onClick={(e) => handleClickMenu(e, params.row)}
+            sx={{ color: "#6B7280" }}
+          >
             <MoreHorizIcon />
           </IconButton>
         </Box>
@@ -168,7 +170,9 @@ export default function Users() {
         subTitle="You can check and monitor all global user bookings"
       />
 
-      <Box sx={{ width: { xs: "90%", sm: "90%", md: "85%" }, mx: "auto", mt: 3 }}>
+      <Box
+        sx={{ width: { xs: "90%", sm: "90%", md: "85%" }, mx: "auto", mt: 3 }}
+      >
         <Box sx={{ mb: 3 }}>
           <TextField
             size="small"
@@ -177,7 +181,7 @@ export default function Users() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             sx={{
-              width: { xs: "100%", sm: "320px",md:'100%' },
+              width: { xs: "100%", sm: "320px", md: "100%" },
               backgroundColor: "#fff",
               borderRadius: "8px",
               "& .MuiOutlinedInput-root": { borderRadius: "8px" },
@@ -217,16 +221,27 @@ export default function Users() {
               },
               "& .MuiDataGrid-row": {
                 borderBottom: "0px solid rgba(243, 244, 246, 1)",
-                "&:nth-of-type(even)": { backgroundColor: "rgba(248, 249, 251, 1)" },
+                "&:nth-of-type(even)": {
+                  backgroundColor: "rgba(248, 249, 251, 1)",
+                },
                 "&:nth-of-type(odd)": { backgroundColor: "#fff" },
               },
-              "& .MuiDataGrid-row:hover": { backgroundColor: "#F3F4F6 !important" },
+              "& .MuiDataGrid-row:hover": {
+                backgroundColor: "#F3F4F6 !important",
+              },
             }}
           />
         </Paper>
 
         {/* Mobile Responsive Cards View */}
-        <Box sx={{ display: { xs: "flex", sm: "none" }, flexDirection: "column", gap: 2, mb: 3 }}>
+        <Box
+          sx={{
+            display: { xs: "flex", sm: "none" },
+            flexDirection: "column",
+            gap: 2,
+            mb: 3,
+          }}
+        >
           {filteredRows.length > 0 ? (
             filteredRows.map((row: Row) => {
               const roomNumber = row.room?.roomNumber || "Deleted Room";
@@ -243,44 +258,106 @@ export default function Users() {
                   }}
                 >
                   <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
-                      <Typography variant="subtitle1" sx={{ fontWeight: "700", color: "#1F2937" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mb: 1,
+                      }}
+                    >
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ fontWeight: "700", color: "#1F2937" }}
+                      >
                         Room: {roomNumber}
                       </Typography>
-                      <IconButton size="small" onClick={(e) => handleClickMenu(e, row)} sx={{ color: "#6B7280" }}>
+                      <IconButton
+                        size="small"
+                        onClick={(e) => handleClickMenu(e, row)}
+                        sx={{ color: "#6B7280" }}
+                      >
                         <MoreHorizIcon />
                       </IconButton>
                     </Box>
 
                     <Divider sx={{ my: 1, borderColor: "#F3F4F6" }} />
 
-                    <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 1 }}>
-                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Client:</Typography>
-                        <Typography variant="body2" sx={{ color: "#4B5563", fontWeight: "600" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 1,
+                        mt: 1,
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>
+                          Client:
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "#4B5563", fontWeight: "600" }}
+                        >
                           {clientName}
                         </Typography>
                       </Box>
-                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Total Price:</Typography>
-                        <Typography variant="body2" sx={{ color: "#4B5563", fontWeight: "600" }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>
+                          Total Price:
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "#4B5563", fontWeight: "600" }}
+                        >
                           {row.totalPrice ? `$${row.totalPrice}` : "N/A"}
                         </Typography>
                       </Box>
-                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Duration:</Typography>
-                        <Typography variant="body2" sx={{ color: "#4B5563", fontSize: "0.8rem" }}>
-                          {formatDate(row.startDate)} - {formatDate(row.endDate)}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>
+                          Duration:
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "#4B5563", fontSize: "0.8rem" }}
+                        >
+                          {formatDate(row.startDate)} -{" "}
+                          {formatDate(row.endDate)}
                         </Typography>
                       </Box>
-                      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>Status:</Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography variant="body2" sx={{ color: "#9CA3AF" }}>
+                          Status:
+                        </Typography>
                         <Typography
                           variant="body2"
                           sx={{
                             color: isCompleted ? "#10B981" : "#D97706",
                             fontWeight: "700",
-                            backgroundColor: isCompleted ? "#E6F4EA" : "#FEF3C7",
+                            backgroundColor: isCompleted
+                              ? "#E6F4EA"
+                              : "#FEF3C7",
                             padding: "2px 8px",
                             borderRadius: "4px",
                             textTransform: "capitalize",
@@ -311,20 +388,23 @@ export default function Users() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={() => { if (activeRow) handleOpenView(activeRow); handleCloseMenu(); }}>
-          <RemoveRedEyeIcon sx={{ fontSize: 20, color: "darkblue", mx: 1 }} /> View
+        <MenuItem
+          onClick={() => {
+            if (activeRow) handleOpenView(activeRow);
+            handleCloseMenu();
+          }}
+        >
+          <RemoveRedEyeIcon sx={{ fontSize: 20, color: "darkblue", mx: 1 }} />{" "}
+          View
         </MenuItem>
-
-        
       </Menu>
 
       {/* Linked Modals */}
-<ViewUser
-  open={openViewModal} 
-  onClose={() => setOpenViewModal(false)} 
-  facility={viewBooking} // تأكد أن هذه هي الحالة التي تحتوي على بيانات المستخدم المختار
-/>
-
+      <ViewUser
+        open={openViewModal}
+        onClose={() => setOpenViewModal(false)}
+        facility={viewBooking} // تأكد أن هذه هي الحالة التي تحتوي على بيانات المستخدم المختار
+      />
     </>
   );
 }

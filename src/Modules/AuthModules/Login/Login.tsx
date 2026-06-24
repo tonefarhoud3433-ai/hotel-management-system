@@ -11,7 +11,7 @@ import Box from "@mui/material/Box";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../YupValidation/YupValidation";
-import { apiLogin } from "../../../API/modules/Auth";
+import { apiLogin } from "../../../Api/modules/Auth";
 import { AuthContext } from "../../../Contexts/AuthContext";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
@@ -62,7 +62,7 @@ export default function Login() {
         localStorage.setItem("token", token);
         saveUserData();
         toast.success(response?.data?.message || "Login successful!");
-        const decoded:{role:string} = jwtDecode(token);
+        const decoded: { role: string } = jwtDecode(token);
 
         if (decoded.role == "user") {
           if (state?.curunteLocation) {
@@ -77,8 +77,8 @@ export default function Login() {
         toast.error("Invalid token received from server.");
       }
     } catch (error) {
-
-     if(axios.isAxiosError(error)) toast.error(error?.response?.data?.message || "Login failed!");
+      if (axios.isAxiosError(error))
+        toast.error(error?.response?.data?.message || "Login failed!");
     } finally {
       setLoading(false);
     }

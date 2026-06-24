@@ -19,7 +19,7 @@ import { CircularProgress } from "@mui/material";
 import { useRef, useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { apiRegister } from "../../../API/modules/Auth";
+import { apiRegister } from "../../../Api/modules/Auth";
 import {
   type RegisterFormData,
   registerSchema,
@@ -89,7 +89,8 @@ export default function Register() {
       navigate("/auth/login");
     } catch (error) {
       console.error("Registration Error:", error);
-      if(axios.isAxiosError(error))toast.error(error.response?.data?.message || " Registration Error:");
+      if (axios.isAxiosError(error))
+        toast.error(error.response?.data?.message || " Registration Error:");
     } finally {
       setLoading(false);
     }
@@ -155,13 +156,17 @@ export default function Register() {
         {/* --- تم إضافة جزء رفع ومعاينة الصورة هنا --- */}
         <Grid
           size={12}
-          
-          sx={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           <Box
             onClick={handleImageClick}
             sx={{
-              position:'relative',
+              position: "relative",
               cursor: "pointer",
               width: "fit-content",
               borderRadius: "50%",

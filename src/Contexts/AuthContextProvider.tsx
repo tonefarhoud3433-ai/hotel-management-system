@@ -1,7 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState, useCallback, type ReactNode } from "react";
 import { toast } from "react-toastify";
-import { apiProfile } from "../API/modules/Auth";
+import { apiProfile } from "../Api/modules/Auth";
 import type { UserData } from "../Modules/Shared/ViewModals/ViewUser";
 import { AuthContext, type User } from "./AuthContext";
 

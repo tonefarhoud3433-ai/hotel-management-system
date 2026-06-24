@@ -9,7 +9,7 @@ import {
   IconButton,
   TextField,
   Typography,
-  Skeleton
+  Skeleton,
 } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -22,10 +22,12 @@ import { toast } from "react-toastify";
 import {
   deleteBookings,
   getAllBookings,
-} from "../../../API/modules/AdminBooking";
+} from "../../../Api/modules/AdminBooking";
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
-import ViewBooking from "../../Shared/ViewModals/ViewBooking";
+import ViewBooking, {
+  type BookingData,
+} from "../../Shared/ViewModals/ViewBooking";
 import axios from "axios";
 
 const paginationModel = { page: 0, pageSize: 5 };
@@ -39,14 +41,14 @@ const formatDate = (dateString: string) => {
   });
 };
 
-interface Row{
-  _id:string,
-  room:{roomNumber:string},
-  user:{userName:string},
-  status:string,
-  totalPrice:number,
-  startDate:string,
-  endDate:string
+interface Row {
+  _id: string;
+  room: { roomNumber: string };
+  user: { userName: string };
+  status: string;
+  totalPrice: number;
+  startDate: string;
+  endDate: string;
 }
 
 export default function Booking() {
@@ -59,7 +61,7 @@ export default function Booking() {
   const [activeRow, setActiveRow] = React.useState<Row | null>(null);
   const openMenu = Boolean(anchorEl);
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
-  const [selectedId, setSelectedId] = React.useState<string>('');
+  const [selectedId, setSelectedId] = React.useState<string>("");
   const [isLoading, setIsLoading] = React.useState(true);
 
   const fetchData = async () => {
@@ -82,7 +84,7 @@ export default function Booking() {
 
   const handleCloseDelete = () => {
     setIsDeleteOpen(false);
-    setSelectedId('');
+    setSelectedId("");
   };
 
   const handleConfirmDelete = async () => {
@@ -93,10 +95,9 @@ export default function Booking() {
       handleCloseDelete();
       fetchData();
     } catch (err) {
-      if(axios.isAxiosError(err)){
-
+      if (axios.isAxiosError(err)) {
         const errorMessage =
-        err?.response?.data?.message || "Failed to delete this Booking!";
+          err?.response?.data?.message || "Failed to delete this Booking!";
         toast.error(errorMessage);
       }
     }
@@ -108,10 +109,9 @@ export default function Booking() {
   };
 
   React.useEffect(() => {
-    (()=>{
-
+    (() => {
       fetchData();
-    })()
+    })();
   }, []);
 
   const handleClickMenu = (
@@ -145,7 +145,7 @@ export default function Booking() {
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueGetter: ( row : Row) => row?._id || "Deleted Room",
+      valueGetter: (row: Row) => row?._id || "Deleted Room",
     },
     {
       field: "userName",
@@ -155,7 +155,7 @@ export default function Booking() {
       align: "center",
       headerAlign: "center",
       headerClassName: "custom-id-header",
-      valueGetter: ( row : Row) => row.user?.userName || "N/A",
+      valueGetter: (row: Row) => row.user?.userName || "N/A",
     },
     {
       field: "totalPrice",
@@ -253,7 +253,7 @@ export default function Booking() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             sx={{
-              width: { xs: "100%", sm: "320px", md: '100%' },
+              width: { xs: "100%", sm: "320px", md: "100%" },
               backgroundColor: "#fff",
               borderRadius: "8px",
               "& .MuiOutlinedInput-root": { borderRadius: "8px" },
@@ -262,18 +262,26 @@ export default function Booking() {
         </Box>
 
         {/* Desktop DataGrid View */}
-        <Paper sx={{
-          display: { xs: "none", sm: "block" },
-          elevation: 0,
-          boxShadow: "none",
-          borderRadius: "16px",
-          overflow: "hidden",
-          width: "100%",
-        }}>
+        <Paper
+          sx={{
+            display: { xs: "none", sm: "block" },
+            elevation: 0,
+            boxShadow: "none",
+            borderRadius: "16px",
+            overflow: "hidden",
+            width: "100%",
+          }}
+        >
           {isLoading ? (
             <Box sx={{ p: 2 }}>
               {[...Array(5)].map((_, i) => (
-                <Skeleton key={i} variant="rectangular"  animation="pulse" height={40} sx={{ my: 1, borderRadius: 2 }} />
+                <Skeleton
+                  key={i}
+                  variant="rectangular"
+                  animation="pulse"
+                  height={40}
+                  sx={{ my: 1, borderRadius: 2 }}
+                />
               ))}
             </Box>
           ) : (
@@ -310,7 +318,6 @@ export default function Booking() {
             />
           )}
         </Paper>
-
 
         {/* Mobile Responsive Cards View */}
         <Box
@@ -489,11 +496,13 @@ export default function Booking() {
       </Menu>
 
       {/* Linked Modals */}
-      <ViewBooking
-        open={openViewModal}
-        onClose={() => setOpenViewModal(false)}
-        facility={viewBooking}
-      />
+      {viewBooking && (
+        <ViewBooking
+          open={openViewModal}
+          onClose={() => setOpenViewModal(false)}
+          facility={viewBooking as BookingData} // إضافة (as BookingData) هنا
+        />
+      )}
       <DeleteConfirmations
         open={isDeleteOpen}
         onClose={handleCloseDelete}
@@ -503,6 +512,3 @@ export default function Booking() {
     </>
   );
 }
-
-
-

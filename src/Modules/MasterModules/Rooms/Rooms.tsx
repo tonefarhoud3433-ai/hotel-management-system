@@ -37,7 +37,7 @@ import {
   viewRoom,
   deleteRoom,
   updateRoom,
-} from "../../../API/modules/AdminRooms";
+} from "../../../Api/modules/AdminRooms";
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
 import ViewRooms from "../../Shared/ViewModals/viewRooms";
@@ -46,7 +46,6 @@ import { type RoomDetailData as room } from "../../Shared/ViewModals/viewRooms";
 import axios from "axios";
 
 const paginationModel = { page: 0, pageSize: 5 };
-
 
 export default function Rooms() {
   const navigate = useNavigate();
@@ -59,10 +58,10 @@ export default function Rooms() {
 
   // Actions Menu State Management
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [activeRow, setActiveRow] = React.useState<room|null>(null);
+  const [activeRow, setActiveRow] = React.useState<room | null>(null);
   const openMenu = Boolean(anchorEl);
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
-  const [selectedId, setSelectedId] = React.useState<string|null>(null);
+  const [selectedId, setSelectedId] = React.useState<string | null>(null);
   // -----
   const [rowsData, setRowsData] = React.useState([]);
 
@@ -94,10 +93,9 @@ export default function Rooms() {
       handleCloseDelete();
       fetchData();
     } catch (err) {
-      if(axios.isAxiosError(err)){
-
+      if (axios.isAxiosError(err)) {
         const errorMessage =
-        err?.response?.data?.message || "Failed to delete this room!";
+          err?.response?.data?.message || "Failed to delete this room!";
         toast.error(errorMessage);
       }
     }
@@ -136,10 +134,10 @@ export default function Rooms() {
     }
 
     const bodyData: FormData = new FormData();
-    bodyData.append('roomNumber',roomNumberValue)
+    bodyData.append("roomNumber", roomNumberValue);
 
     // {roomNumber:string} = {
-      // roomNumber: roomNumberValue,
+    // roomNumber: roomNumberValue,
     // }
 
     const isEdit = !!selectedRoom;
@@ -154,21 +152,19 @@ export default function Rooms() {
       handleCloseModal();
       fetchData();
     } catch (error) {
-      if(axios.isAxiosError(error)){
-
+      if (axios.isAxiosError(error)) {
         const errorMessage =
-        error?.response?.data?.message ||
-        "An error occurred while saving the room!";
+          error?.response?.data?.message ||
+          "An error occurred while saving the room!";
         toast.error(errorMessage);
       }
     }
   };
 
   React.useEffect(() => {
-    (()=>{
-
+    (() => {
       fetchData();
-    })()
+    })();
   }, []);
 
   const handleClickMenu = (
@@ -304,17 +300,16 @@ export default function Rooms() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             slotProps={{
-              input:{
-
+              input: {
                 startAdornment: (
                   <InputAdornment position="start">
-                  <SearchIcon sx={{ color: "#9CA3AF", fontSize: "1.2rem" }} />
-                </InputAdornment>
-              ),
+                    <SearchIcon sx={{ color: "#9CA3AF", fontSize: "1.2rem" }} />
+                  </InputAdornment>
+                ),
+              },
             }}
-          }
             sx={{
-              width: { xs: "100%", sm: "320px",md:'100%' },
+              width: { xs: "100%", sm: "320px", md: "100%" },
               backgroundColor: "#fff",
               borderRadius: "8px",
               "& .MuiOutlinedInput-root": { borderRadius: "8px" },
@@ -602,7 +597,7 @@ export default function Rooms() {
                 {viewRoomData.images
                   .slice(1)
                   .map((imgUrl: string, idx: number) => (
-                    <Grid  size={{xs:4}} key={idx}>
+                    <Grid size={{ xs: 4 }} key={idx}>
                       <Box
                         component="img"
                         src={imgUrl}
@@ -638,7 +633,7 @@ export default function Rooms() {
           </Box>
 
           <Grid container spacing={2} sx={{ mb: 2 }}>
-            <Grid size={{xs:4}}>
+            <Grid size={{ xs: 4 }}>
               <Card
                 variant="outlined"
                 sx={{
@@ -651,8 +646,7 @@ export default function Rooms() {
                 <AttachMoneyIcon sx={{ color: "#059669", mb: 0.5 }} />
                 <Typography
                   variant="caption"
-                  
-                  sx={{ color: "#6b7280", fontWeight: 600,display:'block' }}
+                  sx={{ color: "#6b7280", fontWeight: 600, display: "block" }}
                 >
                   Price
                 </Typography>
@@ -661,7 +655,7 @@ export default function Rooms() {
                 </Typography>
               </Card>
             </Grid>
-            <Grid  size={{xs:4}}>
+            <Grid size={{ xs: 4 }}>
               <Card
                 variant="outlined"
                 sx={{
@@ -676,7 +670,7 @@ export default function Rooms() {
                 />
                 <Typography
                   variant="caption"
-                  sx={{ color: "#6b7280", fontWeight: 600,display:'block' }}
+                  sx={{ color: "#6b7280", fontWeight: 600, display: "block" }}
                 >
                   Discount
                 </Typography>
@@ -685,7 +679,7 @@ export default function Rooms() {
                 </Typography>
               </Card>
             </Grid>
-            <Grid  size={{xs:4}}>
+            <Grid size={{ xs: 4 }}>
               <Card
                 variant="outlined"
                 sx={{
@@ -698,7 +692,7 @@ export default function Rooms() {
                 <PeopleIcon sx={{ color: "#2563eb", mb: 0.5 }} />
                 <Typography
                   variant="caption"
-                  sx={{ color: "#6b7280", fontWeight: 600 ,display:'block'}}
+                  sx={{ color: "#6b7280", fontWeight: 600, display: "block" }}
                 >
                   Capacity
                 </Typography>

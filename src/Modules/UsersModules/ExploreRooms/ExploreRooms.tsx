@@ -17,7 +17,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axiosClient from "../../../API/axsiosClient";
+import axiosClient from "../../../Api/axsiosClient";
 import { OnlyLoggedIn } from "../../Shared/ProtecedRoute/OnlyLoggedIn";
 import { RoomContext, type ADSData } from "../../../Contexts/RoomContext";
 interface RoomAPI {
@@ -37,10 +37,14 @@ const ExploreRooms = () => {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const navigate = useNavigate();
-  const context = useContext<ADSData | null>(RoomContext)
-  const  handleCountChange = context?.handleCountChange
+  const context = useContext<ADSData | null>(RoomContext);
+  const handleCountChange = context?.handleCountChange;
   const pageSize = 15;
-  const { capacity, start, end } = useLocation().state || { capacity: undefined, start: undefined, end: undefined }
+  const { capacity, start, end } = useLocation().state || {
+    capacity: undefined,
+    start: undefined,
+    end: undefined,
+  };
   const fetchRooms = async (currentPage: number) => {
     setLoading(true);
     try {
@@ -53,7 +57,7 @@ const ExploreRooms = () => {
           size: pageSize,
           startDate: start,
           endDate: end,
-          capacity
+          capacity,
         },
       });
 
@@ -75,20 +79,20 @@ const ExploreRooms = () => {
   }
   const AddToFavorites = async (id: string) => {
     try {
-      const res = await axiosClient.post('/api/v0/portal/favorite-rooms', { roomId: id })
-      toast.success(res?.data?.message || 'success!');
-      handleCountChange?.call(this)
+      const res = await axiosClient.post("/api/v0/portal/favorite-rooms", {
+        roomId: id,
+      });
+      toast.success(res?.data?.message || "success!");
+      handleCountChange?.call(this);
+    } catch (error) {
+      if (axios.isAxiosError(error))
+        toast.error(error?.response?.data?.message || "wrong ");
     }
-    catch (error) {
-      if(axios.isAxiosError(error))
-      toast.error(error?.response?.data?.message || 'wrong ')
-    }
-  }
+  };
   useEffect(() => {
     (() => {
-
       fetchRooms(page);
-    })()
+    })();
   }, [page]);
 
   const handlePageChange = (
@@ -206,24 +210,21 @@ const ExploreRooms = () => {
                         }}
                       >
                         <OnlyLoggedIn>
-
-                        <IconButton
-                          onClick={() => AddToFavorites(room._id)}
-                          sx={{
-                            color: "white",
-                            bgcolor: "rgba(255,255,255,0.2)",
-                            "&:hover": { bgcolor: "rgba(255,255,255,0.4)" },
-                          }}
+                          <IconButton
+                            onClick={() => AddToFavorites(room._id)}
+                            sx={{
+                              color: "white",
+                              bgcolor: "rgba(255,255,255,0.2)",
+                              "&:hover": { bgcolor: "rgba(255,255,255,0.4)" },
+                            }}
                           >
-                          <FavoriteIcon />
-                        </IconButton>
-                          </OnlyLoggedIn>
+                            <FavoriteIcon />
+                          </IconButton>
+                        </OnlyLoggedIn>
 
                         <IconButton
                           onClick={() => {
-
                             navigate(`/home/roomdetails/${room?._id}`);
-                            
                           }}
                           sx={{
                             color: "white",

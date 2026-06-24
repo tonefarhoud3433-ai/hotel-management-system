@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import {
   getDashboardCharts,
   type DashboardDataResponse,
-} from "../../../API/modules/DashboardCharts";
+} from "../../../Api/modules/DashboardCharts";
 import axios from "axios";
 
 export default function Home() {
@@ -30,8 +30,8 @@ export default function Home() {
         const response = await getDashboardCharts();
         setDashboardData(response.data.data);
       } catch (error) {
-        if(axios.isAxiosError(error))
-        toast.error(error?.response?.data?.message);
+        if (axios.isAxiosError(error))
+          toast.error(error?.response?.data?.message);
       } finally {
         setLoading(false);
       }

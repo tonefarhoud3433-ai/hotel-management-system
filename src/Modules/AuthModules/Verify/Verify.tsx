@@ -17,7 +17,7 @@ export default function Verify() {
     resolver: yupResolver(verifySchema),
   });
 
-  const onSubmit: SubmitHandler<VerifySchema> = (data, e) => {
+  const onSubmit: SubmitHandler<VerifySchema> = (_, e) => {
     e?.preventDefault();
     reset();
   };
