@@ -11,7 +11,7 @@ import Box from "@mui/material/Box";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../YupValidation/YupValidation";
-import { apiLogin } from "../../../Api/modules/Auth";
+import { apiLogin } from "../../../API/modules/Auth";
 import { AuthContext } from "../../../Contexts/AuthContext";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
