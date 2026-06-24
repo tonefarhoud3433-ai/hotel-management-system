@@ -22,7 +22,7 @@ import { toast } from "react-toastify";
 import {
   deleteBookings,
   getAllBookings,
-} from "../../../Api/modules/AdminBooking";
+} from "../../../API/modules/AdminBooking";
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
 import ViewBooking, {
