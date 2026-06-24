@@ -24,12 +24,12 @@ import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import * as React from "react";
 import { toast } from "react-toastify";
-import { AdminData } from "../../../API";
+import { AdminData } from "../../../Api";
 import {
   addFacilities,
   getAllFacilities,
   updateFacilities,
-} from "../../../API/modules/AdminData";
+} from "../../../Api/modules/AdminData";
 import CustomHeader from "../../Shared/CustomHeader/CustomHeader";
 import DeleteConfirmations from "../../Shared/DeleteConfirmations/DeleteConfirmations";
 import FacilityViewModal, {
