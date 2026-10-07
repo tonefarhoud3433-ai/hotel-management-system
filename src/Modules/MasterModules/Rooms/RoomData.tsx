@@ -85,7 +85,7 @@ export default function RoomData() {
       const getRoomDetails = async () => {
         setFetchingData(true);
         try {
-          const response = await viewRoom(+id);
+          const response = await viewRoom(Number(id));
           const roomData =
             response?.data?.data?.room ||
             response?.data?.room ||
@@ -218,7 +218,7 @@ export default function RoomData() {
       });
 
       if (isEdit && id) {
-        await updateRoom(+id, formData);
+        await updateRoom(Number(id), formData);
         toast.success("Room updated successfully!");
       } else {
         await addRoom(formData);
