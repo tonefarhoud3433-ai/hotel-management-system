@@ -36,7 +36,7 @@ export default function UsersHome() {
       <StaticSwiper title="main title" cards={firstSaticSwiper}/>
       <StaticSwiper title="main title22" cards={secondSaticSwiper}/>
       <SwiperADS />
-      <SwiperReviews idRoom={'6a33ae2ce7cc1f5aed4d3595'} />
+      <SwiperReviews idRoom={'6a8c05f4c57902ba1511ffcf'} />
       </Box>
     </>
   );
